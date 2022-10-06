@@ -707,6 +707,7 @@ namespace TownSuite.TwainScanner
 
                 Console.WriteLine();
                 Console.WriteLine(" " + FileExtention + " ");
+                //Console.WriteLine(FileExtention); //Comment this Code to fix 00058976 & BUG-011649
                 Console.WriteLine();
                 Console.WriteLine("SAVED");
                 Console.Out.Flush();

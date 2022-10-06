@@ -470,7 +470,10 @@ namespace TownSuite.TwainScanner
             set {
                 if((this._TwainState&TwainStateFlag.DSMOpen)!=0) {
                     if((this._TwainState&TwainStateFlag.DSOpen)==0) {
-                        this._srcds=this._sources[value];
+                        if (value != -1)
+                        {
+                            this._srcds = this._sources[value];
+                        }
                     } else {
                         throw new TwainException("Источник данных уже открыт.");
                     }
@@ -497,6 +500,7 @@ namespace TownSuite.TwainScanner
         /// <returns>Имя источника данных.</returns>
         public string GetSourceProductName(int index) {
             return this._sources[index].ProductName;
+            
         }
 
         /// <summary>
@@ -515,6 +519,7 @@ namespace TownSuite.TwainScanner
         /// <returns>Истина, если указанный источник поддерживает TWAIN 2.0; иначе лож.</returns>
         public bool GetIsSourceTwain2Compatible(int index) {
             return (this._sources[index].SupportedGroups&TwDG.DS2)!=0;
+           
         }
 
         /// <summary>
@@ -1438,6 +1443,14 @@ namespace TownSuite.TwainScanner
                     throw new TwainException(this._GetTwainStatus(),_rc);
                 }
             } finally {
+
+                foreach(TwIdentity twi in _src.ToArray())
+                {
+                    if (twi.ProductName.ToString().Contains("WIA"))
+                    {
+                        _src.Remove(twi);
+                    }
+               }
                 this._sources=_src.ToArray();
             }
         }
