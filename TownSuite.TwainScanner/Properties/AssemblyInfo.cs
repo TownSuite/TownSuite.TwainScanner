@@ -31,18 +31,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("Saraff.Twain.NET")]
-[assembly: AssemblyDescription("Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SARAFF SOFTWARE")]
-[assembly: AssemblyProduct("Saraff.Twain.NET")]
-[assembly: AssemblyCopyright("Copyright © SARAFF 2011")]
 [assembly: AssemblyTrademark("SARAFF SOFTWARE")]
-[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM _components.  If you need to access a type in this assembly from 
@@ -51,16 +40,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("d8d1eb72-d26a-48b6-bc2b-e42a72b65ef1")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.24")]
-[assembly: AssemblyFileVersion("1.0.24")]

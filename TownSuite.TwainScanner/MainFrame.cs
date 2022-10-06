@@ -9,13 +9,15 @@ using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 using System.Threading.Tasks;
-using WIA;
 using System.Collections;
+#if INCLUDE_TELERIK
+using WIA;
 using Telerik.Windows.Documents.Fixed.Model;
 using Telerik.Windows.Documents.Fixed.Model.Resources;
 using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
 using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf.Export;
 using Telerik.Windows.Documents.Model;
+#endif
 using System.Threading;
 using System.Text.RegularExpressions;
 
@@ -25,7 +27,12 @@ namespace TownSuite.TwainScanner
     {
         private Twain32 _twain;
         string DirText;
+#if INCLUDE_TELERIK
         private DeviceManager deviceManager;
+        bool removeWia = false;
+#else
+        bool removeWia = true;
+#endif
         private string FileExtention;
         private List<String> lstscansettings;
         private string UserTwainImageType;
@@ -59,6 +66,14 @@ namespace TownSuite.TwainScanner
 
             try
             {
+                if (removeWia)
+                {
+                    tabScanDrivers.TabPages.RemoveByKey("tpWIAScan");
+                    cmbImageType.Items.Remove("PDF");
+                    cmbTwainImageType.Items.Remove("PDF");
+                }
+
+
                 _twain = new Twain32();
                 this._twain.AcquireCompleted += new System.EventHandler(this._twain_AcquireCompleted);
                 this._twain.OpenDSM();
@@ -70,10 +85,10 @@ namespace TownSuite.TwainScanner
                 {
                     Console.WriteLine("Failed to find a scanner");
                     Console.Out.Flush();
-                    this.Close();
-                    return;
+               //     this.Close();
+                 //   return;
                 }
-                throw;
+              //  throw;
             }
             catch (Exception ex)
             {
@@ -89,14 +104,17 @@ namespace TownSuite.TwainScanner
             DeleteFiles();
                 
             LoadTwainDrivers();
+#if INCLUDE_TELERIK
             LoadWIADrivers();
-            GetColors();
+          GetColors();
+#endif
 
             //Set Default Twain Scanner Settings
             cmbTwainImageType.SelectedItem = UserTwainImageType;
             sourceTwianListBox.SelectedItem = UserTwainScanner;
             //cmbTwainImageType.SelectedIndex = 0;
 
+#if INCLUDE_TELERIK
             //WIA Settings
             cmbImageType.SelectedIndex = 0;
             cmbColor.SelectedIndex = 0;
@@ -105,10 +123,10 @@ namespace TownSuite.TwainScanner
             cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
 
             tabScanDrivers.TabPages.Remove(tabScanDrivers.TabPages["tpWIAScan"]); 
-
+#endif
             }
 
-        #region Delete Temporary Files
+#region Delete Temporary Files
 
         private void DeleteFiles()
         {
@@ -134,14 +152,14 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        #endregion
+#endregion
 
         private void MenuItem5_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        #region Load Twian Drivers
+#region Load Twian Drivers
 
         public Twain32 Twain
         {
@@ -174,10 +192,23 @@ namespace TownSuite.TwainScanner
                 MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
+#endregion
 
-        #region WIA Drivers
+#region WIA Drivers
 
+
+        private void btnWIAScan_Click(object sender, EventArgs e)
+        {
+#if INCLUDE_TELERIK
+            //Start Scanning using a Thread
+            //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
+
+            StartWIAScanning();
+#endif
+
+        }
+
+#if INCLUDE_TELERIK
         private void LoadWIADrivers()
         {
             // Clear the ListBox.
@@ -202,22 +233,6 @@ namespace TownSuite.TwainScanner
                     new WIAScanner.Scanner(deviceManager.DeviceInfos[i])
                 );
             }
-        }
-
-        private void GetColors()
-        {
-            DataTable dtColors = new DataTable();
-            DataColumn newColType = new DataColumn("Type", typeof(String));
-            DataColumn newColCode = new DataColumn("Code", typeof(int));
-            dtColors.Columns.Add(newColType);
-            dtColors.Columns.Add(newColCode);
-            dtColors.Rows.Add(new object[] { "Color", 1 });
-            dtColors.Rows.Add(new object[] { "Grayscale", 2 });
-            dtColors.Rows.Add(new object[] { "Black & White", 4 });
-
-            cmbColor.DisplayMember = "Type";
-            cmbColor.ValueMember = "Code";
-            cmbColor.DataSource = dtColors;
         }
 
         public WIA.Device LongRunningOperationAsync(DeviceInfo deviceproInfo, CancellationToken token, CancellationTokenSource tokenSource) // assume we return an int from this long running operation 
@@ -372,15 +387,7 @@ namespace TownSuite.TwainScanner
 
         }
 
-        private void btnWIAScan_Click(object sender, EventArgs e)
-        {
 
-            //Start Scanning using a Thread
-            //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
-
-            StartWIAScanning();
-
-        }
 
         public static float MmToInch(int mm)
         {
@@ -555,9 +562,24 @@ namespace TownSuite.TwainScanner
                 newpic.Image.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension, ImageFormat.Jpeg);
             }
         }
+#endif
+#endregion
 
-        #endregion
+        private void GetColors()
+        {
+            DataTable dtColors = new DataTable();
+            DataColumn newColType = new DataColumn("Type", typeof(String));
+            DataColumn newColCode = new DataColumn("Code", typeof(int));
+            dtColors.Columns.Add(newColType);
+            dtColors.Columns.Add(newColCode);
+            dtColors.Rows.Add(new object[] { "Color", 1 });
+            dtColors.Rows.Add(new object[] { "Grayscale", 2 });
+            dtColors.Rows.Add(new object[] { "Black & White", 4 });
 
+            cmbColor.DisplayMember = "Type";
+            cmbColor.ValueMember = "Code";
+            cmbColor.DataSource = dtColors;
+        }
 
         private void mnuSelect_Click(object sender, EventArgs e)
         {
@@ -592,10 +614,11 @@ namespace TownSuite.TwainScanner
             {
                 switch(tabScanDrivers.SelectedTab.Name)
                 {
+#if INCLUDE_TELERIK
                     case "tpWIAScan":
                         StartWIAScanning(); 
                         break;
-
+#endif
                     case "tpTWAINScan":
                         StartTWIAScanning();
                         break;
@@ -661,7 +684,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        #region Save Scan Files
+#region Save Scan Files
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
@@ -676,10 +699,12 @@ namespace TownSuite.TwainScanner
                                 //Save tiff
                                 SaveTWAIN_TIFF();
                                 break;
+#if INCLUDE_TELERIK
                             case 1:
                                 //Save pdf
                                 SaveTWAIN_PDF();
                                 break;
+#endif
                         }
                         break;
                     case "tpWIAScan":
@@ -689,10 +714,12 @@ namespace TownSuite.TwainScanner
                                 //Save tiff
                                 SaveTIFF();
                                 break;
+#if INCLUDE_TELERIK
                             case 1:
                                 //Save pdf
                                 SavePDF();
                                 break;
+#endif
                             case 2:
                                 //Save PNG'
                                 SavePNG();
@@ -721,7 +748,7 @@ namespace TownSuite.TwainScanner
         }
 
 
-        #region Save Twian Files
+#region Save Twian Files
 
         public static string PadNumbers(string input)
         {
@@ -732,6 +759,8 @@ namespace TownSuite.TwainScanner
             return Regex.Replace(smallName, "[0-9]+", match => match.Value.PadLeft(10, '0'));
         }
 
+
+#if INCLUDE_TELERIK
         private void SaveTWAIN_PDF()
         {
             string[] sa = null;
@@ -802,6 +831,7 @@ namespace TownSuite.TwainScanner
             }
 
         }
+#endif
 
         private void SaveTWAIN_TIFF()
         {
@@ -852,7 +882,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        #endregion
+#endregion
 
 
 
@@ -1004,7 +1034,7 @@ namespace TownSuite.TwainScanner
             return "";
         }
 
-
+#if INCLUDE_TELERIK
         private void SavePDF()
         {
             string[] sa = null;
@@ -1100,18 +1130,19 @@ namespace TownSuite.TwainScanner
             }
 
         }
-
-        #endregion
+#endif
+#endregion
 
         private void sourceListBox_SelectedValueChanged(object sender, EventArgs e)
-        {   
+        {
             //var t=Task.Run(() =>
             //{
             //    LoadScanPropertyValues();
             //});
             //t.Wait(1000);
-
+#if INCLUDE_TELERIK
             LoadScanPropertyValues();
+#endif
 
         }
 
