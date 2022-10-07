@@ -12,9 +12,9 @@
     <Product>Saraff.Twain.NET</Product>
     <Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
     <Copyright>Copyright © SARAFF 2011</Copyright>
-    <AssemblyVersion>1.0.25</AssemblyVersion>
-    <FileVersion>1.0.25</FileVersion>
-	<PackageVersion>1.0.25</PackageVersion>
+    <AssemblyVersion>1.0.27</AssemblyVersion>
+    <FileVersion>1.0.27</FileVersion>
+	<PackageVersion>1.0.27</PackageVersion>
     <DefineConstants>INCLUDE_TELERIK</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -92,7 +92,7 @@
     <EmbeddedResource Include="Resources\scanner.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Telerik.Windows.Documents.Fixed.for.Net40" Version="2020.2.615" />
+    <PackageReference Include="Telerik.Windows.Documents.Fixed" Version="2020.2.615" />
     <PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
   </ItemGroup>
 </Project>

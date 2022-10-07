@@ -122,7 +122,6 @@ namespace TownSuite.TwainScanner
             cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;  
             cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
 
-            tabScanDrivers.TabPages.Remove(tabScanDrivers.TabPages["tpWIAScan"]); 
 #endif
             }
 
