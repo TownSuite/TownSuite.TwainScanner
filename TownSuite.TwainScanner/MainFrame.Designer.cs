@@ -283,6 +283,7 @@
             this.Menu = this.MainMenu1;
             this.Name = "MainFrame";
             this.Text = "Scan Document";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
             this.Load += new System.EventHandler(this.MainFrame_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
