@@ -6,9 +6,10 @@
     <RootNamespace>TownSuite.TwainScanner</RootNamespace>
     <TargetFramework>net462</TargetFramework>
     <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
-    <AssemblyTitle>Saraff.Twain.NET</AssemblyTitle>
-    <Company>SARAFF SOFTWARE</Company>
-    <Product>Saraff.Twain.NET</Product>
+	 <AssemblyName>TownSuite.TwainScanner</AssemblyName>
+    <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
+    <Company>TownSuite</Company>
+    <Product>TownSuite.TwainScanner</Product>
     <Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
     <Copyright>Copyright © SARAFF 2011</Copyright>
     <AssemblyVersion>1.0.27</AssemblyVersion>
