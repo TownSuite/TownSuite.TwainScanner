@@ -553,12 +553,19 @@ namespace TownSuite.TwainScanner
             {
                 picnumber += 1;
                 var newpic = new PictureBox();
-                newpic.Image = (Image)arryimage[i];
+                Image resizedImg;
+                using (var img = (Image)arryimage[i])
+                {
+                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension, ImageFormat.Jpeg);
+                    resizedImg = new Bitmap(img, new Size(180, 180));
+                }
+
+                newpic.Image = resizedImg;
                 newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                 newpic.Refresh();
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                newpic.Image.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension, ImageFormat.Jpeg);
+                
             }
         }
 #endif
