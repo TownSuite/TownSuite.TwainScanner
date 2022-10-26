@@ -666,12 +666,19 @@ namespace TownSuite.TwainScanner
                     {
                         picnumber += 1;
                         var newpic = new PictureBox();
-                        newpic.Image = this._twain.GetImage(i);
+                        Image resizedImg;
+                        using (var img = this._twain.GetImage(i)) 
+                        {
+                            img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp", ImageFormat.Bmp);
+                            resizedImg = new Bitmap(img, new Size(180, 180));
+                        }
+
+                        newpic.Image = resizedImg;
                         newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                         newpic.Refresh();
                         flowLayoutPanel1.Controls.Add(newpic);
                         newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                        newpic.Image.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp", ImageFormat.Bmp);
+                       
                         // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
                     }
 
@@ -1149,6 +1156,12 @@ namespace TownSuite.TwainScanner
         {
             //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
             this._twain.SourceIndex = sourceTwianListBox.SelectedIndex;
+        }
+
+        private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this._twain.CloseDataSource();
+            this._twain.CloseDSM();
         }
     }
 }
