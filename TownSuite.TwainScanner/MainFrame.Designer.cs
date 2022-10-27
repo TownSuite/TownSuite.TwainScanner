@@ -48,6 +48,7 @@
             this.btnWIAScan = new System.Windows.Forms.Button();
             this.tabScanDrivers = new System.Windows.Forms.TabControl();
             this.tpTWAINScan = new System.Windows.Forms.TabPage();
+            this.buttonTwainScan = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbTwainImageType = new System.Windows.Forms.ComboBox();
             this.sourceTwianListBox = new System.Windows.Forms.ListBox();
@@ -219,6 +220,7 @@
             // 
             // tpTWAINScan
             // 
+            this.tpTWAINScan.Controls.Add(this.buttonTwainScan);
             this.tpTWAINScan.Controls.Add(this.label1);
             this.tpTWAINScan.Controls.Add(this.cmbTwainImageType);
             this.tpTWAINScan.Controls.Add(this.sourceTwianListBox);
@@ -229,6 +231,16 @@
             this.tpTWAINScan.TabIndex = 1;
             this.tpTWAINScan.Text = "TWAIN";
             this.tpTWAINScan.UseVisualStyleBackColor = true;
+            // 
+            // buttonTwainScan
+            // 
+            this.buttonTwainScan.Location = new System.Drawing.Point(45, 225);
+            this.buttonTwainScan.Name = "buttonTwainScan";
+            this.buttonTwainScan.Size = new System.Drawing.Size(75, 23);
+            this.buttonTwainScan.TabIndex = 11;
+            this.buttonTwainScan.Text = "Scan";
+            this.buttonTwainScan.UseVisualStyleBackColor = true;
+            this.buttonTwainScan.Click += new System.EventHandler(this.buttonTwainScan_Click);
             // 
             // label1
             // 
@@ -321,5 +333,6 @@
         private System.Windows.Forms.ListBox sourceTwianListBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbTwainImageType;
+        private System.Windows.Forms.Button buttonTwainScan;
     }
 }

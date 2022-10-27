@@ -612,7 +612,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SAMPLE1", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Selection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -634,7 +634,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SAMPLE1", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Scanning Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -692,7 +692,7 @@ namespace TownSuite.TwainScanner
                                 case "tiff":
                                     img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Tiff);
                                     break;
-                                case "png":  
+                                case "png":
                                     img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Png);
                                     break;
                                 case "pdf":
@@ -1094,6 +1094,18 @@ namespace TownSuite.TwainScanner
         {
             string format = cmbImageType.SelectedItem.ToString();
             return format;
+        }
+
+        private void buttonTwainScan_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                StartTWIAScanning();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Scanning Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
