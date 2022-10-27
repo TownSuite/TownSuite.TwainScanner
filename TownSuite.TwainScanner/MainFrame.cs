@@ -532,8 +532,8 @@ namespace TownSuite.TwainScanner
                         break;
 
                     case "pdf":
-                        arryimage = device.ScanTIFF();
-                        imageExtension = ".tif";
+                        arryimage = device.ScanPNG();
+                        imageExtension = ".png";
                         FileExtention = ".pdf";
                         break;
 
@@ -748,7 +748,7 @@ namespace TownSuite.TwainScanner
 #if INCLUDE_TELERIK
                             case "pdf":
                                 //Save pdf
-                                SaveTWAIN_PDF();
+                                SavePDF();
                                 break;
 #endif
                         }
@@ -805,44 +805,10 @@ namespace TownSuite.TwainScanner
             return Regex.Replace(smallName, "[0-9]+", match => match.Value.PadLeft(10, '0'));
         }
 
-
-#if INCLUDE_TELERIK
-        private void SaveTWAIN_PDF()
-        {
-            string[] sa = null;
-            sa = Directory.GetFiles(DirText, "tmpscan*.png");
-
-            List<string> UnSortList = new List<string>(sa);
-            List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
-            sa = SortedList.ToArray();
-
-            RadFixedDocument document = new RadFixedDocument();
-
-            foreach (string image in sa)
-            {
-                using (Stream stream = File.OpenRead(image))
-                {
-                    ImageSource imageSource = new ImageSource(stream);
-                    RadFixedPage page = document.Pages.AddPage();
-                    page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
-                    page.Content.AddImage(imageSource);
-                }
-            }
-
-            PdfFormatProvider provider = new PdfFormatProvider();
-            using (Stream output = new FileStream(Path.Combine(DirText, "tmpScan.pdf"), FileMode.OpenOrCreate))
-            {
-                provider.ExportSettings.ImageQuality = ImageQuality.High;
-                provider.Export(document, output);
-            }
-
-        }
-#endif
-
         private void SaveTWAIN_TIFF()
         {
             string[] sa = null;
-            sa = Directory.GetFiles(DirText, "tmpscan*.bmp");
+            sa = Directory.GetFiles(DirText, "tmpscan*.tif");
 
             List<string> UnSortList = new List<string>(sa);
             List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
@@ -982,8 +948,10 @@ namespace TownSuite.TwainScanner
                 {
                     //save the intermediate frames
                     ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.FrameDimensionPage));
-                    Bitmap bm = (Bitmap)Image.FromFile(s);
-                    pages.SaveAdd(bm, ep);
+                    using (Bitmap bm = (Bitmap)Image.FromFile(s))
+                    {
+                        pages.SaveAdd(bm, ep);
+                    }
                 }
                 if (frame == sa.Length - 1)
                 {
@@ -1053,50 +1021,11 @@ namespace TownSuite.TwainScanner
         private void SavePDF()
         {
             string[] sa = null;
-            sa = Directory.GetFiles(DirText, "tmpscan*.tif");
+            sa = Directory.GetFiles(DirText, "tmpscan*.png");
 
             List<string> UnSortList = new List<string>(sa);
             List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
             sa = SortedList.ToArray();
-
-            //get the codec for tiff files
-            ImageCodecInfo info = ImageCodecInfo.GetImageEncoders().Where(p => p.MimeType == "image/tiff").FirstOrDefault();
-
-            //use the save encoder
-            var enc = System.Drawing.Imaging.Encoder.SaveFlag;
-            EncoderParameters ep = new EncoderParameters(1);
-
-            ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.MultiFrame));
-
-            Bitmap pages = null;
-            int frame = 0;
-
-            foreach (string s in sa)
-            {
-                if (frame == 0)
-                {
-                    pages = (Bitmap)Image.FromFile(s);
-
-                    //save the first frame
-                    pages.Save(DirText + "\\tmpScan.tif", info, ep);
-                }
-                else
-                {
-                    //save the intermediate frames
-                    ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.FrameDimensionPage));
-                    Bitmap bm = (Bitmap)Image.FromFile(s);
-                    pages.SaveAdd(bm, ep);
-                }
-                if (frame == sa.Length - 1)
-                {
-                    //flush and close.
-                    ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.Flush));
-                    pages.SaveAdd(ep);
-
-                }
-                frame += 1;
-
-            }
 
             RadFixedDocument document = new RadFixedDocument();
 
@@ -1108,7 +1037,7 @@ namespace TownSuite.TwainScanner
                     RadFixedPage page = document.Pages.AddPage();
                     //page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
                     page.Content.AddImage(imageSource);
-                    if ((int)(cmbResolution.SelectedValue) <= 100)
+                    if (cmbResolution.SelectedValue != null && (int)(cmbResolution.SelectedValue) <= 100)
                     {
                         page.Size = PaperTypeConverter.ToSize(PaperTypes.Letter);
                     }
@@ -1119,26 +1048,8 @@ namespace TownSuite.TwainScanner
                 }
             }
 
-
-            /*// Old way 
-            Stream stream = File.OpenRead(DirText + "\\tmpScan.tif");
-            ImageSource imageSource = new ImageSource(stream);
-                    
-            RadFixedPage page = document.Pages.AddPage();
-            page.Content.AddImage(imageSource);
-            if ((int)(cmbResolution.SelectedValue) <= 100)
-            {
-                page.Size = PaperTypeConverter.ToSize(PaperTypes.Letter);
-            }
-            else
-            {
-                page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
-            }
-            */
-
-
             PdfFormatProvider provider = new PdfFormatProvider();
-            using (Stream output = new FileStream(DirText + "\\tmpScan.pdf", FileMode.OpenOrCreate))
+            using (Stream output = new FileStream(Path.Combine(DirText, "tmpScan.pdf"), FileMode.OpenOrCreate))
             {
                 provider.ExportSettings.ImageQuality = ImageQuality.High;
                 provider.Export(document, output);
