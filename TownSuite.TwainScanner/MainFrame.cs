@@ -26,6 +26,7 @@ namespace TownSuite.TwainScanner
     public partial class MainFrame : Form
     {
         private Twain32 _twain;
+
         string DirText;
 #if INCLUDE_TELERIK
         private DeviceManager deviceManager;
@@ -51,7 +52,7 @@ namespace TownSuite.TwainScanner
 
         private void MainFrame_Load(object sender, EventArgs e)
         {
-           for (int i = 0; i <= lstscansettings.Count - 1; i++)
+            for (int i = 0; i <= lstscansettings.Count - 1; i++)
             {
                 switch (i)
                 {
@@ -77,18 +78,18 @@ namespace TownSuite.TwainScanner
                 _twain = new Twain32();
                 this._twain.AcquireCompleted += new System.EventHandler(this._twain_AcquireCompleted);
                 this._twain.OpenDSM();
-              
+
             }
-            catch(TwainException ex)
+            catch (TwainException ex)
             {
                 if (ex.Message == "It worked!")
                 {
                     Console.WriteLine("Failed to find a scanner");
                     Console.Out.Flush();
-               //     this.Close();
-                 //   return;
+                    //     this.Close();
+                    //   return;
                 }
-              //  throw;
+                //  throw;
             }
             catch (Exception ex)
             {
@@ -102,11 +103,11 @@ namespace TownSuite.TwainScanner
             GC.WaitForPendingFinalizers();
 
             DeleteFiles();
-                
+
             LoadTwainDrivers();
 #if INCLUDE_TELERIK
             LoadWIADrivers();
-          GetColors();
+            GetColors();
 #endif
 
             //Set Default Twain Scanner Settings
@@ -119,13 +120,13 @@ namespace TownSuite.TwainScanner
             cmbImageType.SelectedIndex = 0;
             cmbColor.SelectedIndex = 0;
 
-            cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;  
+            cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
 
 #endif
-            }
+        }
 
-#region Delete Temporary Files
+        #region Delete Temporary Files
 
         private void DeleteFiles()
         {
@@ -151,14 +152,14 @@ namespace TownSuite.TwainScanner
             }
         }
 
-#endregion
+        #endregion
 
         private void MenuItem5_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-#region Load Twian Drivers
+        #region Load Twian Drivers
 
         public Twain32 Twain
         {
@@ -176,24 +177,24 @@ namespace TownSuite.TwainScanner
                 Twain = this._twain;
 
                 if (this.Twain != null && this.Twain.SourcesCount > 0)
+                {
+                    for (int i = 0; i < this.Twain.SourcesCount; i++)
                     {
-                        for (int i = 0; i < this.Twain.SourcesCount; i++)
-                        {
                         bool twn2 = this.Twain.GetIsSourceTwain2Compatible(i);
-                            this.sourceTwianListBox.Items.Add(this.Twain.GetSourceProductName(i));
-                        }
-                        this.sourceTwianListBox.SelectedIndex = this.Twain.SourceIndex;
+                        this.sourceTwianListBox.Items.Add(this.Twain.GetSourceProductName(i));
                     }
-                
+                    this.sourceTwianListBox.SelectedIndex = this.Twain.SourceIndex;
+                }
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-#endregion
+        #endregion
 
-#region WIA Drivers
+        #region WIA Drivers
 
 
         private void btnWIAScan_Click(object sender, EventArgs e)
@@ -215,7 +216,7 @@ namespace TownSuite.TwainScanner
 
             // Create a DeviceManager instance
             deviceManager = new DeviceManager();
-          
+
 
             // Loop through the list of devices and add the name to the listbox
             for (int i = 1; i <= deviceManager.DeviceInfos.Count; i++)
@@ -236,7 +237,7 @@ namespace TownSuite.TwainScanner
 
         public WIA.Device LongRunningOperationAsync(DeviceInfo deviceproInfo, CancellationToken token, CancellationTokenSource tokenSource) // assume we return an int from this long running operation 
         {
-            WIA.Device device=null;
+            WIA.Device device = null;
             while (!token.IsCancellationRequested)
             {
                 device = deviceproInfo.Connect();
@@ -332,9 +333,9 @@ namespace TownSuite.TwainScanner
                 t.Abort();
                 throw new Exception("More than 2 secs.");
             }
-                     
 
-           // device = ConnectWIA();
+
+            // device = ConnectWIA();
 
             //--------------------------------------------------
             var deviceitem = device.Items[1];
@@ -359,7 +360,7 @@ namespace TownSuite.TwainScanner
                             s += " [valid values include: ";
                         }
                         int count = item.SubTypeValues.Count;
-                        
+
                         for (int i = 1; i <= count; i++)
                         {
                             arryres.Add(item.SubTypeValues.get_Item(i));
@@ -391,7 +392,7 @@ namespace TownSuite.TwainScanner
         public static float MmToInch(int mm)
         {
             return 0.03937f * mm;
-            
+
         }
 
         private WIAScanner.Scanner SetScanPropertyValues()
@@ -470,7 +471,7 @@ namespace TownSuite.TwainScanner
             {
                 device = sourceListBox.SelectedItem as WIAScanner.Scanner;
             }));
-                     
+
 
             if (device == null)
             {
@@ -487,7 +488,7 @@ namespace TownSuite.TwainScanner
                 return;
             }
 
-            if(String.IsNullOrEmpty(cmbImageType.Text))
+            if (String.IsNullOrEmpty(cmbImageType.Text))
             {
                 MessageBox.Show("You need to select scan Image ",
                                "Type",
@@ -514,34 +515,35 @@ namespace TownSuite.TwainScanner
             var devicescanner = SetScanPropertyValues();
 
             ImageFile image = new ImageFile();
-            ArrayList arryimage = new ArrayList(); 
+            ArrayList arryimage = new ArrayList();
 
             string imageExtension = "";
 
             this.Invoke(new MethodInvoker(delegate ()
             {
-                switch (cmbImageType.SelectedIndex)
+                string wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
+                switch (wiaImageFormat)
                 {
 
-                    case 0:
+                    case "tiff":
                         arryimage = device.ScanTIFF();
                         imageExtension = ".tif";
                         FileExtention = imageExtension;
                         break;
 
-                    case 1:
+                    case "pdf":
                         arryimage = device.ScanTIFF();
                         imageExtension = ".tif";
                         FileExtention = ".pdf";
                         break;
 
-                    case 2:
+                    case "png":
                         arryimage = device.ScanPNG();
                         imageExtension = ".png";
                         FileExtention = imageExtension;
                         break;
 
-                    case 3:
+                    case "jpeg":
                         arryimage = device.ScanJPEG();
                         imageExtension = ".jpeg";
                         FileExtention = imageExtension;
@@ -565,11 +567,11 @@ namespace TownSuite.TwainScanner
                 newpic.Refresh();
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                
+
             }
         }
 #endif
-#endregion
+        #endregion
 
         private void GetColors()
         {
@@ -618,17 +620,17 @@ namespace TownSuite.TwainScanner
         {
             try
             {
-                switch(tabScanDrivers.SelectedTab.Name)
+                switch (tabScanDrivers.SelectedTab.Name)
                 {
 #if INCLUDE_TELERIK
                     case "tpWIAScan":
-                        StartWIAScanning(); 
+                        StartWIAScanning();
                         break;
 #endif
                     case "tpTWAINScan":
                         StartTWIAScanning();
                         break;
-               }
+                }
             }
             catch (Exception ex)
             {
@@ -647,18 +649,24 @@ namespace TownSuite.TwainScanner
                 return;
             }
 
-            switch (cmbTwainImageType.SelectedIndex)
+            string imageForat = GetSelectedTwainImageFormat().ToLower().Trim();
+            switch (imageForat)
             {
-                case 0:
-                    this._twain.Acquire();
+                case "tiff":
                     FileExtention = ".tif";
                     break;
-
-                case 1:
-                    this._twain.Acquire();
+                case "pdf":
                     FileExtention = ".pdf";
                     break;
+                case "png":
+                    FileExtention = ".png";
+                    break;
+                case "jpeg":
+                    FileExtention = ".jpeg";
+                    break;
             }
+
+            this._twain.Acquire();
         }
 
 
@@ -669,14 +677,32 @@ namespace TownSuite.TwainScanner
             {
                 if (this._twain.ImageCount > 0)
                 {
+
+                    string imageForat = GetSelectedTwainImageFormat().ToLower().Trim();
+
+
                     for (int i = 0; i <= this._twain.ImageCount - 1; i += 1)
                     {
                         picnumber += 1;
                         var newpic = new PictureBox();
                         Image resizedImg;
-                        using (var img = this._twain.GetImage(i)) 
+                        using (var img = this._twain.GetImage(i))
                         {
-                            img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp", ImageFormat.Bmp);
+                            switch (imageForat)
+                            {
+                                case "tiff":
+                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Tiff);
+                                    break;
+                                case "pdf":
+                                case "png":
+                                    // pdf is just an import of a file.  Use png.
+                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Png);
+                                    break;
+                                case "jpeg":
+                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Jpeg);
+                                    break;
+                            }
+
                             resizedImg = new Bitmap(img, new Size(180, 180));
                         }
 
@@ -685,7 +711,7 @@ namespace TownSuite.TwainScanner
                         newpic.Refresh();
                         flowLayoutPanel1.Controls.Add(newpic);
                         newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                       
+
                         // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
                     }
 
@@ -697,23 +723,31 @@ namespace TownSuite.TwainScanner
             }
         }
 
-#region Save Scan Files
+        #region Save Scan Files
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
             try
             {
+                string twainImageFormat = GetSelectedTwainImageFormat().ToLower().Trim();
+                string wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
                 switch (tabScanDrivers.SelectedTab.Name)
                 {
                     case "tpTWAINScan":
-                        switch (cmbTwainImageType.SelectedIndex)
+                        switch (twainImageFormat)
                         {
-                            case 0:
+                            case "tiff":
                                 //Save tiff
                                 SaveTWAIN_TIFF();
                                 break;
+                            case "png":
+                                SavePNG();
+                                break;
+                            case "jpeg":
+                                SaveJPEG();
+                                break;
 #if INCLUDE_TELERIK
-                            case 1:
+                            case "pdf":
                                 //Save pdf
                                 SaveTWAIN_PDF();
                                 break;
@@ -721,23 +755,23 @@ namespace TownSuite.TwainScanner
                         }
                         break;
                     case "tpWIAScan":
-                        switch (cmbImageType.SelectedIndex)
+                        switch (wiaImageFormat)
                         {
-                            case 0:
+                            case "tiff":
                                 //Save tiff
                                 SaveTIFF();
                                 break;
 #if INCLUDE_TELERIK
-                            case 1:
+                            case "pdf":
                                 //Save pdf
                                 SavePDF();
                                 break;
 #endif
-                            case 2:
+                            case "png":
                                 //Save PNG'
                                 SavePNG();
                                 break;
-                            case 3:
+                            case "jpeg":
                                 //Save Jepg
                                 SaveJPEG();
                                 break;
@@ -756,12 +790,12 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Occured on Scanning & Saving Please Re-try Scanning" + "\r\n" + ex.Message,"Scan Document" ,MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error Occured on Scanning & Saving Please Re-try Scanning" + "\r\n" + ex.Message, "Scan Document", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
 
-#region Save Twian Files
+        #region Save Twian Files
 
         public static string PadNumbers(string input)
         {
@@ -832,10 +866,10 @@ namespace TownSuite.TwainScanner
                     RadFixedPage page = document.Pages.AddPage();
                     page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
                     page.Content.AddImage(imageSource);
-                                 
+
                 }
             }
-            
+
             PdfFormatProvider provider = new PdfFormatProvider();
             using (Stream output = new FileStream(DirText + "\\tmpScan.pdf", FileMode.OpenOrCreate))
             {
@@ -874,7 +908,7 @@ namespace TownSuite.TwainScanner
                     pages = (Bitmap)Image.FromFile(s);
 
                     //save the first frame
-                    pages.Save(DirText + "\\tmpScan.tif", info, ep);
+                    pages.Save(Path.Combine(DirText, "tmpScan.tif"), info, ep);
                 }
                 else
                 {
@@ -895,7 +929,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-#endregion
+        #endregion
 
 
 
@@ -930,25 +964,29 @@ namespace TownSuite.TwainScanner
                     {
                         g.DrawImage(images[i], new Point(width, 0));
                         width += images[i].Width;
+                        // free memory immediately to avoid out of memory exception as 'image' grows.
+                        if (images[i] != null)
+                            images[i].Dispose();
                     }
                 }
 
                 // You don't need to save this in order to use the in-memory object.
                 // img3.Save(finalImage, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                image.Save(DirText + @"\tmpScan.jpeg");
+                image.Save(Path.Combine(DirText, "tmpScan.jpeg"));
                 //imageLocation.Image = image;
             }
             finally
             {
+                // in case of exception dispose everything properly
                 for (int i = 0; i < inputFiles.Length; ++i)
                     if (images[i] != null)
                         images[i].Dispose();
             }
-            
+
             return "";
         }
-        
+
         private void SaveTIFF()
         {
             string[] sa = null;
@@ -997,7 +1035,7 @@ namespace TownSuite.TwainScanner
 
             }
         }
-        
+
         private string SavePNG()
         {
             string[] inputFiles = null;
@@ -1028,20 +1066,23 @@ namespace TownSuite.TwainScanner
                     {
                         g.DrawImage(images[i], new Point(width, 0));
                         width += images[i].Width;
+                        // free memory immediately to avoid out of memory exception as 'image' grows.
+                        if (images[i] != null)
+                            images[i].Dispose();
                     }
                 }
 
                 // You don't need to save this in order to use the in-memory object.
                 // img3.Save(finalImage, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                image.Save(DirText + @"\tmpScan.png");
+                image.Save(Path.Combine(DirText, "tmpScan.png"));
                 //imageLocation.Image = image;
             }
             finally
             {
+                // in case of exception dispose everything properly
                 for (int i = 0; i < inputFiles.Length; ++i)
-                    if (images[i] != null)
-                        images[i].Dispose();
+                    images[i]?.Dispose();
             }
 
             return "";
@@ -1097,7 +1138,7 @@ namespace TownSuite.TwainScanner
             }
 
             RadFixedDocument document = new RadFixedDocument();
-            
+
             foreach (string image in sa)
             {
                 using (Stream stream = File.OpenRead(image))
@@ -1106,7 +1147,7 @@ namespace TownSuite.TwainScanner
                     RadFixedPage page = document.Pages.AddPage();
                     //page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
                     page.Content.AddImage(imageSource);
-                    if((int)(cmbResolution.SelectedValue) <=100)
+                    if ((int)(cmbResolution.SelectedValue) <= 100)
                     {
                         page.Size = PaperTypeConverter.ToSize(PaperTypes.Letter);
                     }
@@ -1116,8 +1157,8 @@ namespace TownSuite.TwainScanner
                     }
                 }
             }
-            
-                       
+
+
             /*// Old way 
             Stream stream = File.OpenRead(DirText + "\\tmpScan.tif");
             ImageSource imageSource = new ImageSource(stream);
@@ -1133,7 +1174,7 @@ namespace TownSuite.TwainScanner
                 page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
             }
             */
-            
+
 
             PdfFormatProvider provider = new PdfFormatProvider();
             using (Stream output = new FileStream(DirText + "\\tmpScan.pdf", FileMode.OpenOrCreate))
@@ -1144,7 +1185,7 @@ namespace TownSuite.TwainScanner
 
         }
 #endif
-#endregion
+        #endregion
 
         private void sourceListBox_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -1169,6 +1210,18 @@ namespace TownSuite.TwainScanner
         {
             this._twain.CloseDataSource();
             this._twain.CloseDSM();
+        }
+
+        private string GetSelectedTwainImageFormat()
+        {
+            string format = cmbTwainImageType.SelectedItem.ToString();
+            return format;
+        }
+
+        private string GetSelectedWiaImageFormat()
+        {
+            string format = cmbImageType.SelectedItem.ToString();
+            return format;
         }
     }
 }

@@ -245,7 +245,9 @@
             this.cmbTwainImageType.FormattingEnabled = true;
             this.cmbTwainImageType.Items.AddRange(new object[] {
             "TIFF",
-            "PDF"});
+            "PDF",
+            "JPEG",
+            "PNG"});
             this.cmbTwainImageType.Location = new System.Drawing.Point(10, 198);
             this.cmbTwainImageType.Name = "cmbTwainImageType";
             this.cmbTwainImageType.Size = new System.Drawing.Size(110, 21);
