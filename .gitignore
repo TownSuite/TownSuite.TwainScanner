@@ -283,3 +283,4 @@ __pycache__/
 
 # End of https://www.gitignore.io/api/visualstudio
 /nugetspec/TownSuite.TwainScanner/output
+/nugetspec/NugetBuild
