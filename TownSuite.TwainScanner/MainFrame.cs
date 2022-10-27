@@ -532,8 +532,8 @@ namespace TownSuite.TwainScanner
                         break;
 
                     case "pdf":
-                        arryimage = device.ScanPNG();
-                        imageExtension = ".png";
+                        arryimage = device.ScanJPEG();
+                        imageExtension = ".jpeg";
                         FileExtention = ".pdf";
                         break;
 
@@ -655,11 +655,11 @@ namespace TownSuite.TwainScanner
                 case "tiff":
                     FileExtention = ".tif";
                     break;
-                case "pdf":
                 case "png":
                     // PDFs will internally be png images
                     FileExtention = ".png";
                     break;
+                case "pdf":
                 case "jpeg":
                     FileExtention = ".jpeg";
                     break;
@@ -692,12 +692,12 @@ namespace TownSuite.TwainScanner
                                 case "tiff":
                                     img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Tiff);
                                     break;
-                                case "pdf":
-                                case "png":
-                                    // pdf is just an import of a file.  Use png.
+                                case "png":  
                                     img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Png);
                                     break;
+                                case "pdf":
                                 case "jpeg":
+                                    // pdf is just an import of a file.  Use jpg.
                                     img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Jpeg);
                                     break;
                             }
@@ -1021,7 +1021,7 @@ namespace TownSuite.TwainScanner
         private void SavePDF()
         {
             string[] sa = null;
-            sa = Directory.GetFiles(DirText, "tmpscan*.png");
+            sa = Directory.GetFiles(DirText, "tmpscan*.jpeg");
 
             List<string> UnSortList = new List<string>(sa);
             List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
