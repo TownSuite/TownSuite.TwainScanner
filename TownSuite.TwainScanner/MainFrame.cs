@@ -35,6 +35,7 @@ namespace TownSuite.TwainScanner
         bool removeWia = true;
 #endif
         private string FileExtention;
+        private string imageExtension = "";
         private List<String> lstscansettings;
         private string UserTwainImageType;
         private string UserTwainScanner;
@@ -517,7 +518,7 @@ namespace TownSuite.TwainScanner
             ImageFile image = new ImageFile();
             ArrayList arryimage = new ArrayList();
 
-            string imageExtension = "";
+
 
             this.Invoke(new MethodInvoker(delegate ()
             {
@@ -558,7 +559,7 @@ namespace TownSuite.TwainScanner
                 Image resizedImg;
                 using (var img = (Image)arryimage[i])
                 {
-                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension, ImageFormat.Jpeg);
+                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Jpeg);
                     resizedImg = new Bitmap(img, new Size(180, 180));
                 }
 
@@ -654,14 +655,20 @@ namespace TownSuite.TwainScanner
             {
                 case "tiff":
                     FileExtention = ".tif";
+                    imageExtension = ".tif";
                     break;
                 case "png":
                     // PDFs will internally be png images
                     FileExtention = ".png";
+                    imageExtension = ".png";
                     break;
                 case "pdf":
+                    FileExtention = ".pdf";
+                    imageExtension = ".jpeg";
+                    break;
                 case "jpeg":
                     FileExtention = ".jpeg";
+                    imageExtension = ".jpeg";
                     break;
             }
 
@@ -690,15 +697,15 @@ namespace TownSuite.TwainScanner
                             switch (imageForat)
                             {
                                 case "tiff":
-                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Tiff);
+                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Tiff);
                                     break;
                                 case "png":
-                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Png);
+                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Png);
                                     break;
                                 case "pdf":
                                 case "jpeg":
                                     // pdf is just an import of a file.  Use jpg.
-                                    img.Save(DirText + @"\tmpScan" + picnumber.ToString() + "_" + i.ToString() + FileExtention, ImageFormat.Jpeg);
+                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Jpeg);
                                     break;
                             }
 
