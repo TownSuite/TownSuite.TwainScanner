@@ -587,10 +587,32 @@ namespace TownSuite.TwainScanner
                 newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                 newpic.Refresh();
                 newpic.DoubleClick += Newpic_DoubleClick;
+                newpic.MouseEnter += Newpic_MouseEnter;
+                newpic.MouseLeave += Newpic_MouseLeave;
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
             }
+        }
+
+        private void Newpic_MouseLeave(object sender, EventArgs e)
+        {
+            if (sender is PictureBox == false)
+            {
+                return;
+            }
+            var pb = sender as PictureBox;
+            pb.BorderStyle = BorderStyle.None;
+        }
+
+        private void Newpic_MouseEnter(object sender, EventArgs e)
+        {
+            if (sender is PictureBox == false)
+            {
+                return;
+            }
+            var pb = sender as PictureBox;
+            pb.BorderStyle = BorderStyle.FixedSingle;
         }
 
         private void Newpic_DoubleClick(object sender, EventArgs e)
@@ -753,6 +775,8 @@ namespace TownSuite.TwainScanner
                         newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                         newpic.Refresh();
                         newpic.DoubleClick += Newpic_DoubleClick;
+                        newpic.MouseEnter += Newpic_MouseEnter;
+                        newpic.MouseLeave += Newpic_MouseLeave;
                         flowLayoutPanel1.Controls.Add(newpic);
                         newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
