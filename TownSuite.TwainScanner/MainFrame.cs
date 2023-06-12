@@ -561,7 +561,7 @@ namespace TownSuite.TwainScanner
                 using (var img = (Image)arryimage[i])
                 {
 
-                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension);
+                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
                     newpic.Tag = origPath;
                     switch (wiaImageFormat)
                     {
@@ -748,7 +748,7 @@ namespace TownSuite.TwainScanner
                         picnumber += 1;
                         var newpic = new PictureBox();
                         Image resizedImg;
-                        string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension);
+                        string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
                         newpic.Tag = origPath;
                         using (var img = this._twain.GetImage(i))
                         {
