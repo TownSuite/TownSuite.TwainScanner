@@ -323,16 +323,16 @@ namespace TownSuite.TwainScanner
         {
             var devicescanner = sourceListBox.SelectedItem as WIAScanner.Scanner;
             WIA.Device device = null;
-
+            
             DeviceInfo deviceproInfo;
             deviceproInfo = deviceManager.DeviceInfos[sourceListBox.SelectedIndex + 1];
 
             Thread t = new Thread(() => { device = DoSomething(deviceproInfo); });
             t.Start();
-            if (!t.Join(TimeSpan.FromSeconds(2)))
+            if (!t.Join(TimeSpan.FromSeconds(5)))
             {
                 t.Abort();
-                throw new Exception("More than 2 secs.");
+                throw new Exception("More than 5 secs.");
             }
 
 
@@ -519,37 +519,38 @@ namespace TownSuite.TwainScanner
             ArrayList arryimage = new ArrayList();
 
 
-
+            string wiaImageFormat="jpeg";
+     
+            wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
             this.Invoke(new MethodInvoker(delegate ()
             {
-                string wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
                 switch (wiaImageFormat)
-                {
+            {
 
-                    case "tiff":
-                        arryimage = device.ScanTIFF();
-                        imageExtension = ".tif";
-                        FileExtention = imageExtension;
-                        break;
+                case "tiff":
+                    arryimage = device.ScanTIFF();
+                    imageExtension = ".tif";
+                    FileExtention = imageExtension;
+                    break;
 
-                    case "pdf":
-                        arryimage = device.ScanJPEG();
-                        imageExtension = ".jpeg";
-                        FileExtention = ".pdf";
-                        break;
+                case "pdf":
+                    arryimage = device.ScanJPEG();
+                    imageExtension = ".jpeg";
+                    FileExtention = ".pdf";
+                    break;
 
-                    case "png":
-                        arryimage = device.ScanPNG();
-                        imageExtension = ".png";
-                        FileExtention = imageExtension;
-                        break;
+                case "png":
+                    arryimage = device.ScanPNG();
+                    imageExtension = ".png";
+                    FileExtention = imageExtension;
+                    break;
 
-                    case "jpeg":
-                        arryimage = device.ScanJPEG();
-                        imageExtension = ".jpeg";
-                        FileExtention = imageExtension;
-                        break;
-                }
+                case "jpeg":
+                    arryimage = device.ScanJPEG();
+                    imageExtension = ".jpeg";
+                    FileExtention = imageExtension;
+                    break;
+            }
             }));
 
             for (int i = 0; i <= arryimage.Count - 1; i += 1)
@@ -559,16 +560,49 @@ namespace TownSuite.TwainScanner
                 Image resizedImg;
                 using (var img = (Image)arryimage[i])
                 {
-                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Jpeg);
+
+                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension);
+                    newpic.Tag = origPath;
+                    switch (wiaImageFormat)
+                    {
+                        case "tiff":
+                            img.Save(origPath, ImageFormat.Tiff);
+                            break;
+                        case "png":
+                            img.Save(origPath, ImageFormat.Png);
+                            break;
+                        case "pdf":
+                        case "jpeg":
+                        default:
+                            // pdf is just an import of a file.  Use jpg.
+                            img.Save(origPath, ImageFormat.Jpeg);
+                            break;
+                    }
+
+                   
                     resizedImg = new Bitmap(img, new Size(180, 180));
                 }
 
                 newpic.Image = resizedImg;
                 newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                 newpic.Refresh();
+                newpic.DoubleClick += Newpic_DoubleClick;
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
+            }
+        }
+
+        private void Newpic_DoubleClick(object sender, EventArgs e)
+        {
+            if (sender is PictureBox == false)
+            {
+                return;
+            }
+            var pb = sender as PictureBox;
+            if (System.IO.File.Exists(pb.Tag?.ToString() ?? ""))
+            {
+                System.Diagnostics.Process.Start(pb.Tag.ToString());
             }
         }
 #endif
@@ -692,20 +726,23 @@ namespace TownSuite.TwainScanner
                         picnumber += 1;
                         var newpic = new PictureBox();
                         Image resizedImg;
+                        string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension);
+                        newpic.Tag = origPath;
                         using (var img = this._twain.GetImage(i))
                         {
                             switch (imageForat)
                             {
                                 case "tiff":
-                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Tiff);
+                                    img.Save(origPath, ImageFormat.Tiff);
                                     break;
                                 case "png":
-                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Png);
+                                    img.Save(origPath, ImageFormat.Png);
                                     break;
                                 case "pdf":
                                 case "jpeg":
+                                default:
                                     // pdf is just an import of a file.  Use jpg.
-                                    img.Save(Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + imageExtension), ImageFormat.Jpeg);
+                                    img.Save(origPath, ImageFormat.Jpeg);
                                     break;
                             }
 
@@ -715,6 +752,7 @@ namespace TownSuite.TwainScanner
                         newpic.Image = resizedImg;
                         newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
                         newpic.Refresh();
+                        newpic.DoubleClick += Newpic_DoubleClick;
                         flowLayoutPanel1.Controls.Add(newpic);
                         newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
