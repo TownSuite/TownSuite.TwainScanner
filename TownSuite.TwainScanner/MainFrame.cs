@@ -222,13 +222,13 @@ namespace TownSuite.TwainScanner
         #region WIA Drivers
 
 
-        private async void btnWIAScan_Click(object sender, EventArgs e)
+        private void btnWIAScan_Click(object sender, EventArgs e)
         {
 #if INCLUDE_TELERIK
             //Start Scanning using a Thread
             //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
 
-            await StartWIAScanning();
+            StartWIAScanning();
 #endif
 
         }
@@ -488,7 +488,7 @@ namespace TownSuite.TwainScanner
             Console.WriteLine("Image succesfully scanned");
         }
 
-        public async Task StartWIAScanning()
+        public void StartWIAScanning()
         {
             WIAScanner.Scanner device = null;
 
@@ -616,18 +616,15 @@ namespace TownSuite.TwainScanner
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
-                await RunOcr(newpic, origPath, checkboxWiaOcr.Checked);
+                RunOcr(newpic, origPath, checkboxWiaOcr.Checked);
             }
         }
 
-        private async Task RunOcr(PictureBox newpic, string origPath, bool ocrCheckboxChecked)
+        private void RunOcr(PictureBox newpic, string origPath, bool ocrCheckboxChecked)
         {
             if (ocr.Enabled && ocrCheckboxChecked)
             {
-                string text = await ocr.GetText(origPath);
-                var tt = new ToolTip();
-                tt.SetToolTip(newpic, text);
-                System.IO.File.WriteAllText($"{origPath}.txt", text);
+                ocr.GetText(origPath, newpic);
             }
         }
 
@@ -709,7 +706,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        private async void mnuAcquire_Click(object sender, EventArgs e)
+        private void mnuAcquire_Click(object sender, EventArgs e)
         {
             try
             {
@@ -717,7 +714,7 @@ namespace TownSuite.TwainScanner
                 {
 #if INCLUDE_TELERIK
                     case "tpWIAScan":
-                        await StartWIAScanning();
+                        StartWIAScanning();
                         break;
 #endif
                     case "tpTWAINScan":
@@ -769,7 +766,7 @@ namespace TownSuite.TwainScanner
 
 
         int picnumber = 0;
-        private async void _twain_AcquireCompleted(object sender, EventArgs e)
+        private void _twain_AcquireCompleted(object sender, EventArgs e)
         {
             try
             {
@@ -818,7 +815,7 @@ namespace TownSuite.TwainScanner
 
                         // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
 
-                        await RunOcr(newpic, origPath, checkBoxTwainOcr.Checked);
+                        RunOcr(newpic, origPath, checkBoxTwainOcr.Checked);
                     }
 
                 }
