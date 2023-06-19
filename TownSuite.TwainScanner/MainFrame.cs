@@ -23,11 +23,11 @@ using System.Text.RegularExpressions;
 
 namespace TownSuite.TwainScanner
 {
-    public partial class MainFrame : Form
+    internal partial class MainFrame : Form
     {
         private Twain32 _twain;
 
-        string DirText;
+        readonly string DirText;
 #if INCLUDE_TELERIK
         private DeviceManager deviceManager;
         bool removeWia = false;
@@ -39,10 +39,13 @@ namespace TownSuite.TwainScanner
         private List<String> lstscansettings;
         private string UserTwainImageType;
         private string UserTwainScanner;
+        readonly Ocr ocr;
 
-        public MainFrame(List<String> lstScanSet)
+        public MainFrame(List<String> lstScanSet, Ocr ocr, string workingDir)
         {
             lstscansettings = lstScanSet;
+            this.ocr = ocr;
+            DirText = workingDir;
             InitializeComponent();
         }
 
@@ -53,6 +56,11 @@ namespace TownSuite.TwainScanner
 
         private void MainFrame_Load(object sender, EventArgs e)
         {
+            if (!System.IO.Directory.Exists(DirText))
+            {
+                System.IO.Directory.CreateDirectory(DirText);
+            }
+
             for (int i = 0; i <= lstscansettings.Count - 1; i++)
             {
                 switch (i)
@@ -97,9 +105,6 @@ namespace TownSuite.TwainScanner
                 MessageBox.Show(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), "TownSuite Scanner Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-
-            DirText = Environment.GetEnvironmentVariable("TMP");
-
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
@@ -125,17 +130,36 @@ namespace TownSuite.TwainScanner
             cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
 
 #endif
+
+            checkBoxTwainOcr.Visible = ocr.Enabled;
+            checkboxWiaOcr.Visible = ocr.Enabled;
         }
 
         #region Delete Temporary Files
 
         private void DeleteFiles()
         {
-            LoopFiles("tmpscan*.bmp");
-            LoopFiles("tmpscan*.jpeg");
-            LoopFiles("tmpscan*.tif");
-            LoopFiles("tmpscan*.png");
-            LoopFiles("tmpscan*.pdf");
+
+            if (string.Equals(DirText, System.IO.Path.Combine(Environment.GetEnvironmentVariable("TMP"), "TownSuite", "TwainScanner"), 
+                StringComparison.InvariantCultureIgnoreCase))
+            {
+                // using a custom folder.   Delete everything.
+                LoopFiles("*.bmp");
+                LoopFiles("*.jpeg");
+                LoopFiles("*.tif");
+                LoopFiles("*.png");
+                LoopFiles("*.pdf");
+                LoopFiles("*.txt");
+            }
+            else
+            {
+                LoopFiles("tmpscan*.bmp");
+                LoopFiles("tmpscan*.jpeg");
+                LoopFiles("tmpscan*.tif");
+                LoopFiles("tmpscan*.png");
+                LoopFiles("tmpscan*.pdf");
+                LoopFiles("tmpscan*.txt");
+            }
         }
 
         private void LoopFiles(string fileext)
@@ -198,13 +222,13 @@ namespace TownSuite.TwainScanner
         #region WIA Drivers
 
 
-        private void btnWIAScan_Click(object sender, EventArgs e)
+        private async void btnWIAScan_Click(object sender, EventArgs e)
         {
 #if INCLUDE_TELERIK
             //Start Scanning using a Thread
             //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
 
-            StartWIAScanning();
+            await StartWIAScanning();
 #endif
 
         }
@@ -464,7 +488,7 @@ namespace TownSuite.TwainScanner
             Console.WriteLine("Image succesfully scanned");
         }
 
-        public void StartWIAScanning()
+        public async Task StartWIAScanning()
         {
             WIAScanner.Scanner device = null;
 
@@ -558,10 +582,10 @@ namespace TownSuite.TwainScanner
                 picnumber += 1;
                 var newpic = new PictureBox();
                 Image resizedImg;
+                string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
+
                 using (var img = (Image)arryimage[i])
                 {
-
-                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
                     newpic.Tag = origPath;
                     switch (wiaImageFormat)
                     {
@@ -579,7 +603,7 @@ namespace TownSuite.TwainScanner
                             break;
                     }
 
-                   
+
                     resizedImg = new Bitmap(img, new Size(180, 180));
                 }
 
@@ -592,6 +616,18 @@ namespace TownSuite.TwainScanner
                 flowLayoutPanel1.Controls.Add(newpic);
                 newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
+                await RunOcr(newpic, origPath, checkboxWiaOcr.Checked);
+            }
+        }
+
+        private async Task RunOcr(PictureBox newpic, string origPath, bool ocrCheckboxChecked)
+        {
+            if (ocr.Enabled && ocrCheckboxChecked)
+            {
+                string text = await ocr.GetText(origPath);
+                var tt = new ToolTip();
+                tt.SetToolTip(newpic, text);
+                System.IO.File.WriteAllText($"{origPath}.txt", text);
             }
         }
 
@@ -673,7 +709,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        private void mnuAcquire_Click(object sender, EventArgs e)
+        private async void mnuAcquire_Click(object sender, EventArgs e)
         {
             try
             {
@@ -681,7 +717,7 @@ namespace TownSuite.TwainScanner
                 {
 #if INCLUDE_TELERIK
                     case "tpWIAScan":
-                        StartWIAScanning();
+                        await StartWIAScanning();
                         break;
 #endif
                     case "tpTWAINScan":
@@ -733,7 +769,7 @@ namespace TownSuite.TwainScanner
 
 
         int picnumber = 0;
-        private void _twain_AcquireCompleted(object sender, EventArgs e)
+        private async void _twain_AcquireCompleted(object sender, EventArgs e)
         {
             try
             {
@@ -781,6 +817,8 @@ namespace TownSuite.TwainScanner
                         newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
 
                         // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
+
+                        await RunOcr(newpic, origPath, checkBoxTwainOcr.Checked);
                     }
 
                 }

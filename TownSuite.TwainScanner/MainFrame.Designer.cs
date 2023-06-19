@@ -48,11 +48,13 @@
             this.btnWIAScan = new System.Windows.Forms.Button();
             this.tabScanDrivers = new System.Windows.Forms.TabControl();
             this.tpTWAINScan = new System.Windows.Forms.TabPage();
+            this.checkBoxTwainOcr = new System.Windows.Forms.CheckBox();
             this.buttonTwainScan = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbTwainImageType = new System.Windows.Forms.ComboBox();
             this.sourceTwianListBox = new System.Windows.Forms.ListBox();
             this.tpWIAScan = new System.Windows.Forms.TabPage();
+            this.checkboxWiaOcr = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.tabScanDrivers.SuspendLayout();
             this.tpTWAINScan.SuspendLayout();
@@ -205,7 +207,6 @@
             this.btnWIAScan.TabIndex = 6;
             this.btnWIAScan.Text = "WIA Scan";
             this.btnWIAScan.UseVisualStyleBackColor = true;
-            this.btnWIAScan.Visible = false;
             this.btnWIAScan.Click += new System.EventHandler(this.btnWIAScan_Click);
             // 
             // tabScanDrivers
@@ -220,6 +221,7 @@
             // 
             // tpTWAINScan
             // 
+            this.tpTWAINScan.Controls.Add(this.checkBoxTwainOcr);
             this.tpTWAINScan.Controls.Add(this.buttonTwainScan);
             this.tpTWAINScan.Controls.Add(this.label1);
             this.tpTWAINScan.Controls.Add(this.cmbTwainImageType);
@@ -232,9 +234,20 @@
             this.tpTWAINScan.Text = "TWAIN";
             this.tpTWAINScan.UseVisualStyleBackColor = true;
             // 
+            // checkBoxTwainOcr
+            // 
+            this.checkBoxTwainOcr.AutoSize = true;
+            this.checkBoxTwainOcr.Location = new System.Drawing.Point(10, 229);
+            this.checkBoxTwainOcr.Name = "checkBoxTwainOcr";
+            this.checkBoxTwainOcr.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxTwainOcr.TabIndex = 12;
+            this.checkBoxTwainOcr.Text = "OCR";
+            this.checkBoxTwainOcr.UseVisualStyleBackColor = true;
+            this.checkBoxTwainOcr.Visible = false;
+            // 
             // buttonTwainScan
             // 
-            this.buttonTwainScan.Location = new System.Drawing.Point(45, 225);
+            this.buttonTwainScan.Location = new System.Drawing.Point(72, 225);
             this.buttonTwainScan.Name = "buttonTwainScan";
             this.buttonTwainScan.Size = new System.Drawing.Size(75, 23);
             this.buttonTwainScan.TabIndex = 11;
@@ -262,7 +275,7 @@
             "PNG"});
             this.cmbTwainImageType.Location = new System.Drawing.Point(10, 198);
             this.cmbTwainImageType.Name = "cmbTwainImageType";
-            this.cmbTwainImageType.Size = new System.Drawing.Size(110, 21);
+            this.cmbTwainImageType.Size = new System.Drawing.Size(137, 21);
             this.cmbTwainImageType.TabIndex = 9;
             // 
             // sourceTwianListBox
@@ -276,6 +289,7 @@
             // 
             // tpWIAScan
             // 
+            this.tpWIAScan.Controls.Add(this.checkboxWiaOcr);
             this.tpWIAScan.Controls.Add(this.sourceListBox);
             this.tpWIAScan.Controls.Add(this.btnWIAScan);
             this.tpWIAScan.Controls.Add(this.groupBox1);
@@ -286,6 +300,17 @@
             this.tpWIAScan.TabIndex = 0;
             this.tpWIAScan.Text = "WIA";
             this.tpWIAScan.UseVisualStyleBackColor = true;
+            // 
+            // checkboxWiaOcr
+            // 
+            this.checkboxWiaOcr.AutoSize = true;
+            this.checkboxWiaOcr.Location = new System.Drawing.Point(16, 340);
+            this.checkboxWiaOcr.Name = "checkboxWiaOcr";
+            this.checkboxWiaOcr.Size = new System.Drawing.Size(49, 17);
+            this.checkboxWiaOcr.TabIndex = 7;
+            this.checkboxWiaOcr.Text = "OCR";
+            this.checkboxWiaOcr.UseVisualStyleBackColor = true;
+            this.checkboxWiaOcr.Visible = false;
             // 
             // MainFrame
             // 
@@ -305,6 +330,7 @@
             this.tpTWAINScan.ResumeLayout(false);
             this.tpTWAINScan.PerformLayout();
             this.tpWIAScan.ResumeLayout(false);
+            this.tpWIAScan.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -334,5 +360,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbTwainImageType;
         private System.Windows.Forms.Button buttonTwainScan;
+        private System.Windows.Forms.CheckBox checkBoxTwainOcr;
+        private System.Windows.Forms.CheckBox checkboxWiaOcr;
     }
 }
