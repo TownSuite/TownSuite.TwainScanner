@@ -619,6 +619,9 @@ namespace TownSuite.TwainScanner
                 RunOcr(newpic, origPath, checkboxWiaOcr.Checked);
             }
         }
+ 
+#endif
+        #endregion
 
         private void RunOcr(PictureBox newpic, string origPath, bool ocrCheckboxChecked)
         {
@@ -660,8 +663,6 @@ namespace TownSuite.TwainScanner
                 System.Diagnostics.Process.Start(pb.Tag.ToString());
             }
         }
-#endif
-        #endregion
 
         private void GetColors()
         {
