@@ -627,7 +627,7 @@ namespace TownSuite.TwainScanner
         {
             if (ocr.Enabled && ocrCheckboxChecked)
             {
-                ocr.GetText(origPath, newpic);
+                ocr.GetText(origPath, newpic, toolStripProgressBar1, toolStripStatusLabel1);
             }
         }
 

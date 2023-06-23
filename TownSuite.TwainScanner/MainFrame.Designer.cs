@@ -55,10 +55,14 @@
             this.sourceTwianListBox = new System.Windows.Forms.ListBox();
             this.tpWIAScan = new System.Windows.Forms.TabPage();
             this.checkboxWiaOcr = new System.Windows.Forms.CheckBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1.SuspendLayout();
             this.tabScanDrivers.SuspendLayout();
             this.tpTWAINScan.SuspendLayout();
             this.tpWIAScan.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainMenu1
@@ -115,7 +119,7 @@
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(186, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(586, 494);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(586, 474);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // sourceListBox
@@ -216,7 +220,7 @@
             this.tabScanDrivers.Location = new System.Drawing.Point(6, 2);
             this.tabScanDrivers.Name = "tabScanDrivers";
             this.tabScanDrivers.SelectedIndex = 0;
-            this.tabScanDrivers.Size = new System.Drawing.Size(174, 488);
+            this.tabScanDrivers.Size = new System.Drawing.Size(174, 472);
             this.tabScanDrivers.TabIndex = 7;
             // 
             // tpTWAINScan
@@ -229,7 +233,7 @@
             this.tpTWAINScan.Location = new System.Drawing.Point(4, 22);
             this.tpTWAINScan.Name = "tpTWAINScan";
             this.tpTWAINScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTWAINScan.Size = new System.Drawing.Size(166, 462);
+            this.tpTWAINScan.Size = new System.Drawing.Size(166, 446);
             this.tpTWAINScan.TabIndex = 1;
             this.tpTWAINScan.Text = "TWAIN";
             this.tpTWAINScan.UseVisualStyleBackColor = true;
@@ -312,11 +316,36 @@
             this.checkboxWiaOcr.UseVisualStyleBackColor = true;
             this.checkboxWiaOcr.Visible = false;
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 477);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(780, 22);
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Visible = false;
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(93, 17);
+            this.toolStripStatusLabel1.Text = "processing ocr...";
+            this.toolStripStatusLabel1.Visible = false;
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(780, 499);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabScanDrivers);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Menu = this.MainMenu1;
@@ -331,7 +360,10 @@
             this.tpTWAINScan.PerformLayout();
             this.tpWIAScan.ResumeLayout(false);
             this.tpWIAScan.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -362,5 +394,8 @@
         private System.Windows.Forms.Button buttonTwainScan;
         private System.Windows.Forms.CheckBox checkBoxTwainOcr;
         private System.Windows.Forms.CheckBox checkboxWiaOcr;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

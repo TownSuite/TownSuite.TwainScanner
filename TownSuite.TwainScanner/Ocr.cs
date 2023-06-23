@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Forms;
 
 namespace TownSuite.TwainScanner
@@ -27,12 +28,23 @@ namespace TownSuite.TwainScanner
             _bearerToken = bearerToken;
         }
 
-        public void GetText(string filepath, PictureBox newpic)
+        public void GetText(string filepath,
+            PictureBox newpic,
+            ToolStripProgressBar toolStrip,
+            ToolStripStatusLabel statusLabel)
         {
             QueueThread(async () =>
             {
                 try
                 {
+                    newpic.Invoke((MethodInvoker)delegate
+                    {
+                        // Running on the UI thread
+                        toolStrip.Style = ProgressBarStyle.Marquee;
+                        toolStrip.Visible = true;
+                        statusLabel.Visible = true;
+                    });
+
                     var client = new WebClient();
                     client.Headers.Add("Authorization", $"Bearer {_bearerToken}");
                     client.Headers.Add("User-Agent", "TownSuiteScanner/1.0 Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/113.0");
@@ -44,7 +56,27 @@ namespace TownSuite.TwainScanner
                     }
 #endif
 
-                    byte[] byteImage = System.IO.File.ReadAllBytes(filepath);
+                    byte[] byteImage;
+                    using (var bmp = Bitmap.FromFile(filepath))
+                    {
+                        // sheet of paper hack 2550 pixels wide (300 pixels/inch * 8.5 inches) and. 3300 pixels tall (300 pixels/inch * 11 inches)
+                        if (bmp.Width > 2550 && bmp.Height > 3300)
+                        {
+                            using (var resizedImg = new Bitmap(bmp, new Size(2550, 3300)))
+                            {
+                                byteImage = ImageToByte(resizedImg);
+                            }
+                        }
+                        else if (!string.Equals(System.IO.Path.GetExtension(filepath), ".jpg", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            byteImage = ImageToByte(bmp);
+                        }
+                        else
+                        {
+                            byteImage = System.IO.File.ReadAllBytes(filepath);
+                        }
+                    }
+;
                     var output = await client.UploadDataTaskAsync(_apiUrl, byteImage);
 
                     string text = System.Text.Encoding.UTF8.GetString(output);
@@ -54,8 +86,11 @@ namespace TownSuite.TwainScanner
                         var tt = new ToolTip();
                         tt.SetToolTip(newpic, text);
                         System.IO.File.WriteAllText($"{filepath}.txt", text);
+                        newpic.BackColor = Color.Gray;
+                        toolStrip.Style = ProgressBarStyle.Blocks;
+                        toolStrip.Visible = false;
+                        statusLabel.Visible = false;
                     });
-
                 }
                 catch (Exception ex)
                 {
@@ -66,6 +101,15 @@ namespace TownSuite.TwainScanner
                 }
             });
 
+        }
+
+        public static byte[] ImageToByte(Image img)
+        {
+            using (var stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return stream.ToArray();
+            }
         }
 
         private ConcurrentQueue<Action> _theQueueAction = new ConcurrentQueue<Action>();
@@ -99,6 +143,7 @@ namespace TownSuite.TwainScanner
                     if (totalTimeEmpty >= twoSecond)
                     {
                         threadStarted = false;
+
                         return;
                     }
                 }
