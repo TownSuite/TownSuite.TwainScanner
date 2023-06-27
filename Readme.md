@@ -4,3 +4,37 @@ You can use this library in your programs written in any programming languages c
 
 
 Fork of https://sarafftwain.codeplex.com/
+
+# Usage
+
+```powershell
+.\TownSuite.TwainScanner.exe
+```
+
+Available output filetypes.
+
+* PDF
+* PNG
+* JPG
+* TIFF
+
+Set a default selected output filetype and scanner.  
+
+```powershell
+.\TownSuite.TwainScanner.exe -scansettings "JPG \"Brother DS-620\"" 
+```
+
+
+## Enable ocr
+The following example enables ocr.   To use ocr the following application arguments must be set on startup.
+
+* -enableocr 
+* -ocrapiurl "PLACEHOLDER" 
+* -ocrbearertoken "PLACEHOLDER" 
+* Optionally a working directory for temp files can be set
+  * -tempdir "PLACEHOLDER"
+
+```powershell
+TownSuite.TwainScanner.exe -enableocr -ocrapiurl "PLACEHOLDER" -ocrbearertoken "PLACEHOLDER" -tempdir "PLACEHOLDER"
+```
+
