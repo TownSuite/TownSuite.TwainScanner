@@ -233,9 +233,6 @@ namespace WIAScanner
 
             try
             {
-                double pval = 100;
-                
-
                 AdjustScannerSettings(item, resolution, 0, 0, width_pixel, height_pixel, 0, 0, color_mode);
 
                 //SetDeviceProperty(device, 3097, pval);

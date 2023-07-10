@@ -3,7 +3,7 @@
 	  <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
 	  <OutputType>WinExe</OutputType>
 	  <RootNamespace>TownSuite.TwainScanner</RootNamespace>
-	  <TargetFramework>net462</TargetFramework>
+	  <TargetFramework>net48</TargetFramework>
 	  <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
 	  <AssemblyName>TownSuite.TwainScanner</AssemblyName>
 	  <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>

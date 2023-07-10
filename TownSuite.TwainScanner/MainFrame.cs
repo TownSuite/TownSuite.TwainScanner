@@ -346,6 +346,11 @@ namespace TownSuite.TwainScanner
         public void LoadScanPropertyValues() // async Task
         {
             var devicescanner = sourceListBox.SelectedItem as WIAScanner.Scanner;
+            if (devicescanner == null)
+            {
+                return;
+            }
+
             WIA.Device device = null;
             
             DeviceInfo deviceproInfo;
@@ -833,11 +838,10 @@ namespace TownSuite.TwainScanner
         {
             try
             {
-                string twainImageFormat = GetSelectedTwainImageFormat().ToLower().Trim();
-                string wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
                 switch (tabScanDrivers.SelectedTab.Name)
                 {
                     case "tpTWAINScan":
+                        string twainImageFormat = GetSelectedTwainImageFormat().ToLower().Trim();
                         switch (twainImageFormat)
                         {
                             case "tiff":
@@ -859,6 +863,7 @@ namespace TownSuite.TwainScanner
                         }
                         break;
                     case "tpWIAScan":
+                        string wiaImageFormat = GetSelectedWiaImageFormat().ToLower().Trim();
                         switch (wiaImageFormat)
                         {
                             case "tiff":
@@ -1211,6 +1216,11 @@ namespace TownSuite.TwainScanner
             {
                 MessageBox.Show(ex.Message, "Scanning Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void MenuItem1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
