@@ -110,6 +110,7 @@
             // 
             this.MenuItem1.Index = 4;
             this.MenuItem1.Text = "Window";
+            this.MenuItem1.Click += new System.EventHandler(this.MenuItem1_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -300,7 +301,7 @@
             this.tpWIAScan.Location = new System.Drawing.Point(4, 22);
             this.tpWIAScan.Name = "tpWIAScan";
             this.tpWIAScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpWIAScan.Size = new System.Drawing.Size(166, 462);
+            this.tpWIAScan.Size = new System.Drawing.Size(166, 446);
             this.tpWIAScan.TabIndex = 0;
             this.tpWIAScan.Text = "WIA";
             this.tpWIAScan.UseVisualStyleBackColor = true;
