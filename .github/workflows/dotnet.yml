@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+      uses: microsoft/setup-msbuild@v1.1
     - name: Restore dependencies
       run: dotnet restore TownSuite.TwainScanner.sln
     - name: Build
