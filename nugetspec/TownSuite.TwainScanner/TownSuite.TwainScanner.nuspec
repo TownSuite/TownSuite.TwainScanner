@@ -2,25 +2,25 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TownSuite.TwainScanner</id>
-    <version>1.0.32</version>
+    <version>1.0.33</version>
     <authors>TownSuite.TwainScanner</authors>
     <description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</description>
     <copyright>Copyright © SARAFF 2011</copyright>
     <dependencies>
-      <group targetFramework=".NETFramework4.6.2">
+      <group targetFramework=".NETFramework4.8">
         <dependency id="Telerik.Windows.Documents.Fixed" version="2020.2.615" exclude="Build,Analyzers" />
         <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" />
         <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.3" /> <!-- See https://github.com/baseclass/Contrib.Nuget, nuget by default does not let output content --> 
       </group>
     </dependencies>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="PresentationFramework" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="System.Security" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.6.2" />
-      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.6.2" />
+      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="PresentationFramework" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="System.Security" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.8" />
+      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.8" />
     </frameworkAssemblies>
   </metadata>
 </package>
