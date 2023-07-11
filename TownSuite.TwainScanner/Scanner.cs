@@ -1,10 +1,6 @@
 ﻿#if INCLUDE_TELERIK
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using WIA;
 using System.Windows.Forms;
 using System.IO;
@@ -27,18 +23,11 @@ namespace WIAScanner
 
         public int brightness = 0;
         public int contrast = 0;
-        public WIA.Device deviceConn; 
+        //public Device deviceConn; 
 
         public Scanner(DeviceInfo deviceInfo)
         {
             this._deviceInfo = deviceInfo;
-        }
- 
-        public void ScannerProperties(DeviceInfo deviceproInfo)
-        {
-            var device = this._deviceInfo.Connect();
-            var item = device.Items[1];
-
         }
 
         /// <summary>
@@ -57,7 +46,6 @@ namespace WIAScanner
             var item = device.Items[1];
             ArrayList arrImages = new ArrayList();
                        
-
             try
             {
                 AdjustScannerSettings(item, resolution, 0, 0, width_pixel, height_pixel, 0, 0, color_mode);
@@ -107,10 +95,12 @@ namespace WIAScanner
                 if (errorCode ==  0x80210006)
                 {
                     MessageBox.Show("The scanner is busy or isn't ready");
-                }else if(errorCode == 0x80210064)
+                }
+                else if(errorCode == 0x80210064)
                 {
                     MessageBox.Show("The scanning process has been cancelled.");
-                }else
+                }
+                else
                 {
                     MessageBox.Show("A non catched error occurred, check the console","Error",MessageBoxButtons.OK);
                 }
@@ -193,27 +183,6 @@ namespace WIAScanner
 
             return new ArrayList();
         }
-
-        public static void SetDeviceProperty(Device device, int propertyId, object value)
-        {
-            Property property = FindProperty(device.Properties, propertyId);
-            if (property != null)
-                property.set_Value(ref value);
-        }
-
-        public static Property FindProperty(WIA.Properties properties, int propertyId)
-        {
-            foreach (Property property in properties)
-                if (property.PropertyID == propertyId)
-                    return property;
-            return null;
-        }
-
-        //private static void SetWIAPropertyValue(IProperties properties, object propName, object propValue)
-        //{
-        //    Property prop = properties.get_Item(ref propName);
-        //    prop.set_Value(ref propValue);
-        //}
 
         /// <summary>
         /// Scan a image with TIFF Format
@@ -342,15 +311,6 @@ namespace WIAScanner
         {
             Property prop = properties.get_Item(ref propName);
             prop.set_Value(ref propValue);
-        }
-
-        /// <summary>
-        /// Declare the ToString method
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return (string) this._deviceInfo.Properties["Name"].get_Value();
         }
          
     }
