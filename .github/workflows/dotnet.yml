@@ -1,0 +1,27 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Restore dependencies
+      run: dotnet restore TownSuite.TwainScanner.sln
+    - name: Build
+      run: msbuild TownSuite.TwainScanner.sln -property:Configuration=Release
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x64
+        path: |
+          TownSuite.TwainScanner/bin/Release
+        retention-days: 1
