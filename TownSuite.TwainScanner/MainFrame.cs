@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections;
 #if INCLUDE_TELERIK
 using WIA;
@@ -46,11 +43,6 @@ namespace TownSuite.TwainScanner
             lstscansettings = lstScanSet;
             this.ocr = ocr;
             DirText = workingDir;
-            InitializeComponent();
-        }
-
-        public MainFrame()
-        {
             InitializeComponent();
         }
 
@@ -166,13 +158,11 @@ namespace TownSuite.TwainScanner
         {
             //New Stuff
             //---------------------------
-            string[] sa = null;
-            string s = null;
-            sa = Directory.GetFiles(DirText, fileext);
+            string [] sa = Directory.GetFiles(DirText, fileext);
 
             foreach (string s_loopVariable in sa)
             {
-                s = s_loopVariable;
+                string s = s_loopVariable;
                 File.Delete(s);
             }
         }
@@ -221,7 +211,6 @@ namespace TownSuite.TwainScanner
 
         #region WIA Drivers
 
-
         private void btnWIAScan_Click(object sender, EventArgs e)
         {
 #if INCLUDE_TELERIK
@@ -260,79 +249,11 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        public WIA.Device LongRunningOperationAsync(DeviceInfo deviceproInfo, CancellationToken token, CancellationTokenSource tokenSource) // assume we return an int from this long running operation 
-        {
-            WIA.Device device = null;
-            while (!token.IsCancellationRequested)
-            {
-                device = deviceproInfo.Connect();
-                tokenSource.Cancel();
-                //await Task.Delay(1000); // 1 second delay
-            }
-            return device;
-        }
-
-        public WIA.Device ConnectWIA()
-        {
-            DeviceInfo deviceproInfo;
-            deviceproInfo = deviceManager.DeviceInfos[sourceListBox.SelectedIndex + 1];
-
-            WIA.Device device = null;
-
-            CancellationTokenSource tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(2));
-            tokenSource.CancelAfter(TimeSpan.FromSeconds(2));
-            CancellationToken token = tokenSource.Token;
-
-
-            //Func<Device> function = new Func<Device>(() => LongRunningOperationAsync(deviceproInfo, token, tokenSource));
-            /*
-            device = await Task.Run<Device>(() =>
-            {
-                device = LongRunningOperationAsync(deviceproInfo, token, tokenSource);
-                return device;
-            },token);
-
-            while (token.IsCancellationRequested == false && device == null)
-            { }
-            */
-
-            var t = Task.Run(() =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    //Do some work
-                    device = deviceproInfo.Connect();
-                    //tokenSource.Cancel();
-                }
-                return device;
-            }, token);
-
-            t.Wait(2);
-            tokenSource.Cancel();
-            //while (token.IsCancellationRequested  == false)
-            //{ }
-
-            //tokenSource.Cancel();
-            device = (Device)t.Result;
-
-            if (device == null) // t.IsCompleted == false
-            {
-                MessageBox.Show("Cannot Connect to the Device(may not valid WIA Driver) ",
-                                "Connect WIA Device",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return null;
-            }
-
-            return device;
-
-        }
-
         private WIA.Device DoSomething(DeviceInfo deviceproInfo)
         {
-            WIA.Device device = null;
             try
             {
-                device = deviceproInfo.Connect();
+                WIA.Device device = deviceproInfo.Connect();
                 return device;
             }
             catch (ThreadAbortException)
@@ -341,7 +262,6 @@ namespace TownSuite.TwainScanner
                 return null;
             }
         }
-
 
         public void LoadScanPropertyValues() // async Task
         {
@@ -417,8 +337,6 @@ namespace TownSuite.TwainScanner
 
         }
 
-
-
         public static float MmToInch(int mm)
         {
             return 0.03937f * mm;
@@ -436,8 +354,7 @@ namespace TownSuite.TwainScanner
             var device = deviceproInfo.Connect();
             var deviceitem = device.Items[1];
 
-            IProperties properties;
-            properties = deviceitem.Properties;
+            IProperties properties = deviceitem.Properties;
 
             SizeF documentSize = new SizeF(MmToInch(210), MmToInch(297));
 
@@ -486,11 +403,6 @@ namespace TownSuite.TwainScanner
                 }
             }
             return devicescanner;
-        }
-
-        private void TriggerScan()
-        {
-            Console.WriteLine("Image succesfully scanned");
         }
 
         public void StartWIAScanning()
@@ -685,33 +597,6 @@ namespace TownSuite.TwainScanner
             cmbColor.DataSource = dtColors;
         }
 
-        private void mnuSelect_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Environment.OSVersion.Platform == PlatformID.Unix)
-                {
-                    using (SelectSourceForm _dlg = new SelectSourceForm { Twain = this._twain })
-                    {
-                        if (_dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            this._twain.SetDefaultSource(_dlg.SourceIndex);
-                            this._twain.SourceIndex = _dlg.SourceIndex;
-                        }
-                    }
-                }
-                else
-                {
-                    //this._twain.CloseDataSource();
-                    //this._twain.SelectSource();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Selection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void mnuAcquire_Click(object sender, EventArgs e)
         {
             try
@@ -770,8 +655,8 @@ namespace TownSuite.TwainScanner
             this._twain.Acquire();
         }
 
-
         int picnumber = 0;
+
         private void _twain_AcquireCompleted(object sender, EventArgs e)
         {
             try
@@ -903,7 +788,6 @@ namespace TownSuite.TwainScanner
             }
         }
 
-
         #region Save Twian Files
 
         public static string PadNumbers(string input)
@@ -968,13 +852,9 @@ namespace TownSuite.TwainScanner
 
         #endregion
 
-
-
-
         private string SaveJPEG()
         {
-            string[] inputFiles = null;
-            inputFiles = Directory.GetFiles(DirText, "tmpscan*.jpeg");
+            string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.jpeg");
 
             // TODO: You may want to add input checking here.
             Image[] images = new Image[inputFiles.Length];
@@ -1077,8 +957,7 @@ namespace TownSuite.TwainScanner
 
         private string SavePNG()
         {
-            string[] inputFiles = null;
-            inputFiles = Directory.GetFiles(DirText, "tmpscan*.png");
+            string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.png");
 
             // TODO: You may want to add input checking here.
             Image[] images = new Image[inputFiles.Length];
@@ -1169,7 +1048,7 @@ namespace TownSuite.TwainScanner
 #endif
         #endregion
 
-        private void sourceListBox_SelectedValueChanged(object sender, EventArgs e)
+        private void SourceListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             //var t=Task.Run(() =>
             //{
@@ -1182,7 +1061,7 @@ namespace TownSuite.TwainScanner
 
         }
 
-        private void sourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
+        private void SourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
             this._twain.SourceIndex = sourceTwianListBox.SelectedIndex;
@@ -1206,7 +1085,7 @@ namespace TownSuite.TwainScanner
             return format;
         }
 
-        private void buttonTwainScan_Click(object sender, EventArgs e)
+        private void ButtonTwainScan_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1218,9 +1097,5 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        private void MenuItem1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

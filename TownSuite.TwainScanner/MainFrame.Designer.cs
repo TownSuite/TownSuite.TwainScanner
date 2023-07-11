@@ -32,10 +32,8 @@
             this.MainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuMainFile = new System.Windows.Forms.MenuItem();
             this.MenuItem5 = new System.Windows.Forms.MenuItem();
-            this.mnuSelect = new System.Windows.Forms.MenuItem();
             this.mnuAcquire = new System.Windows.Forms.MenuItem();
             this.mnuSave = new System.Windows.Forms.MenuItem();
-            this.MenuItem1 = new System.Windows.Forms.MenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.sourceListBox = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -69,10 +67,8 @@
             // 
             this.MainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuMainFile,
-            this.mnuSelect,
             this.mnuAcquire,
-            this.mnuSave,
-            this.MenuItem1});
+            this.mnuSave});
             // 
             // menuMainFile
             // 
@@ -88,29 +84,17 @@
             this.MenuItem5.Text = "Exit";
             this.MenuItem5.Click += new System.EventHandler(this.MenuItem5_Click);
             // 
-            // mnuSelect
-            // 
-            this.mnuSelect.Index = 1;
-            this.mnuSelect.Text = "Se&lect Scanner";
-            this.mnuSelect.Click += new System.EventHandler(this.mnuSelect_Click);
-            // 
             // mnuAcquire
             // 
-            this.mnuAcquire.Index = 2;
+            this.mnuAcquire.Index = 1;
             this.mnuAcquire.Text = "&Acquire";
             this.mnuAcquire.Click += new System.EventHandler(this.mnuAcquire_Click);
             // 
             // mnuSave
             // 
-            this.mnuSave.Index = 3;
+            this.mnuSave.Index = 2;
             this.mnuSave.Text = "&Save";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
-            // 
-            // MenuItem1
-            // 
-            this.MenuItem1.Index = 4;
-            this.MenuItem1.Text = "Window";
-            this.MenuItem1.Click += new System.EventHandler(this.MenuItem1_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -130,7 +114,7 @@
             this.sourceListBox.Name = "sourceListBox";
             this.sourceListBox.Size = new System.Drawing.Size(146, 160);
             this.sourceListBox.TabIndex = 2;
-            this.sourceListBox.SelectedValueChanged += new System.EventHandler(this.sourceListBox_SelectedValueChanged);
+            this.sourceListBox.SelectedValueChanged += new System.EventHandler(this.SourceListBox_SelectedValueChanged);
             // 
             // groupBox1
             // 
@@ -258,7 +242,7 @@
             this.buttonTwainScan.TabIndex = 11;
             this.buttonTwainScan.Text = "Scan";
             this.buttonTwainScan.UseVisualStyleBackColor = true;
-            this.buttonTwainScan.Click += new System.EventHandler(this.buttonTwainScan_Click);
+            this.buttonTwainScan.Click += new System.EventHandler(this.ButtonTwainScan_Click);
             // 
             // label1
             // 
@@ -290,7 +274,7 @@
             this.sourceTwianListBox.Name = "sourceTwianListBox";
             this.sourceTwianListBox.Size = new System.Drawing.Size(146, 160);
             this.sourceTwianListBox.TabIndex = 3;
-            this.sourceTwianListBox.SelectedValueChanged += new System.EventHandler(this.sourceTwianListBox_SelectedValueChanged);
+            this.sourceTwianListBox.SelectedValueChanged += new System.EventHandler(this.SourceTwianListBox_SelectedValueChanged);
             // 
             // tpWIAScan
             // 
@@ -372,10 +356,8 @@
         internal System.Windows.Forms.MainMenu MainMenu1;
         internal System.Windows.Forms.MenuItem menuMainFile;
         internal System.Windows.Forms.MenuItem MenuItem5;
-        internal System.Windows.Forms.MenuItem mnuSelect;
         internal System.Windows.Forms.MenuItem mnuAcquire;
         internal System.Windows.Forms.MenuItem mnuSave;
-        internal System.Windows.Forms.MenuItem MenuItem1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ListBox sourceListBox;
         private System.Windows.Forms.GroupBox groupBox1;
