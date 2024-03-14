@@ -8,7 +8,7 @@
     <copyright>Copyright © SARAFF 2011</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.8">
-        <dependency id="Telerik.Windows.Documents.Fixed" version="2020.2.615" exclude="Build,Analyzers" />
+        <dependency id="Telerik.Windows.Documents.Fixed" version="2023.3.1010" exclude="Build,Analyzers" />
         <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" />
         <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.3" /> <!-- See https://github.com/baseclass/Contrib.Nuget, nuget by default does not let output content --> 
       </group>
