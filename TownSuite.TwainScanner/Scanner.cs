@@ -30,6 +30,22 @@ namespace WIAScanner
             this._deviceInfo = deviceInfo;
         }
 
+        public override String ToString()
+        {
+            return scannerDispalyName(base.ToString(), _deviceInfo.DeviceID.ToString());
+        }
+
+        public String scannerDispalyName(String name, String id)
+        {
+            String trimmedName = name.Trim(new Char[] { ' ', '*', '.', '(', ')', '{', '}', '[', ']' });
+            int reduceIndex = trimmedName.IndexOf('.');
+            String reducedName = trimmedName.Substring(0, reduceIndex);
+            String trimmedID = id.Trim(new Char[] { ' ', '*', '.', '(', ')', '{', '}', '[', ']' });
+            String abrvID = trimmedID.Substring(0, 6);
+            String newName = abrvID;
+            return reducedName + ' ' + newName;
+        }
+
         /// <summary>
         /// Scan a image with PNG Format
         /// </summary>
