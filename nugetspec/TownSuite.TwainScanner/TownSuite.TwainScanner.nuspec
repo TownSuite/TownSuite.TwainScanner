@@ -2,15 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TownSuite.TwainScanner</id>
-    <version>1.0.33</version>
+    <version>1.0.35</version>
     <authors>TownSuite.TwainScanner</authors>
     <description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</description>
     <copyright>Copyright © SARAFF 2011</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.8">
         <dependency id="Telerik.Windows.Documents.Fixed" version="2023.3.1010" exclude="Build,Analyzers" />
-        <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" />
-        <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.3" /> <!-- See https://github.com/baseclass/Contrib.Nuget, nuget by default does not let output content --> 
+        <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" /> 
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -22,5 +21,12 @@
       <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.8" />
       <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.8" />
     </frameworkAssemblies>
+    <contentFiles>
+        <files include="**" buildAction="Content" copyToOutput="true" flatten="false" />
+    </contentFiles>
   </metadata>
+   <files>
+    <file src=".\content\**\*.*" target="contentFiles\any\any" /> <!-- this is for NuGet version 4.x + -->
+    <file src=".\content\**\*.*" target="content" /> <!-- this is for NuGet 3.x - 4.x -->
+  </files>
 </package>
