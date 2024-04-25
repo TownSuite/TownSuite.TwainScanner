@@ -131,27 +131,12 @@ namespace TownSuite.TwainScanner
 
         private void DeleteFiles()
         {
-
-            if (string.Equals(DirText, System.IO.Path.Combine(Environment.GetEnvironmentVariable("TMP"), "TownSuite", "TwainScanner"), 
-                StringComparison.InvariantCultureIgnoreCase))
-            {
-                // using a custom folder.   Delete everything.
-                LoopFiles("*.bmp");
-                LoopFiles("*.jpeg");
-                LoopFiles("*.tif");
-                LoopFiles("*.png");
-                LoopFiles("*.pdf");
-                LoopFiles("*.txt");
-            }
-            else
-            {
-                LoopFiles("tmpscan*.bmp");
-                LoopFiles("tmpscan*.jpeg");
-                LoopFiles("tmpscan*.tif");
-                LoopFiles("tmpscan*.png");
-                LoopFiles("tmpscan*.pdf");
-                LoopFiles("tmpscan*.txt");
-            }
+            LoopFiles("tmpScan.bmp");
+            LoopFiles("tmpScan.jpeg");
+            LoopFiles("tmpScan.tif");
+            LoopFiles("tmpScan.png");
+            LoopFiles("tmpScan.pdf");
+            LoopFiles("tmpScan.txt");
         }
 
         private void LoopFiles(string fileext)
