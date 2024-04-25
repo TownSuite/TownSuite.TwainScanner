@@ -131,12 +131,12 @@ namespace TownSuite.TwainScanner
 
         private void DeleteFiles()
         {
-            LoopFiles("tmpscan*.bmp");
-            LoopFiles("tmpscan*.jpeg");
-            LoopFiles("tmpscan*.tif");
-            LoopFiles("tmpscan*.png");
-            LoopFiles("tmpscan*.pdf");
-            LoopFiles("tmpscan*.txt");
+            LoopFiles("tmpScan.bmp");
+            LoopFiles("tmpScan.jpeg");
+            LoopFiles("tmpScan.tif");
+            LoopFiles("tmpScan.png");
+            LoopFiles("tmpScan.pdf");
+            LoopFiles("tmpScan.txt");
         }
 
         private void LoopFiles(string fileext)
