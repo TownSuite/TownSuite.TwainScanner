@@ -56,6 +56,8 @@ jobs:
       # If this step fails, then you should remove it and run the build manually (see below)
       #- name: Autobuild
       #  uses: github/codeql-action/autobuild@v3
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v1.1
       - name: Restore dependencies
         run: dotnet restore TownSuite.TwainScanner.sln
       - name: Build
