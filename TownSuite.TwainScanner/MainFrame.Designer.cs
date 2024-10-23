@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.MainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.menuMainFile = new System.Windows.Forms.MenuItem();
-            this.MenuItem5 = new System.Windows.Forms.MenuItem();
-            this.mnuAcquire = new System.Windows.Forms.MenuItem();
-            this.mnuSave = new System.Windows.Forms.MenuItem();
+            this.MainMenu1 = new System.Windows.Forms.MenuStrip();
+            this.menuMainFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAcquire = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.sourceListBox = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -65,34 +65,34 @@
             // 
             // MainMenu1
             // 
-            this.MainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripMenuItem[] {
             this.menuMainFile,
             this.mnuAcquire,
             this.mnuSave});
             // 
             // menuMainFile
             // 
-            this.menuMainFile.Index = 0;
-            this.menuMainFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuMainFile.MergeIndex = 0;
+            this.menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripMenuItem[] {
             this.MenuItem5});
-            this.menuMainFile.MergeType = System.Windows.Forms.MenuMerge.MergeItems;
+            this.menuMainFile.MergeAction = System.Windows.Forms.MergeAction.Insert;
             this.menuMainFile.Text = "File";
             // 
             // MenuItem5
             // 
-            this.MenuItem5.Index = 0;
+            this.MenuItem5.MergeIndex = 0;
             this.MenuItem5.Text = "Exit";
             this.MenuItem5.Click += new System.EventHandler(this.MenuItem5_Click);
             // 
             // mnuAcquire
             // 
-            this.mnuAcquire.Index = 1;
+            this.mnuAcquire.MergeIndex = 1;
             this.mnuAcquire.Text = "&Acquire";
             this.mnuAcquire.Click += new System.EventHandler(this.mnuAcquire_Click);
             // 
             // mnuSave
             // 
-            this.mnuSave.Index = 2;
+            this.mnuSave.MergeIndex = 2;
             this.mnuSave.Text = "&Save";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
             // 
@@ -330,10 +330,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(780, 499);
+            this.Controls.Add(this.MainMenu1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabScanDrivers);
             this.Controls.Add(this.flowLayoutPanel1);
-            this.Menu = this.MainMenu1;
+            this.MainMenuStrip = this.MainMenu1;
             this.Name = "MainFrame";
             this.Text = "Scan Document";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
@@ -353,11 +354,11 @@
         }
 
         #endregion
-        internal System.Windows.Forms.MainMenu MainMenu1;
-        internal System.Windows.Forms.MenuItem menuMainFile;
-        internal System.Windows.Forms.MenuItem MenuItem5;
-        internal System.Windows.Forms.MenuItem mnuAcquire;
-        internal System.Windows.Forms.MenuItem mnuSave;
+        internal System.Windows.Forms.MenuStrip MainMenu1;
+        internal System.Windows.Forms.ToolStripMenuItem menuMainFile;
+        internal System.Windows.Forms.ToolStripMenuItem MenuItem5;
+        internal System.Windows.Forms.ToolStripMenuItem mnuAcquire;
+        internal System.Windows.Forms.ToolStripMenuItem mnuSave;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ListBox sourceListBox;
         private System.Windows.Forms.GroupBox groupBox1;

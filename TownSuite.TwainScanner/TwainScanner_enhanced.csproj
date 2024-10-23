@@ -3,7 +3,7 @@
 	  <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
 	  <OutputType>WinExe</OutputType>
 	  <RootNamespace>TownSuite.TwainScanner</RootNamespace>
-	  <TargetFramework>net48</TargetFramework>
+	  <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
 	  <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
 	  <AssemblyName>TownSuite.TwainScanner</AssemblyName>
 	  <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
@@ -17,6 +17,8 @@
 	  <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
 	  <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 	  <Platforms>AnyCPU;x86</Platforms>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	<DefineConstants>INCLUDE_TELERIK</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>

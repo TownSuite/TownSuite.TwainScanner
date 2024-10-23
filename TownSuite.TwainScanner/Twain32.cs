@@ -84,7 +84,7 @@ namespace TownSuite.TwainScanner
                 case PlatformID.MacOSX:
                     throw new NotImplementedException();
                 default:
-                    Form _window=new Form();
+                    var _window=new System.Windows.Forms.Form();
                     this._components.Add(_window);
                     this._hwnd=_window.Handle;
                     break;
