@@ -1,20 +1,20 @@
-/* Этот файл является частью библиотеки Saraff.Twain.NET
- * © SARAFF SOFTWARE (Кирножицкий Андрей), 2011.
- * Saraff.Twain.NET - свободная программа: вы можете перераспространять ее и/или
- * изменять ее на условиях Меньшей Стандартной общественной лицензии GNU в том виде,
- * в каком она была опубликована Фондом свободного программного обеспечения;
- * либо версии 3 лицензии, либо (по вашему выбору) любой более поздней
- * версии.
- * Saraff.Twain.NET распространяется в надежде, что она будет полезной,
- * но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА
- * или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Меньшей Стандартной
- * общественной лицензии GNU.
- * Вы должны были получить копию Меньшей Стандартной общественной лицензии GNU
- * вместе с этой программой. Если это не так, см.
+п»ї/* пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Saraff.Twain.NET
+ * пїЅ SARAFF SOFTWARE (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ), 2011.
+ * Saraff.Twain.NET - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ/пїЅпїЅпїЅ
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GNU пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ,
+ * пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ;
+ * пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 3 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * пїЅпїЅпїЅпїЅпїЅпїЅ.
+ * Saraff.Twain.NET пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ,
+ * пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ; пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+ * пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GNU.
+ * пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ GNU
+ * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅ.
  * <http://www.gnu.org/licenses/>.)
  * 
  * This file is part of Saraff.Twain.NET.
- * © SARAFF SOFTWARE (Kirnazhytski Andrei), 2011.
+ * пїЅ SARAFF SOFTWARE (Kirnazhytski Andrei), 2011.
  * Saraff.Twain.NET is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -35,57 +35,90 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using TownSuite.TwainScanner;
 
 
 namespace TownSuite.TwainScanner
 {
 
-    internal sealed class DibToImage {
-        private const int BufferSize=256*1024; //256K
+    internal sealed class DibToImage : _ImageHandler
+    {
 
-        public static Stream WithStream(IntPtr dibPtr,IStreamProvider provider) {
-            Stream _stream=provider!=null?provider.GetStream():new MemoryStream();
-            BinaryWriter _writer=new BinaryWriter(_stream);
-
-            BITMAPINFOHEADER _bmi=(BITMAPINFOHEADER)Marshal.PtrToStructure(dibPtr,typeof(BITMAPINFOHEADER));
-
-            int _extra=0;
-            if(_bmi.biCompression==0) {
-                int _bytesPerRow=((_bmi.biWidth*_bmi.biBitCount)>>3);
-                _extra=Math.Max(_bmi.biHeight*(_bytesPerRow+((_bytesPerRow&0x3)!=0?4-_bytesPerRow&0x3:0))-_bmi.biSizeImage,0);
-            }
-
-            int _dibSize=_bmi.biSize+_bmi.biSizeImage+_extra+(_bmi.ClrUsed<<2);
+        /// <summary>
+        /// Convert a block of unmanaged memory to stream.
+        /// </summary>
+        /// <param name="ptr">The pointer to block of unmanaged memory.</param>
+        /// <param name="stream"></param>
+        protected override void PtrToStreamCore(IntPtr ptr, Stream stream)
+        {
+            BinaryWriter _writer = new BinaryWriter(stream);
 
             #region BITMAPFILEHEADER
 
+            BITMAPINFOHEADER _header = this.Header;
+
             _writer.Write((ushort)0x4d42);
-            _writer.Write(14+_dibSize);
+            _writer.Write(14 + this.GetSize());
             _writer.Write(0);
-            _writer.Write(14+_bmi.biSize+(_bmi.ClrUsed<<2));
+            _writer.Write(14 + _header.biSize + (_header.ClrUsed << 2));
 
             #endregion
 
             #region BITMAPINFO and pixel data
 
-            byte[] _buffer = new byte[DibToImage.BufferSize];
-            for(int _offset = 0, _len = 0; _offset<_dibSize; _offset+=_len) {
-                _len=Math.Min(DibToImage.BufferSize,_dibSize-_offset);
-                Marshal.Copy((IntPtr)(dibPtr.ToInt64()+_offset),_buffer,0,_len);
-                _writer.Write(_buffer,0,_len);
-            }
+            base.PtrToStreamCore(ptr, stream);
 
             #endregion
 
-            return _stream;
         }
 
-        public static Stream WithStream(IntPtr dibPtr) {
-            return DibToImage.WithStream(dibPtr,null);
+        /// <summary>
+        /// Gets the size of a image data.
+        /// </summary>
+        /// <returns>
+        /// Size of a image data.
+        /// </returns>
+        protected override int GetSize()
+        {
+            if (!this.HandlerState.ContainsKey("DIBSIZE"))
+            {
+                BITMAPINFOHEADER _header = this.Header;
+
+                int _extra = 0;
+                if (_header.biCompression == 0)
+                {
+                    int _bytesPerRow = ((_header.biWidth * _header.biBitCount) >> 3);
+                    _extra = Math.Max(_header.biHeight * (_bytesPerRow + ((_bytesPerRow & 0x3) != 0 ? 4 - _bytesPerRow & 0x3 : 0)) - _header.biSizeImage, 0);
+                }
+
+                this.HandlerState.Add("DIBSIZE", _header.biSize + _header.biSizeImage + _extra + (_header.ClrUsed << 2));
+            }
+            return (int)this.HandlerState["DIBSIZE"];
         }
 
-        [StructLayout(LayoutKind.Sequential,Pack=2)]
-        private class BITMAPINFOHEADER {
+        /// <summary>
+        /// Gets the size of the buffer.
+        /// </summary>
+        /// <value>
+        /// The size of the buffer.
+        /// </value>
+        protected override int BufferSize => 256 * 1024; //256K
+
+        private BITMAPINFOHEADER Header
+        {
+            get
+            {
+                if (!this.HandlerState.ContainsKey("BITMAPINFOHEADER"))
+                {
+                    this.HandlerState.Add("BITMAPINFOHEADER", Marshal.PtrToStructure(this.ImagePointer, typeof(BITMAPINFOHEADER)));
+                }
+                return this.HandlerState["BITMAPINFOHEADER"] as BITMAPINFOHEADER;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 2)]
+        private class BITMAPINFOHEADER
+        {
             public int biSize;
             public int biWidth;
             public int biHeight;
@@ -98,29 +131,9 @@ namespace TownSuite.TwainScanner
             public int biClrUsed;
             public int biClrImportant;
 
-            public int ClrUsed {
-                get {
-                    return this.IsRequiredCreateColorTable ? 1<<this.biBitCount : this.biClrUsed;
-                }
-            }
+            public int ClrUsed => this.IsRequiredCreateColorTable ? 1 << this.biBitCount : this.biClrUsed;
 
-            public bool IsRequiredCreateColorTable {
-                get {
-                    return this.biClrUsed==0&&this.biBitCount<=8;
-                }
-            }
+            public bool IsRequiredCreateColorTable => this.biClrUsed == 0 && this.biBitCount <= 8;
         }
-    }
-
-    /// <summary>
-    /// Provides instances of the <see cref="System.IO.Stream"/> for data writing.
-    /// </summary>
-    public interface IStreamProvider {
-
-        /// <summary>
-        /// Gets the stream.
-        /// </summary>
-        /// <returns>The stream.</returns>
-        Stream GetStream();
     }
 }

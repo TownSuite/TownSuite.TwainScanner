@@ -1064,7 +1064,10 @@ namespace TownSuite.TwainScanner
         private void SourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
-            this._twain.SourceIndex = sourceTwianListBox.SelectedIndex;
+            if (sourceTwianListBox.SelectedIndex >= 0)
+            {
+                this._twain.SourceIndex = sourceTwianListBox.SelectedIndex;
+            }
         }
 
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
