@@ -615,7 +615,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Scanning Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, I18N.GetString("ScanningError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1096,7 +1096,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Scanning Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, I18N.GetString("ScanningError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -240,7 +240,7 @@
             this.buttonTwainScan.Name = "buttonTwainScan";
             this.buttonTwainScan.Size = new System.Drawing.Size(75, 23);
             this.buttonTwainScan.TabIndex = 11;
-            this.buttonTwainScan.Text = "Scan";
+            this.buttonTwainScan.Text = I18N.GetString("Scan");
             this.buttonTwainScan.UseVisualStyleBackColor = true;
             this.buttonTwainScan.Click += new System.EventHandler(this.ButtonTwainScan_Click);
             // 
