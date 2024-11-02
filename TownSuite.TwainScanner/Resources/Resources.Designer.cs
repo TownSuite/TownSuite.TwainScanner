@@ -61,6 +61,168 @@ namespace TownSuite.TwainScanner.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error allocating memory..
+        /// </summary>
+        internal static string ErrorAllocatingMemory {
+            get {
+                return ResourceManager.GetString("ErrorAllocatingMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find default data source..
+        /// </summary>
+        internal static string ErrorCouldNotFindDataSource {
+            get {
+                return ResourceManager.GetString("ErrorCouldNotFindDataSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The data source is already open..
+        /// </summary>
+        internal static string ErrorDataSourceAlreadyOpen {
+            get {
+                return ResourceManager.GetString("ErrorDataSourceAlreadyOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The data source is already open. You must first close the data source..
+        /// </summary>
+        internal static string ErrorDataSourceAlreadyOpen2 {
+            get {
+                return ResourceManager.GetString("ErrorDataSourceAlreadyOpen2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data Source Manager is not open..
+        /// </summary>
+        internal static string ErrorDataSourceManagerNotOpen {
+            get {
+                return ResourceManager.GetString("ErrorDataSourceManagerNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The data source is not open..
+        /// </summary>
+        internal static string ErrorDataSourceNotOpen {
+            get {
+                return ResourceManager.GetString("ErrorDataSourceNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSM already opened..
+        /// </summary>
+        internal static string ErrorDsmAlreadyOpened {
+            get {
+                return ResourceManager.GetString("ErrorDsmAlreadyOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find DSM_Entry entry point..
+        /// </summary>
+        internal static string ErrorDsmEntryPoint {
+            get {
+                return ResourceManager.GetString("ErrorDsmEntryPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSM is not open..
+        /// </summary>
+        internal static string ErrorDsmNotOpen {
+            get {
+                return ResourceManager.GetString("ErrorDsmNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid a Return Code value..
+        /// </summary>
+        internal static string ErrorInvalidReturnCode {
+            get {
+                return ResourceManager.GetString("ErrorInvalidReturnCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is read only property..
+        /// </summary>
+        internal static string ErrorIsReadOnly {
+            get {
+                return ResourceManager.GetString("ErrorIsReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t load DSM..
+        /// </summary>
+        internal static string ErrorLoadDsm {
+            get {
+                return ResourceManager.GetString("ErrorLoadDsm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On MacOSX platform only TWAIN 2.x enabled..
+        /// </summary>
+        internal static string ErrorMac {
+            get {
+                return ResourceManager.GetString("ErrorMac", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Occured on Scanning &amp; Saving Please Re-try Scanning.
+        /// </summary>
+        internal static string ErrorOccured {
+            get {
+                return ResourceManager.GetString("ErrorOccured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In x64 mode only TWAIN 2.x enabled..
+        /// </summary>
+        internal static string ErrorX64 {
+            get {
+                return ResourceManager.GetString("ErrorX64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to find a scanner.
+        /// </summary>
+        internal static string FailedtoFindScanner {
+            get {
+                return ResourceManager.GetString("FailedtoFindScanner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TownSuite Scanner Load Error.
+        /// </summary>
+        internal static string LoadError {
+            get {
+                return ResourceManager.GetString("LoadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OCR Error.
+        /// </summary>
+        internal static string OcrError {
+            get {
+                return ResourceManager.GetString("OcrError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scan.
         /// </summary>
         internal static string Scan {
@@ -70,11 +232,38 @@ namespace TownSuite.TwainScanner.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scan Document.
+        /// </summary>
+        internal static string ScanDocument {
+            get {
+                return ResourceManager.GetString("ScanDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scanning Error.
         /// </summary>
         internal static string ScanningError {
             get {
                 return ResourceManager.GetString("ScanningError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You need to select scan Image.
+        /// </summary>
+        internal static string SelectScanImage {
+            get {
+                return ResourceManager.GetString("SelectScanImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TownSuite Scan.
+        /// </summary>
+        internal static string TownSuiteScan {
+            get {
+                return ResourceManager.GetString("TownSuiteScan", resourceCulture);
             }
         }
     }

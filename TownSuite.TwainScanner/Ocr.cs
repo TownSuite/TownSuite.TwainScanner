@@ -96,7 +96,7 @@ namespace TownSuite.TwainScanner
                 {
                     newpic.Invoke((MethodInvoker)delegate
                     {
-                        MessageBox.Show(ex.Message, "OCR Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, I18N.GetString("OcrError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
             });

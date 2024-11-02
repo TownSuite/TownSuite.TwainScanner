@@ -176,12 +176,12 @@ namespace TownSuite.TwainScanner
                             }
                             else
                             {
-                                throw new TwainException("Can't find DSM_Entry entry point.");
+                                throw new TwainException(I18N.GetString("ErrorDsmEntryPoint"));
                             }
                         }
                         else
                         {
-                            throw new TwainException("Can't load DSM.");
+                            throw new TwainException(I18N.GetString("ErrorLoadDsm"));
                         }
                         break;
                 }
@@ -495,11 +495,11 @@ namespace TownSuite.TwainScanner
             {
                 if ((this._TwainState & TwainStateFlag.DSMOpen) != 0)
                 {
-                    throw new InvalidOperationException("DSM already opened.");
+                    throw new InvalidOperationException(I18N.GetString("ErrorDsmAlreadyOpened"));
                 }
                 if (IntPtr.Size != 4 && !value)
                 {
-                    throw new InvalidOperationException("In x64 mode only TWAIN 2.x enabled.");
+                    throw new InvalidOperationException(I18N.GetString("ErrorX64"));
                 }
                 if (Environment.OSVersion.Platform == PlatformID.Unix && !value)
                 {
@@ -507,7 +507,7 @@ namespace TownSuite.TwainScanner
                 }
                 if (Environment.OSVersion.Platform == PlatformID.MacOSX && !value)
                 {
-                    throw new InvalidOperationException("On MacOSX platform only TWAIN 2.x enabled.");
+                    throw new InvalidOperationException(I18N.GetString("ErrorMac"));
                 }
                 if (this._isTwain2Enable = value)
                 {
@@ -533,7 +533,7 @@ namespace TownSuite.TwainScanner
             {
                 if ((this._TwainState & TwainStateFlag.DSMOpen) == 0)
                 {
-                    throw new InvalidOperationException("DSM is not open.");
+                    throw new InvalidOperationException(I18N.GetString("ErrorDsmNotOpen"));
                 }
                 return (this._AppId.SupportedGroups & TwDG.DSM2) != 0;
             }
@@ -581,12 +581,12 @@ namespace TownSuite.TwainScanner
                     }
                     else
                     {
-                        throw new TwainException("The data source is already open.");
+                        throw new TwainException(I18N.GetString("ErrorDataSourceAlreadyOpen"));
                     }
                 }
                 else
                 {
-                    throw new TwainException("Data Source Manager is not open.");
+                    throw new TwainException(I18N.GetString("ErrorDataSourceManagerNotOpen"));
                 }
             }
         }
@@ -642,12 +642,12 @@ namespace TownSuite.TwainScanner
                 }
                 else
                 {
-                    throw new TwainException("The data source is already open. You must first close the data source.");
+                    throw new TwainException(I18N.GetString("ErrorDataSourceAlreadyOpen2"));
                 }
             }
             else
             {
-                throw new TwainException("DSM is not open.");
+                throw new TwainException(I18N.GetString("ErrorDsmNotOpen"));
             }
         }
 
@@ -676,11 +676,11 @@ namespace TownSuite.TwainScanner
                         return i;
                     }
                 }
-                throw new TwainException("Could not find default data source.");
+                throw new TwainException(I18N.GetString("ErrorCouldNotFindDataSource"));
             }
             else
             {
-                throw new TwainException("DSM is not open.");
+                throw new TwainException(I18N.GetString("ErrorDsmNotOpen"));
             }
         }
 
@@ -729,7 +729,7 @@ namespace TownSuite.TwainScanner
             {
                 if (value != null)
                 {
-                    throw new ArgumentException("Is read only property.");
+                    throw new ArgumentException(I18N.GetString("ErrorIsReadOnly"));
                 }
                 this._appid = null;
             }
@@ -903,7 +903,7 @@ namespace TownSuite.TwainScanner
             }
             else
             {
-                throw new TwainException("The data source is not open.");
+                throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
             }
         }
 
@@ -960,7 +960,7 @@ namespace TownSuite.TwainScanner
             }
             else
             {
-                throw new TwainException("The data source is not open.");
+                throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
             }
         }
 
@@ -1017,7 +1017,7 @@ namespace TownSuite.TwainScanner
             }
             else
             {
-                throw new TwainException("The data source is not open.");
+                throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
             }
         }
 
@@ -1046,7 +1046,7 @@ namespace TownSuite.TwainScanner
             }
             else
             {
-                throw new TwainException("The data source is not open.");
+                throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
             }
         }
 
@@ -1069,7 +1069,7 @@ namespace TownSuite.TwainScanner
             }
             else
             {
-                throw new TwainException("The data source is not open.");
+                throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
             }
         }
 
@@ -1400,7 +1400,7 @@ namespace TownSuite.TwainScanner
                     IntPtr _hMem = _Memory.Alloc((int)_memBufSize.Preferred);
                     if (_hMem == IntPtr.Zero)
                     {
-                        throw new TwainException("Error allocating memory.");
+                        throw new TwainException(I18N.GetString("ErrorAllocatingMemory"));
                     }
                     try
                     {
@@ -1484,7 +1484,7 @@ namespace TownSuite.TwainScanner
                 }
                 else
                 {
-                    throw new TwainException("Источник данных не открыт.");
+                    throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
                 }
             }
             set
@@ -1507,7 +1507,7 @@ namespace TownSuite.TwainScanner
                 }
                 else
                 {
-                    throw new TwainException("Источник данных не открыт.");
+                    throw new TwainException(I18N.GetString("ErrorDataSourceNotOpen"));
                 }
             }
         }
@@ -2661,7 +2661,7 @@ namespace TownSuite.TwainScanner
                         case TwRC.Failure:
                             throw new TwainException(this._twain._GetTwainStatus(), TwRC.Failure);
                         default:
-                            throw new InvalidOperationException("Получен неверный код результата операции. Invalid a Return Code value.");
+                            throw new InvalidOperationException(I18N.GetString("ErrorInvalidReturnCode"));
                     }
                 }
                 catch (TwainException ex)

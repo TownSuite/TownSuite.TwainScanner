@@ -117,10 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorAllocatingMemory" xml:space="preserve">
+    <value>Error allocating memory.</value>
+  </data>
+  <data name="ErrorCouldNotFindDataSource" xml:space="preserve">
+    <value>Could not find default data source.</value>
+  </data>
+  <data name="ErrorDataSourceAlreadyOpen" xml:space="preserve">
+    <value>The data source is already open.</value>
+  </data>
+  <data name="ErrorDataSourceAlreadyOpen2" xml:space="preserve">
+    <value>The data source is already open. You must first close the data source.</value>
+  </data>
+  <data name="ErrorDataSourceManagerNotOpen" xml:space="preserve">
+    <value>Data Source Manager is not open.</value>
+  </data>
+  <data name="ErrorDataSourceNotOpen" xml:space="preserve">
+    <value>The data source is not open.</value>
+  </data>
+  <data name="ErrorDsmAlreadyOpened" xml:space="preserve">
+    <value>DSM already opened.</value>
+  </data>
+  <data name="ErrorDsmEntryPoint" xml:space="preserve">
+    <value>Can't find DSM_Entry entry point.</value>
+  </data>
+  <data name="ErrorDsmNotOpen" xml:space="preserve">
+    <value>DSM is not open.</value>
+  </data>
+  <data name="ErrorInvalidReturnCode" xml:space="preserve">
+    <value>Invalid a Return Code value.</value>
+  </data>
+  <data name="ErrorIsReadOnly" xml:space="preserve">
+    <value>Is read only property.</value>
+  </data>
+  <data name="ErrorLoadDsm" xml:space="preserve">
+    <value>Can't load DSM.</value>
+  </data>
+  <data name="ErrorMac" xml:space="preserve">
+    <value>On MacOSX platform only TWAIN 2.x enabled.</value>
+  </data>
+  <data name="ErrorOccured" xml:space="preserve">
+    <value>Error Occured on Scanning &amp; Saving Please Re-try Scanning</value>
+  </data>
+  <data name="ErrorX64" xml:space="preserve">
+    <value>In x64 mode only TWAIN 2.x enabled.</value>
+  </data>
+  <data name="FailedtoFindScanner" xml:space="preserve">
+    <value>Failed to find a scanner</value>
+  </data>
+  <data name="LoadError" xml:space="preserve">
+    <value>TownSuite Scanner Load Error</value>
+  </data>
+  <data name="OcrError" xml:space="preserve">
+    <value>OCR Error</value>
+  </data>
   <data name="Scan" xml:space="preserve">
     <value>Scan</value>
   </data>
+  <data name="ScanDocument" xml:space="preserve">
+    <value>Scan Document</value>
+  </data>
   <data name="ScanningError" xml:space="preserve">
     <value>Scanning Error</value>
+  </data>
+  <data name="SelectScanImage" xml:space="preserve">
+    <value>You need to select scan Image</value>
+  </data>
+  <data name="TownSuiteScan" xml:space="preserve">
+    <value>TownSuite Scan</value>
   </data>
 </root>

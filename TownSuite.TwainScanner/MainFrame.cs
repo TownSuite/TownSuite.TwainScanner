@@ -94,7 +94,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), "TownSuite Scanner Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), I18N.GetString("LoadError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             GC.Collect();
@@ -624,7 +624,7 @@ namespace TownSuite.TwainScanner
 
             if (String.IsNullOrEmpty(cmbTwainImageType.Text))
             {
-                MessageBox.Show("You need to select scan Image ",
+                MessageBox.Show(I18N.GetString("SelectScanImage"),
                                "type",
                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -713,7 +713,7 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "TownSuite Scan", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, I18N.GetString("TownSuiteScan"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -784,7 +784,8 @@ namespace TownSuite.TwainScanner
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error Occured on Scanning & Saving Please Re-try Scanning" + "\r\n" + ex.Message, "Scan Document", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(I18N.GetString("ErrorOccured") + "\r\n" + ex.Message, 
+                    I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
