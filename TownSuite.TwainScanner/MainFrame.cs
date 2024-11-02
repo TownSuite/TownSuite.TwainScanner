@@ -7,16 +7,13 @@ using System.IO;
 using System.Windows.Forms;
 using System.Linq;
 using System.Collections;
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
 using WIA;
-using Telerik.Windows.Documents.Fixed.Model;
-using Telerik.Windows.Documents.Fixed.Model.Resources;
-using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf;
-using Telerik.Windows.Documents.Fixed.FormatProviders.Pdf.Export;
-using Telerik.Windows.Documents.Model;
 #endif
 using System.Threading;
 using System.Text.RegularExpressions;
+using QuestPDF.Fluent;
+using System.Windows.Media;
 
 namespace TownSuite.TwainScanner
 {
@@ -25,7 +22,7 @@ namespace TownSuite.TwainScanner
         private Twain32 _twain;
 
         readonly string DirText;
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
         private DeviceManager deviceManager;
         bool removeWia = false;
 #else
@@ -71,8 +68,6 @@ namespace TownSuite.TwainScanner
                 if (removeWia)
                 {
                     tabScanDrivers.TabPages.RemoveByKey("tpWIAScan");
-                    cmbImageType.Items.Remove("PDF");
-                    cmbTwainImageType.Items.Remove("PDF");
                 }
 
 
@@ -103,7 +98,7 @@ namespace TownSuite.TwainScanner
             DeleteFiles();
 
             LoadTwainDrivers();
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
             LoadWIADrivers();
             GetColors();
 #endif
@@ -113,7 +108,7 @@ namespace TownSuite.TwainScanner
             sourceTwianListBox.SelectedItem = UserTwainScanner;
             //cmbTwainImageType.SelectedIndex = 0;
 
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
             //WIA Settings
             cmbImageType.SelectedIndex = 0;
             cmbColor.SelectedIndex = 0;
@@ -213,7 +208,7 @@ namespace TownSuite.TwainScanner
 
         private void btnWIAScan_Click(object sender, EventArgs e)
         {
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
             //Start Scanning using a Thread
             //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
 
@@ -222,7 +217,7 @@ namespace TownSuite.TwainScanner
 
         }
 
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
         private void LoadWIADrivers()
         {
             // Clear the ListBox.
@@ -603,7 +598,7 @@ namespace TownSuite.TwainScanner
             {
                 switch (tabScanDrivers.SelectedTab.Name)
                 {
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
                     case "tpWIAScan":
                         StartWIAScanning();
                         break;
@@ -739,12 +734,10 @@ namespace TownSuite.TwainScanner
                             case "jpeg":
                                 SaveJPEG();
                                 break;
-#if INCLUDE_TELERIK
                             case "pdf":
                                 //Save pdf
                                 SavePDF();
                                 break;
-#endif
                         }
                         break;
                     case "tpWIAScan":
@@ -755,12 +748,10 @@ namespace TownSuite.TwainScanner
                                 //Save tiff
                                 SaveTIFF();
                                 break;
-#if INCLUDE_TELERIK
                             case "pdf":
                                 //Save pdf
                                 SavePDF();
                                 break;
-#endif
                             case "png":
                                 //Save PNG'
                                 SavePNG();
@@ -1007,7 +998,6 @@ namespace TownSuite.TwainScanner
             return "";
         }
 
-#if INCLUDE_TELERIK
         private void SavePDF()
         {
             string[] sa = null;
@@ -1017,36 +1007,31 @@ namespace TownSuite.TwainScanner
             List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
             sa = SortedList.ToArray();
 
-            RadFixedDocument document = new RadFixedDocument();
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
-            foreach (string image in sa)
+            var pdf = Document.Create(handler =>
             {
-                using (Stream stream = File.OpenRead(image))
+                foreach (string image in sa)
                 {
-                    ImageSource imageSource = new ImageSource(stream);
-                    RadFixedPage page = document.Pages.AddPage();
-                    //page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
-                    page.Content.AddImage(imageSource);
-                    if (cmbResolution.SelectedValue != null && (int)(cmbResolution.SelectedValue) <= 100)
+                    handler.Page(page =>
                     {
-                        page.Size = PaperTypeConverter.ToSize(PaperTypes.Letter);
-                    }
-                    else
-                    {
-                        page.Size = new System.Windows.Size(imageSource.Width, imageSource.Height);
-                    }
+                        page.Size(QuestPDF.Helpers.PageSizes.Letter);
+                        page.Margin(2, QuestPDF.Infrastructure.Unit.Centimetre);
+                        page.PageColor(QuestPDF.Helpers.Colors.White);
+                        page.DefaultTextStyle(x => x.FontSize(20));
+                        using (var inputStream = new FileStream(image, FileMode.Open))
+                        {
+                            page.Content().Image(inputStream).FitArea();
+                        }
+                    });
                 }
-            }
-
-            PdfFormatProvider provider = new PdfFormatProvider();
+            });
             using (Stream output = new FileStream(Path.Combine(DirText, "tmpScan.pdf"), FileMode.OpenOrCreate))
             {
-                provider.ExportSettings.ImageQuality = ImageQuality.High;
-                provider.Export(document, output);
+                pdf.GeneratePdf(output);
             }
-
         }
-#endif
+
         #endregion
 
         private void SourceListBox_SelectedValueChanged(object sender, EventArgs e)
@@ -1056,7 +1041,7 @@ namespace TownSuite.TwainScanner
             //    LoadScanPropertyValues();
             //});
             //t.Wait(1000);
-#if INCLUDE_TELERIK
+#if INCLUDE_WIA
             LoadScanPropertyValues();
 #endif
 

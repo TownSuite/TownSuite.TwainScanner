@@ -1,4 +1,4 @@
-﻿#if INCLUDE_TELERIK
+﻿#if INCLUDE_WIA
 using System;
 using System.Runtime.InteropServices;
 using WIA;

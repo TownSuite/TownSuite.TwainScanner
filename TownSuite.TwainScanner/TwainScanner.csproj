@@ -1,24 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>TownSuite.TwainScanner</RootNamespace>
-    <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
-    <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
-	<AssemblyName>TownSuite.TwainScanner</AssemblyName>
-    <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
-    <Company>TownSuite</Company>
-    <Product>TownSuite.TwainScanner</Product>
-    <Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
-    <Copyright>Copyright © SARAFF 2011</Copyright>
-    <AssemblyVersion>1.0.36</AssemblyVersion>
-    <FileVersion>1.0.36</FileVersion>
-	<PackageVersion>1.0.36</PackageVersion>
-    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+	  <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+	  <OutputType>WinExe</OutputType>
+	  <RootNamespace>TownSuite.TwainScanner</RootNamespace>
+	  <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+	  <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
+	  <AssemblyName>TownSuite.TwainScanner</AssemblyName>
+	  <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
+	  <Company>TownSuite</Company>
+	  <Product>TownSuite.TwainScanner</Product>
+	  <Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
+	  <Copyright>Copyright © SARAFF 2011</Copyright>
+	  <AssemblyVersion>1.0.36</AssemblyVersion>
+	  <FileVersion>1.0.36</FileVersion>
+	  <PackageVersion>1.0.36</PackageVersion>
+	  <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+	  <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Platforms>AnyCPU;x86;x64</Platforms>
-	<UseWindowsForms>true</UseWindowsForms>
-	<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	<!-- <DefineConstants>INCLUDE_WIA</DefineConstants> -->
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile />
@@ -48,12 +49,12 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-	  <Reference Include="Microsoft.CSharp" />
-	  <Reference Include="PresentationCore" />
-	  <Reference Include="PresentationFramework" />
-	  <Reference Include="System.Security" />
-	  <Reference Include="System.Xaml" />
-	  <Reference Include="WindowsBase" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="MainFrame.cs">
@@ -113,6 +114,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\scanner.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> -->
+	<PackageReference Include="QuestPDF" Version="2024.10.2" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
 	<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
