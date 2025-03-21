@@ -40,7 +40,7 @@ namespace TownSuite.TwainScanner
         {
             lstscansettings = lstScanSet;
             this.ocr = ocr;
-            DirText = $"{workingDir}/TownSuiteScanner";
+            DirText = Path.Combine(workingDir,"TownSuiteScanner");
             InitializeComponent();
         }
 
