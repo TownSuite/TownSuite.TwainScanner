@@ -274,7 +274,7 @@ namespace TownSuite.TwainScanner
                         }
                         break;
                 }
-
+               
             }
             return (this._TwainState & TwainStateFlag.DSOpen) != 0;
         }
@@ -336,7 +336,9 @@ namespace TownSuite.TwainScanner
             if (this.OpenDSM())
             {
                 if (this.OpenDataSource())
+
                 {
+            
                     if (this._EnableDataSource())
                     {
                         switch (Environment.OSVersion.Platform)
