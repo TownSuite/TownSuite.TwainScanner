@@ -118,8 +118,8 @@
   <!-- <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
 	<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> 
   </ItemGroup> -->
-	<ItemGroup >
-		<PackageReference Include="QuestPDF" Version="2024.10.2" />
+	<ItemGroup>
+		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.7.1" />
 	</ItemGroup>
 	
   <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">

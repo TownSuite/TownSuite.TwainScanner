@@ -9,11 +9,11 @@
     <dependencies>
       <group targetFramework=".NETFramework4.8">
         <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" /> 
-        <dependency id="QuestPDF" version="2024.10.2" exclude="Build,Analyzers" />
+        <dependency id="iTextSharp.LGPLv2.Core" version="3.7.1" exclude="Build,Analyzers" />
       </group>
        <group targetFramework="net8.0-windows">
         <dependency id="System.Drawing.Common" version="8.0.10" exclude="Build,Analyzers" /> 
-        <dependency id="QuestPDF" version="2024.10.2" exclude="Build,Analyzers" />
+        <dependency id="iTextSharp.LGPLv2.Core" version="3.7.1" exclude="Build,Analyzers" />
         <dependency id="System.Windows.Extensions" version="8.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>

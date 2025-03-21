@@ -12,10 +12,9 @@ using WIA;
 #endif
 using System.Threading;
 using System.Text.RegularExpressions;
-using QuestPDF.Fluent;
 using System.Windows.Media;
-using QuestPDF.Helpers;
-
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 namespace TownSuite.TwainScanner
 {
     internal partial class MainFrame : Form
@@ -494,10 +493,10 @@ namespace TownSuite.TwainScanner
             {
                 picnumber += 1;
                 var newpic = new PictureBox();
-                Image resizedImg;
+                System.Drawing.Image resizedImg;
                 string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
 
-                using (var img = (Image)arryimage[i])
+                using (var img = (System.Drawing.Image)arryimage[i])
                 {
                     newpic.Tag = origPath;
                     switch (wiaImageFormat)
@@ -667,7 +666,7 @@ namespace TownSuite.TwainScanner
                     {
                         picnumber += 1;
                         var newpic = new PictureBox();
-                        Image resizedImg;
+                        System.Drawing.Image resizedImg;
                         string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + i.ToString() + Guid.NewGuid().ToString() + imageExtension);
                         newpic.Tag = origPath;
                         using (var img = this._twain.GetImage(i))
@@ -817,7 +816,7 @@ namespace TownSuite.TwainScanner
             {
                 if (frame == 0)
                 {
-                    pages = (Bitmap)Image.FromFile(s);
+                    pages = (Bitmap)System.Drawing.Image.FromFile(s);
 
                     //save the first frame
                     pages.Save(Path.Combine(DirText, "tmpScan.tif"), info, ep);
@@ -826,7 +825,7 @@ namespace TownSuite.TwainScanner
                 {
                     //save the intermediate frames
                     ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.FrameDimensionPage));
-                    using (Bitmap bm = (Bitmap)Image.FromFile(s))
+                    using (Bitmap bm = (Bitmap)System.Drawing.Image.FromFile(s))
                     {
                         pages.SaveAdd(bm, ep);
                     }
@@ -850,15 +849,15 @@ namespace TownSuite.TwainScanner
             string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.jpeg");
 
             // TODO: You may want to add input checking here.
-            Image[] images = new Image[inputFiles.Length];
-            Image image;
+            System.Drawing.Image[] images = new System.Drawing.Image[inputFiles.Length];
+            System.Drawing.Image image;
             int height = 0, width = 0;
 
             try
             {
                 for (int i = 0; i < inputFiles.Length; ++i)
                 {
-                    images[i] = image = Image.FromFile(inputFiles[i]);
+                    images[i] = image = System.Drawing.Image.FromFile(inputFiles[i]);
                     height = Math.Max(height, image.Height);
                     width += image.Width;
                 }
@@ -878,8 +877,8 @@ namespace TownSuite.TwainScanner
                         int scaledWidth = (int)(images[i].Width * scale);
                         // Draw the image scaled to match the maxHeight
                         g.DrawImage(images[i],
-                                    new Rectangle(width, 0, scaledWidth, height),
-                                    new Rectangle(0, 0, images[i].Width, images[i].Height),
+                                    new System.Drawing.Rectangle(width, 0, scaledWidth, height),
+                                    new System.Drawing.Rectangle(0, 0, images[i].Width, images[i].Height),
                                     GraphicsUnit.Pixel);
                         width += scaledWidth;
 
@@ -927,7 +926,7 @@ namespace TownSuite.TwainScanner
             {
                 if (frame == 0)
                 {
-                    pages = (Bitmap)Image.FromFile(s);
+                    pages = (Bitmap)System.Drawing.Image.FromFile(s);
 
                     //save the first frame
                     pages.Save(DirText + "\\tmpScan.tif", info, ep);
@@ -936,7 +935,7 @@ namespace TownSuite.TwainScanner
                 {
                     //save the intermediate frames
                     ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.FrameDimensionPage));
-                    using (Bitmap bm = (Bitmap)Image.FromFile(s))
+                    using (Bitmap bm = (Bitmap)System.Drawing.Image.FromFile(s))
                     {
                         pages.SaveAdd(bm, ep);
                     }
@@ -958,15 +957,15 @@ namespace TownSuite.TwainScanner
             string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.png");
 
             // TODO: You may want to add input checking here.
-            Image[] images = new Image[inputFiles.Length];
-            Image image;
+            System.Drawing.Image[] images = new System.Drawing.Image[inputFiles.Length];
+            System.Drawing.Image image;
             int height = 0, width = 0;
 
             try
             {
                 for (int i = 0; i < inputFiles.Length; ++i)
                 {
-                    images[i] = image = Image.FromFile(inputFiles[i]);
+                    images[i] = image = System.Drawing.Image.FromFile(inputFiles[i]);
                     height = Math.Max(height, image.Height);
                     width += image.Width;
                 }
@@ -986,8 +985,8 @@ namespace TownSuite.TwainScanner
                         int scaledWidth = (int)(images[i].Width * scale);
                         // Draw the image scaled to match the maxHeight
                         g.DrawImage(images[i],
-                                    new Rectangle(width, 0, scaledWidth, height),
-                                    new Rectangle(0, 0, images[i].Width, images[i].Height),
+                                    new System.Drawing.Rectangle(width, 0, scaledWidth, height),
+                                    new System.Drawing.Rectangle(0, 0, images[i].Width, images[i].Height),
                                     GraphicsUnit.Pixel);
                         width += scaledWidth;
 
@@ -1016,102 +1015,93 @@ namespace TownSuite.TwainScanner
         private void SavePDF()
         {
             var predefinedSizes = new[]
-                {
-                    new { Size = PageSizes.A4, Width = 21f, Height = 29.7f },
-                    new { Size = PageSizes.A3, Width = 29.7f, Height = 42f },
-                    new { Size = PageSizes.Letter, Width = 21.59f, Height = 27.94f },
-                    new { Size = PageSizes.Legal, Width = 21.59f, Height = 35.56f },
-                    new { Size = new PageSize(15.24f, 6.99f),  Width = 15.24f, Height = 6.99f },  // Cheque: 6" x 2.75"
-                    new { Size = new PageSize(8f, 30f),        Width = 8f,     Height = 30f }       // Receipt: 80mm x 300mm (approx)
-                };
-            string[] sa = null;
-            sa = Directory.GetFiles(DirText, "tmpscan*.jpeg");
+        {
+            new { Size = PageSize.A4, Width = 21f, Height = 29.7f },
+            new { Size = PageSize.A3, Width = 29.7f, Height = 42f },
+            new { Size = new iTextSharp.text.Rectangle(21.59f * 28.35f, 27.94f * 28.35f), Width = 21.59f, Height = 27.94f },  // Letter (8.5" x 11")
+            new { Size = new iTextSharp.text.Rectangle(21.59f * 28.35f, 35.56f * 28.35f), Width = 21.59f, Height = 35.56f },  // Legal (8.5" x 14")
+            new { Size = new iTextSharp.text.Rectangle(15.24f * 28.35f, 6.99f * 28.35f), Width = 15.24f, Height = 6.99f },  // Cheque: 6" x 2.75"
+            new { Size = new  iTextSharp.text.Rectangle(8f * 28.35f, 30f * 28.35f), Width = 8f, Height = 30f }  // Receipt: 80mm x 300mm (approx)
+        };
+
+            string[] sa = Directory.GetFiles(DirText, "tmpscan*.jpeg");
 
             List<string> UnSortList = new List<string>(sa);
             List<string> SortedList = UnSortList.OrderBy(p => PadNumbers(p)).ToList();
             sa = SortedList.ToArray();
+            string outputPdfPath = Path.Combine(DirText, "tmpscan.pdf");
 
-            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
-
-            var pdf = Document.Create(handler =>
+            using (FileStream fs = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (Document doc = new Document(PageSize.A4)) // Default to A4, will resize per page
+            using (PdfWriter writer = PdfWriter.GetInstance(doc, fs))
             {
-                foreach (string image in sa)
+                doc.Open();
+
+                foreach (string imagePath in sa)
                 {
-                    // Read the entire image file into a byte array.
-                    // Read the image into a byte array
-                    byte[] imageBytes = File.ReadAllBytes(image);
-                    using (var ms = new MemoryStream(imageBytes))
+                    byte[] imageBytes = File.ReadAllBytes(imagePath);
+                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    using (System.Drawing.Image sysImage = System.Drawing.Image.FromStream(ms))
                     {
-                        using (var sysImage = Image.FromStream(ms))
+                        float dpiX = sysImage.HorizontalResolution;
+                        float dpiY = sysImage.VerticalResolution;
+                        float widthInches = sysImage.Width / dpiX;
+                        float heightInches = sysImage.Height / dpiY;
+                        float imageWidthCm = widthInches * 2.54f;
+                        float imageHeightCm = heightInches * 2.54f;
+
+                        bool isLandscape = imageWidthCm > imageHeightCm;
+                        float actualWidth = imageWidthCm;
+                        float actualHeight = imageHeightCm;
+                        if (isLandscape)
                         {
-                            // Get physical dimensions from the image using its actual DPI.
-                            float dpiX = sysImage.HorizontalResolution;
-                            float dpiY = sysImage.VerticalResolution;
-                            float widthInches = sysImage.Width / dpiX;
-                            float heightInches = sysImage.Height / dpiY;
-                            float imageWidthCm = widthInches * 2.54f;
-                            float imageHeightCm = heightInches * 2.54f;
-
-                            // Check orientation – if the scanned image is landscape, we swap width/height for comparison.
-                            bool isLandscape = imageWidthCm > imageHeightCm;
-                            float actualWidth = imageWidthCm;
-                            float actualHeight = imageHeightCm;
-                            if (isLandscape)
-                            {
-                                // For comparison, swap the dimensions so that width is always the longer side.
-                                actualWidth = imageHeightCm;
-                                actualHeight = imageWidthCm;
-                            }
-
-                            // Choose the best predefined paper size based on minimal difference.
-                            float bestDiff = float.MaxValue;
-                            var bestPaper = predefinedSizes[0];
-
-                            foreach (var paper in predefinedSizes)
-                            {
-                                // Adjust paper orientation if necessary.
-                                float paperWidth = paper.Width;
-                                float paperHeight = paper.Height;
-                                if (isLandscape && paperWidth < paperHeight)
-                                {
-                                    // Swap dimensions if the paper is defined in portrait.
-                                    float temp = paperWidth;
-                                    paperWidth = paperHeight;
-                                    paperHeight = temp;
-                                }
-
-                                // Calculate a simple difference metric.
-                                float diff = Math.Abs(actualWidth - paperWidth) + Math.Abs(actualHeight - paperHeight);
-                                if (diff < bestDiff)
-                                {
-                                    bestDiff = diff;
-                                    bestPaper = paper;
-                                }
-                            }
-
-                            // Reset the stream for rendering the image.
-                            ms.Position = 0;
-
-                            // Use the best matching paper size.
-                            handler.Page(page =>
-                            {
-                                page.Size(bestPaper.Size);
-                                page.Margin(0);
-                                page.PageColor(QuestPDF.Helpers.Colors.White);
-                                // Fit the image in the available area while maintaining its aspect ratio.
-                                page.Content().Image(ms).FitArea();
-                            });
+                            actualWidth = imageHeightCm;
+                            actualHeight = imageWidthCm;
                         }
+
+                        // Choose the best predefined paper size
+                        float bestDiff = float.MaxValue;
+                        var bestPaper = predefinedSizes[0];
+
+                        foreach (var paper in predefinedSizes)
+                        {
+                            float paperWidth = paper.Width;
+                            float paperHeight = paper.Height;
+
+                            if (isLandscape && paperWidth < paperHeight)
+                            {
+                                float temp = paperWidth;
+                                paperWidth = paperHeight;
+                                paperHeight = temp;
+                            }
+
+                            float diff = Math.Abs(actualWidth - paperWidth) + Math.Abs(actualHeight - paperHeight);
+                            if (diff < bestDiff)
+                            {
+                                bestDiff = diff;
+                                bestPaper = paper;
+                            }
+                        }
+
+                        // Create a new page for each image
+                        doc.SetPageSize(bestPaper.Size);
+                        doc.NewPage();
+
+                        // Add image to the PDF
+                        iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imageBytes);
+                        pdfImage.ScaleToFit(bestPaper.Size.Width, bestPaper.Size.Height);
+                        pdfImage.SetAbsolutePosition(0, 0);
+                        doc.Add(pdfImage);
                     }
                 }
-            });
-            using (Stream output = new FileStream(Path.Combine(DirText, "tmpScan.pdf"), FileMode.OpenOrCreate))
-            {
-                pdf.GeneratePdf(output);
+
+                doc.Close();
             }
+
         }
 
 
+        
         #endregion
 
         private void SourceListBox_SelectedValueChanged(object sender, EventArgs e)
