@@ -2,25 +2,22 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TownSuite.TwainScanner</id>
-    <version>1.0.36</version>
+    <version>1.0.37</version>
     <authors>TownSuite.TwainScanner</authors>
     <description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</description>
     <copyright>Copyright © SARAFF 2011</copyright>
     <dependencies>
       <group targetFramework=".NETFramework4.8">
-        <dependency id="Telerik.Windows.Documents.Fixed" version="2023.3.1010" exclude="Build,Analyzers" />
         <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" /> 
+        <dependency id="QuestPDF" version="2024.10.2" exclude="Build,Analyzers" />
+      </group>
+       <group targetFramework="net8.0-windows">
+        <dependency id="System.Drawing.Common" version="8.0.10" exclude="Build,Analyzers" /> 
+        <dependency id="QuestPDF" version="2024.10.2" exclude="Build,Analyzers" />
+        <dependency id="System.Windows.Extensions" version="8.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="PresentationFramework" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="System.Security" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.8" />
-      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.8" />
-    </frameworkAssemblies>
+
     <contentFiles>
         <files include="**" buildAction="Content" copyToOutput="true" flatten="false" />
     </contentFiles>

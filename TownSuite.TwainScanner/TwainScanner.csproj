@@ -19,13 +19,13 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
 	  <UseWindowsForms>true</UseWindowsForms>
 	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	<!-- <DefineConstants>INCLUDE_WIA</DefineConstants> -->
+	
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile />
   </PropertyGroup>
-  <PropertyGroup>
-    <DefineConstants Condition=" '$(TargetFrameworkVersion)' == 'v2.0' ">NET2</DefineConstants>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
+	  <DefineConstants>INCLUDE_WIA</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>TownSuite.TwainScanner.Program</StartupObject>
@@ -115,12 +115,16 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\scanner.bmp" />
   </ItemGroup>
-  <ItemGroup>
-    <!-- <PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> -->
-	<PackageReference Include="QuestPDF" Version="2024.10.2" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+	<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> 
   </ItemGroup>
+	<ItemGroup >
+		<PackageReference Include="QuestPDF" Version="2024.10.2" />
+	</ItemGroup>
+	
   <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
-	<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+
+	  <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
 	<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
   </ItemGroup>
