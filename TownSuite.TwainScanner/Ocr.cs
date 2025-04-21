@@ -16,7 +16,7 @@ namespace TownSuite.TwainScanner
 {
     internal class Ocr
     {
-        public bool Enabled { get; private set; }
+        public bool Enabled { get; set; }
         string _apiUrl;
         string _bearerToken;
 

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.MainMenu1 = new System.Windows.Forms.MenuStrip();
             this.menuMainFile = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +55,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.MainMenu1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabScanDrivers.SuspendLayout();
             this.tpTWAINScan.SuspendLayout();
@@ -65,34 +65,46 @@
             // 
             // MainMenu1
             // 
-            this.MainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripMenuItem[] {
+            this.MainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuMainFile,
             this.mnuAcquire,
             this.mnuSave});
+            this.MainMenu1.Location = new System.Drawing.Point(0, 0);
+            this.MainMenu1.Name = "MainMenu1";
+            this.MainMenu1.Size = new System.Drawing.Size(904, 24);
+            this.MainMenu1.TabIndex = 0;
             // 
             // menuMainFile
             // 
-            this.menuMainFile.MergeIndex = 0;
-            this.menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripMenuItem[] {
+            this.menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuItem5});
             this.menuMainFile.MergeAction = System.Windows.Forms.MergeAction.Insert;
+            this.menuMainFile.MergeIndex = 0;
+            this.menuMainFile.Name = "menuMainFile";
+            this.menuMainFile.Size = new System.Drawing.Size(37, 20);
             this.menuMainFile.Text = "File";
             // 
             // MenuItem5
             // 
             this.MenuItem5.MergeIndex = 0;
+            this.MenuItem5.Name = "MenuItem5";
+            this.MenuItem5.Size = new System.Drawing.Size(92, 22);
             this.MenuItem5.Text = "Exit";
             this.MenuItem5.Click += new System.EventHandler(this.MenuItem5_Click);
             // 
             // mnuAcquire
             // 
             this.mnuAcquire.MergeIndex = 1;
+            this.mnuAcquire.Name = "mnuAcquire";
+            this.mnuAcquire.Size = new System.Drawing.Size(60, 20);
             this.mnuAcquire.Text = "&Acquire";
             this.mnuAcquire.Click += new System.EventHandler(this.mnuAcquire_Click);
             // 
             // mnuSave
             // 
             this.mnuSave.MergeIndex = 2;
+            this.mnuSave.Name = "mnuSave";
+            this.mnuSave.Size = new System.Drawing.Size(43, 20);
             this.mnuSave.Text = "&Save";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
             // 
@@ -104,7 +116,7 @@
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(186, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(586, 474);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(710, 593);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // sourceListBox
@@ -202,11 +214,12 @@
             // 
             this.tabScanDrivers.Controls.Add(this.tpTWAINScan);
             this.tabScanDrivers.Controls.Add(this.tpWIAScan);
-            this.tabScanDrivers.Location = new System.Drawing.Point(6, 2);
+            this.tabScanDrivers.Location = new System.Drawing.Point(6, 27);
             this.tabScanDrivers.Name = "tabScanDrivers";
             this.tabScanDrivers.SelectedIndex = 0;
-            this.tabScanDrivers.Size = new System.Drawing.Size(174, 472);
+            this.tabScanDrivers.Size = new System.Drawing.Size(174, 447);
             this.tabScanDrivers.TabIndex = 7;
+            this.tabScanDrivers.SelectedIndexChanged += new System.EventHandler(this.tabScanDrivers_SelectedIndexChanged);
             // 
             // tpTWAINScan
             // 
@@ -218,7 +231,7 @@
             this.tpTWAINScan.Location = new System.Drawing.Point(4, 22);
             this.tpTWAINScan.Name = "tpTWAINScan";
             this.tpTWAINScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTWAINScan.Size = new System.Drawing.Size(166, 446);
+            this.tpTWAINScan.Size = new System.Drawing.Size(166, 421);
             this.tpTWAINScan.TabIndex = 1;
             this.tpTWAINScan.Text = "TWAIN";
             this.tpTWAINScan.UseVisualStyleBackColor = true;
@@ -240,7 +253,7 @@
             this.buttonTwainScan.Name = "buttonTwainScan";
             this.buttonTwainScan.Size = new System.Drawing.Size(75, 23);
             this.buttonTwainScan.TabIndex = 11;
-            this.buttonTwainScan.Text = I18N.GetString("Scan");
+            this.buttonTwainScan.Text = "Scan";
             this.buttonTwainScan.UseVisualStyleBackColor = true;
             this.buttonTwainScan.Click += new System.EventHandler(this.ButtonTwainScan_Click);
             // 
@@ -285,7 +298,7 @@
             this.tpWIAScan.Location = new System.Drawing.Point(4, 22);
             this.tpWIAScan.Name = "tpWIAScan";
             this.tpWIAScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpWIAScan.Size = new System.Drawing.Size(166, 446);
+            this.tpWIAScan.Size = new System.Drawing.Size(166, 421);
             this.tpWIAScan.TabIndex = 0;
             this.tpWIAScan.Text = "WIA";
             this.tpWIAScan.UseVisualStyleBackColor = true;
@@ -306,9 +319,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripProgressBar1,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 477);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(780, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(904, 22);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -329,7 +342,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(780, 499);
+            this.ClientSize = new System.Drawing.Size(904, 618);
             this.Controls.Add(this.MainMenu1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabScanDrivers);
@@ -339,6 +352,9 @@
             this.Text = "Scan Document";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
             this.Load += new System.EventHandler(this.MainFrame_Load);
+            this.Shown += new System.EventHandler(this.MainFrame_Shown);
+            this.MainMenu1.ResumeLayout(false);
+            this.MainMenu1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabScanDrivers.ResumeLayout(false);

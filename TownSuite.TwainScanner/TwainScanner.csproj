@@ -3,8 +3,8 @@
 	  <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
 	  <OutputType>WinExe</OutputType>
 	  <RootNamespace>TownSuite.TwainScanner</RootNamespace>
-	  <TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
-	  <RuntimeIdentifiers>win;win-x86;win-x64</RuntimeIdentifiers>
+	  <TargetFrameworks>net8.0-windows</TargetFrameworks>
+	  <RuntimeIdentifiers>win;win-x86</RuntimeIdentifiers>
 	  <AssemblyName>TownSuite.TwainScanner</AssemblyName>
 	  <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
 	  <Company>TownSuite</Company>
@@ -16,7 +16,7 @@
 	  <PackageVersion>1.0.37</PackageVersion>
 	  <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
 	  <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <Platforms>AnyCPU;x86</Platforms>
 	  <UseWindowsForms>true</UseWindowsForms>
 	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	
@@ -24,23 +24,16 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile />
   </PropertyGroup>
-  <!-- <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
 	  <DefineConstants>INCLUDE_WIA</DefineConstants>
-  </PropertyGroup> -->
+  </PropertyGroup>
   <PropertyGroup>
     <StartupObject>TownSuite.TwainScanner.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
@@ -115,11 +108,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\scanner.bmp" />
   </ItemGroup>
-  <!-- <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
 	<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> 
-  </ItemGroup> -->
+  </ItemGroup> 
 	<ItemGroup>
 		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.7.1" />
+		<PackageReference Include="NAPS2.Images.Gdi" Version="1.1.6" />
+		<PackageReference Include="NAPS2.Sdk" Version="1.1.6" />
+		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.1.6" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 	</ItemGroup>
 	
   <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
