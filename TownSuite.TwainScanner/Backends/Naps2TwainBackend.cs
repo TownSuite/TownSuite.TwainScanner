@@ -17,7 +17,7 @@ using System.IO;
 
 namespace TownSuite.TwainScanner.Backends
 {
-    class Naps2Backend : IBackend
+    class Naps2Backend : ScannerBackends
     {
         ScanningContext scanningContext;
         ScanController controller;

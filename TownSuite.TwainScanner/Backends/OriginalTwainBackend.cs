@@ -11,7 +11,7 @@ using System.IO;
 
 namespace TownSuite.TwainScanner.Backends
 {
-    class OriginalTwainBackend : IBackend
+    class OriginalTwainBackend : ScannerBackends
     {
         private Twain32 _twain;
 

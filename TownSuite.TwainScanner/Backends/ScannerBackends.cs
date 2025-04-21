@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace TownSuite.TwainScanner.Backends
 {
-    internal class IBackend : IDisposable
+    internal class ScannerBackends : IDisposable
     {
         protected string imageFormat;
         protected readonly string DirText;
@@ -27,7 +27,7 @@ namespace TownSuite.TwainScanner.Backends
             get; set;
         }
 
-        public IBackend(string dirText, Ocr ocr)
+        public ScannerBackends(string dirText, Ocr ocr)
         {
             this.DirText = dirText;
             this.ocr = ocr;

@@ -22,7 +22,7 @@ namespace TownSuite.TwainScanner
         private string UserTwainImageType;
         private string UserTwainScanner;
         readonly Ocr ocr;
-        IBackend backend;
+        ScannerBackends backend;
         readonly string dirText;
 
 #if INCLUDE_WIA
@@ -214,7 +214,7 @@ namespace TownSuite.TwainScanner
             }
         }
 
-        private IBackend GetBackend(string backend)
+        private ScannerBackends GetBackend(string backend)
         {
             switch (backend)
             {
