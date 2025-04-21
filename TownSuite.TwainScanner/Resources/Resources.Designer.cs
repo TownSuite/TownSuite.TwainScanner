@@ -250,11 +250,29 @@ namespace TownSuite.TwainScanner.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must select an image format.
+        /// </summary>
+        internal static string SelectImageType {
+            get {
+                return ResourceManager.GetString("SelectImageType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You need to select scan Image.
         /// </summary>
         internal static string SelectScanImage {
             get {
                 return ResourceManager.GetString("SelectScanImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must select a scanner..
+        /// </summary>
+        internal static string SelectScanner {
+            get {
+                return ResourceManager.GetString("SelectScanner", resourceCulture);
             }
         }
         

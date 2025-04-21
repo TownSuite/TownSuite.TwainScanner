@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using TownSuite.TwainScanner.Backends;
 
 namespace TownSuite.TwainScanner
 {
@@ -18,17 +19,19 @@ namespace TownSuite.TwainScanner
             string ocrApiUrl = "";
             string ocrBearerToken = "";
             string workingDir = Environment.GetEnvironmentVariable("TMP");
+            string backend = "originaltwain";
 
             List<string> scanlist = new List<string>();
             for (int i = 0; i <= Environment.GetCommandLineArgs().Length - 1; i++)
             {
+#if INCLUDE_ORIGINAL
                 if (Environment.GetCommandLineArgs()[i] == "-scanlist")
                 {
                     ScanList = true;
                     var scnlst = new ScannerList();
                     scanlist = scnlst.ScanList();
                 }
-
+#endif
                 if (Environment.GetCommandLineArgs()[i] == "-scansettings")
                 {
                     foreach (string s in Environment.GetCommandLineArgs())
@@ -43,7 +46,7 @@ namespace TownSuite.TwainScanner
                 }
                 if (Environment.GetCommandLineArgs()[i] == "-ocrapiurl")
                 {
-                    ocrApiUrl = Environment.GetCommandLineArgs()[i+1];
+                    ocrApiUrl = Environment.GetCommandLineArgs()[i + 1];
                 }
                 if (Environment.GetCommandLineArgs()[i] == "-ocrbearertoken")
                 {
@@ -53,14 +56,21 @@ namespace TownSuite.TwainScanner
                 {
                     workingDir = Environment.GetCommandLineArgs()[i + 1];
                 }
+                if (Environment.GetCommandLineArgs()[i] == "-backend")
+                {
+                    backend = Environment.GetCommandLineArgs()[i + 1];
+                }
 
             }
+
+            string dirText = Path.Combine(workingDir, "TownSuiteScanner");
 
             if (ScanList == false)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainFrame(settings, new Ocr(enableOcr, ocrApiUrl, ocrBearerToken), workingDir));
+                Application.Run(new MainFrame(settings, new Ocr(enableOcr, ocrApiUrl, ocrBearerToken),
+                    dirText, backend));
             }
             else
             {
@@ -71,9 +81,6 @@ namespace TownSuite.TwainScanner
                 Console.WriteLine("ScanListEnd");
                 Console.Out.Flush();
             }
-
-
-
         }
     }
 }

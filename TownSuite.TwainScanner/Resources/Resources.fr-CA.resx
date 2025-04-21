@@ -123,4 +123,10 @@
   <data name="ScanningError" xml:space="preserve">
     <value>Erreur d’analyse</value>
   </data>
+  <data name="SelectImageType" xml:space="preserve">
+    <value>Vous devez sélectionner un format d'image</value>
+  </data>
+  <data name="SelectScanner" xml:space="preserve">
+    <value>Vous devez sélectionner un scanner.</value>
+  </data>
 </root>

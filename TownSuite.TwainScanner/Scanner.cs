@@ -1,5 +1,4 @@
-﻿#if INCLUDE_WIA
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using WIA;
 using System.Windows.Forms;
@@ -331,5 +330,3 @@ namespace WIAScanner
          
     }
 }
-
-#endif

@@ -5,6 +5,11 @@ You can use this library in your programs written in any programming languages c
 
 Fork of https://sarafftwain.codeplex.com/
 
+
+# Scanner setup
+
+* Install your printers twain driver with its official driver pack
+
 # Usage
 
 ```powershell
