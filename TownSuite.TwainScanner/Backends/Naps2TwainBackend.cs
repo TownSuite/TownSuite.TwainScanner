@@ -34,6 +34,15 @@ namespace TownSuite.TwainScanner.Backends
             scanningContext = new ScanningContext(new GdiImageContext());
             scanningContext.SetUpWin32Worker();
 
+
+        //        public WorkerFactory(string nativeWorkerExePath, string? winX86WorkerExePath = null, Dictionary<string, string>? environmentVariables = null)
+        //{
+        //    NativeWorkerExePath = nativeWorkerExePath;
+        //    WinX86WorkerExePath = winX86WorkerExePath;
+        //    _environmentVariables = environmentVariables ?? new Dictionary<string, string>();
+        //}
+        //PlatformCompat.System.NativeWorkerAlias
+
             controller = new ScanController(scanningContext);
 
             var scanOptions = new ScanOptions()
@@ -42,20 +51,25 @@ namespace TownSuite.TwainScanner.Backends
                 PageSize = PageSize.Letter,
                 Dpi = 300,
                 UseNativeUI = true,
-                Driver = Driver.Twain,
-
+                Driver = Driver.Twain
             };
             var devices = (await controller.GetDeviceList(scanOptions));
 
             var sourceTwainListBox = ParentForm.GetTwainSourceList();
             sourceTwainListBox.Items.Clear();
 
-            foreach (var device in devices)
-            {
-                var options = new ScanOptions { Device = device };
+            sourceTwainListBox.DataSource = devices;
+            sourceTwainListBox.DisplayMember = "Name";
 
-                sourceTwainListBox.Items.Add(options);
-            }
+            //foreach (var device in devices)
+            //{
+            //    var options = new ScanOptions { Device = device };
+
+            //    sourceTwainListBox.Items.Add(options);
+            //    // set the display name
+                
+            //    sourceTwainListBox.Items[sourceTwainListBox.Items.Count - 1] = device.Name;
+            //}
             sourceTwainListBox.SelectedIndex = 0;
         }
 
@@ -64,22 +78,8 @@ namespace TownSuite.TwainScanner.Backends
         {
             await base.Scan(imageFormat);
 
-            // Scanning with TWAIN on Windows must happen from a 32-bit process. You can do this by building your exe as
-            // 32-bit, but the better solution is to install the NAPS2.Sdk.Worker.Win32 Nuget package, which includes a
-            // pre-compiled 32-bit NAPS2.Worker.exe. Then you only need to call ScanningContext.SetUpWin32Worker and you
-            // should be able to scan with TWAIN.
-            //
-            // If you want to use a worker process but don't want to use a pre-compiled exe (or want to set up your own
-            // logging etc), you can also build your own worker exe with the same name (and call WorkerServer.Run in its
-            // Main method).
-
-
-            // Set up the worker; this includes starting a worker process in the background so it will be ready to respond
-            // when we need it
-
-
-            // As we're not using the default (WIA) driver, we need to specify it when listing devices or scanning
-            ScanDevice device = (await controller.GetDeviceList(Driver.Twain)).First();
+            var sourceTwainListBox = ParentForm.GetTwainSourceList();
+            var device = sourceTwainListBox.SelectedItem as ScanDevice;
             var options = new ScanOptions { Device = device };
 
             await foreach (var image in controller.Scan(options))
@@ -138,39 +138,6 @@ namespace TownSuite.TwainScanner.Backends
         {
             base.Dispose();
             this.scanningContext?.Dispose();
-        }
-
-        public async Task Init()
-        {
-            //// Set up
-            //using (var scanningContext = new ScanningContext(new GdiImageContext()))
-            //{
-            //    var controller = new ScanController(scanningContext);
-
-            //    // Query for available scanning devices
-            //    var devices = await controller.GetDeviceList();
-
-            //    // Set scanning options
-            //    var options = new ScanOptions
-            //    {
-            //        Device = devices.First(),
-            //        PaperSource = PaperSource.Feeder,
-            //        PageSize = PageSize.A4,
-            //        Dpi = 300
-            //    };
-
-            //    // Scan and save images
-            //    int i = 1;
-            //    await foreach (var image in controller.Scan(options))
-            //    {
-            //        image.Save($"page{i++}.jpg");
-            //    }
-
-            //    // Scan and save PDF
-            //    var images = await controller.Scan(options).ToListAsync();
-            //    var pdfExporter = new PdfExporter(scanningContext);
-            //    await pdfExporter.Export("doc.pdf", images);
-            //}
         }
     }
 }
