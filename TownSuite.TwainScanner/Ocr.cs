@@ -34,6 +34,7 @@ namespace TownSuite.TwainScanner
         {
             QueueThread(async () =>
             {
+                string text = string.Empty;
                 try
                 {
                     newpic.Invoke((MethodInvoker)delegate
@@ -41,6 +42,7 @@ namespace TownSuite.TwainScanner
                         // Running on the UI thread
                         toolStrip.Style = ProgressBarStyle.Marquee;
                         toolStrip.Visible = true;
+                        statusLabel.Text = I18N.GetString("OcrProcessing");
                         statusLabel.Visible = true;
                     });
 
@@ -78,7 +80,18 @@ namespace TownSuite.TwainScanner
 ;
                     var output = await client.UploadDataTaskAsync(_apiUrl, byteImage);
 
-                    string text = System.Text.Encoding.UTF8.GetString(output);
+                    text = System.Text.Encoding.UTF8.GetString(output);
+
+                }
+                catch (Exception ex)
+                {
+                    newpic.Invoke((MethodInvoker)delegate
+                    {
+                        MessageBox.Show(ex.Message, I18N.GetString("OcrError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    });
+                }
+                finally
+                {
                     newpic.Invoke((MethodInvoker)delegate
                     {
                         // Running on the UI thread
@@ -89,13 +102,6 @@ namespace TownSuite.TwainScanner
                         toolStrip.Style = ProgressBarStyle.Blocks;
                         toolStrip.Visible = false;
                         statusLabel.Visible = false;
-                    });
-                }
-                catch (Exception ex)
-                {
-                    newpic.Invoke((MethodInvoker)delegate
-                    {
-                        MessageBox.Show(ex.Message, I18N.GetString("OcrError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     });
                 }
             });

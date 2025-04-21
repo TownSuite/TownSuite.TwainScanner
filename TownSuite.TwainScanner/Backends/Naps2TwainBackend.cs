@@ -56,56 +56,75 @@ namespace TownSuite.TwainScanner.Backends
         int picnumber = 0;
         public override async Task Scan(string imageFormat)
         {
-            await base.Scan(imageFormat);
 
-            var sourceTwainListBox = ParentForm.GetTwainSourceList();
-            var device = sourceTwainListBox.SelectedItem as ScanDevice;
-            var options = new ScanOptions { Device = device };
+            var toolStrip = ParentForm.GetProgressBar();
+            var statusLabel = ParentForm.GetStatusLabel();
 
-            await foreach (var image in controller.Scan(options))
+            toolStrip.Style = ProgressBarStyle.Marquee;
+            toolStrip.Visible = true;
+            statusLabel.Text = "Scanning...";
+            statusLabel.Visible = true;
+
+            try
             {
-                picnumber += 1;
-                var newpic = new PictureBox();
-                System.Drawing.Image resizedImg;
-                string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + picnumber.ToString() + Guid.NewGuid().ToString() + imageExtension);
-                newpic.Tag = origPath;
 
-                using Bitmap img = image.RenderToBitmap();
+                await base.Scan(imageFormat);
 
-                switch (imageFormat)
+                var sourceTwainListBox = ParentForm.GetTwainSourceList();
+                var device = sourceTwainListBox.SelectedItem as ScanDevice;
+                var options = new ScanOptions { Device = device };
+
+                await foreach (var image in controller.Scan(options))
                 {
-                    case "tiff":
-                        img.Save(origPath, ImageFormat.Tiff);
-                        break;
-                    case "png":
-                        img.Save(origPath, ImageFormat.Png);
-                        break;
-                    case "pdf":
-                    case "jpeg":
-                    default:
-                        // pdf is just an import of a file.  Use jpg.
-                        img.Save(origPath, ImageFormat.Jpeg);
-                        break;
+                    picnumber += 1;
+                    var newpic = new PictureBox();
+                    System.Drawing.Image resizedImg;
+                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + picnumber.ToString() + Guid.NewGuid().ToString() + imageExtension);
+                    newpic.Tag = origPath;
+
+                    using Bitmap img = image.RenderToBitmap();
+
+                    switch (imageFormat)
+                    {
+                        case "tiff":
+                            img.Save(origPath, ImageFormat.Tiff);
+                            break;
+                        case "png":
+                            img.Save(origPath, ImageFormat.Png);
+                            break;
+                        case "pdf":
+                        case "jpeg":
+                        default:
+                            // pdf is just an import of a file.  Use jpg.
+                            img.Save(origPath, ImageFormat.Jpeg);
+                            break;
+                    }
+
+                    resizedImg = new Bitmap(img, new Size(180, 180));
+
+
+                    newpic.Image = resizedImg;
+                    newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
+                    newpic.Refresh();
+                    newpic.DoubleClick += Newpic_DoubleClick;
+                    newpic.MouseEnter += Newpic_MouseEnter;
+                    newpic.MouseLeave += Newpic_MouseLeave;
+                    var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
+                    newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
+                    flowLayoutPanel1.Controls.Add(newpic);
+                    // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
+
+                    RunOcr(newpic, origPath, OcrEnabled());
+
+                    Console.WriteLine("Scanned a page!");
+                    picnumber += 1;
                 }
-
-                resizedImg = new Bitmap(img, new Size(180, 180));
-
-
-                newpic.Image = resizedImg;
-                newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
-                newpic.Refresh();
-                newpic.DoubleClick += Newpic_DoubleClick;
-                newpic.MouseEnter += Newpic_MouseEnter;
-                newpic.MouseLeave += Newpic_MouseLeave;
-                var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
-                newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                flowLayoutPanel1.Controls.Add(newpic);
-                // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
-
-                RunOcr(newpic, origPath, OcrEnabled());
-
-                Console.WriteLine("Scanned a page!");
-                picnumber += 1;
+            }
+            finally
+            {
+                toolStrip.Style = ProgressBarStyle.Blocks;
+                toolStrip.Visible = false;
+                statusLabel.Visible = false;
             }
         }
         public override void Save()
