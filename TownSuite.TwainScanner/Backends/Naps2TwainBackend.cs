@@ -23,7 +23,6 @@ namespace TownSuite.TwainScanner.Backends
         ScanController controller;
         public Naps2Backend(string dirText, Ocr ocr) : base(dirText, ocr)
         {
-            // Constructor logic here
         }
 
         public override async Task ConfigureSettings()
@@ -33,15 +32,6 @@ namespace TownSuite.TwainScanner.Backends
 
             scanningContext = new ScanningContext(new GdiImageContext());
             scanningContext.SetUpWin32Worker();
-
-
-        //        public WorkerFactory(string nativeWorkerExePath, string? winX86WorkerExePath = null, Dictionary<string, string>? environmentVariables = null)
-        //{
-        //    NativeWorkerExePath = nativeWorkerExePath;
-        //    WinX86WorkerExePath = winX86WorkerExePath;
-        //    _environmentVariables = environmentVariables ?? new Dictionary<string, string>();
-        //}
-        //PlatformCompat.System.NativeWorkerAlias
 
             controller = new ScanController(scanningContext);
 
@@ -60,16 +50,6 @@ namespace TownSuite.TwainScanner.Backends
 
             sourceTwainListBox.DataSource = devices;
             sourceTwainListBox.DisplayMember = "Name";
-
-            //foreach (var device in devices)
-            //{
-            //    var options = new ScanOptions { Device = device };
-
-            //    sourceTwainListBox.Items.Add(options);
-            //    // set the display name
-                
-            //    sourceTwainListBox.Items[sourceTwainListBox.Items.Count - 1] = device.Name;
-            //}
             sourceTwainListBox.SelectedIndex = 0;
         }
 
@@ -91,7 +71,6 @@ namespace TownSuite.TwainScanner.Backends
                 newpic.Tag = origPath;
 
                 using Bitmap img = image.RenderToBitmap();
-
 
                 switch (imageFormat)
                 {
