@@ -21,8 +21,10 @@ namespace TownSuite.TwainScanner.Backends
     {
         ScanningContext scanningContext;
         ScanController controller;
-        public Naps2Backend(string dirText, Ocr ocr) : base(dirText, ocr)
+        Driver driver;
+        public Naps2Backend(string dirText, Ocr ocr, Driver driver) : base(dirText, ocr)
         {
+            this.driver = driver;
         }
 
         public override async Task ConfigureSettings()
@@ -31,7 +33,10 @@ namespace TownSuite.TwainScanner.Backends
             // Initialize NAPS2 scanning context and other settings here
 
             scanningContext = new ScanningContext(new GdiImageContext());
-            scanningContext.SetUpWin32Worker();
+            if (driver == Driver.Twain)
+            {
+                scanningContext.SetUpWin32Worker();
+            }
 
             controller = new ScanController(scanningContext);
 
@@ -41,22 +46,28 @@ namespace TownSuite.TwainScanner.Backends
                 PageSize = PageSize.Letter,
                 Dpi = 300,
                 UseNativeUI = true,
-                Driver = Driver.Twain
+                Driver = driver
             };
             var devices = (await controller.GetDeviceList(scanOptions));
 
-            var sourceTwainListBox = ParentForm.GetTwainSourceList();
-            sourceTwainListBox.Items.Clear();
+            ListBox sourceListBox;
+            if (driver == Driver.Twain)
+            {
+                sourceListBox = ParentForm.GetTwainSourceList();
+            }
+            else
+            {
+                sourceListBox = ParentForm.GetWiaSourceList();
+            }
 
-            sourceTwainListBox.DataSource = devices;
-            sourceTwainListBox.DisplayMember = "Name";
-            sourceTwainListBox.SelectedIndex = 0;
+            sourceListBox.DataSource = devices;
+            sourceListBox.DisplayMember = "Name";
+            sourceListBox.SelectedIndex = 0;
         }
 
         int picnumber = 0;
         public override async Task Scan(string imageFormat)
         {
-
             var toolStrip = ParentForm.GetProgressBar();
             var statusLabel = ParentForm.GetStatusLabel();
 
@@ -70,8 +81,16 @@ namespace TownSuite.TwainScanner.Backends
 
                 await base.Scan(imageFormat);
 
-                var sourceTwainListBox = ParentForm.GetTwainSourceList();
-                var device = sourceTwainListBox.SelectedItem as ScanDevice;
+                ListBox sourceListBox;
+                if (driver == Driver.Twain)
+                {
+                    sourceListBox = ParentForm.GetTwainSourceList();
+                }
+                else
+                {
+                    sourceListBox = ParentForm.GetWiaSourceList();
+                }
+                var device = sourceListBox.SelectedItem as ScanDevice;
                 var options = new ScanOptions { Device = device };
 
                 await foreach (var image in controller.Scan(options))

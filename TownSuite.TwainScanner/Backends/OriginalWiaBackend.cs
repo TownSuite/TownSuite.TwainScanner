@@ -1,4 +1,4 @@
-﻿#if INCLUDE_WIA
+﻿#if INCLUDE_ORIGINAL
 using NAPS2.Images;
 using System;
 using System.Collections.Generic;

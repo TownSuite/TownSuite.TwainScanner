@@ -1,116 +1,119 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+		<OutputType>WinExe</OutputType>
+		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
+		<TargetFrameworks>net8.0-windows</TargetFrameworks>
+		<RuntimeIdentifiers>win;win-x86</RuntimeIdentifiers>
+		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
+		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
+		<Company>TownSuite</Company>
+		<Product>TownSuite.TwainScanner</Product>
+		<Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
+		<Copyright>Copyright © SARAFF 2011</Copyright>
+		<AssemblyVersion>1.0.37</AssemblyVersion>
+		<FileVersion>1.0.37</FileVersion>
+		<PackageVersion>1.0.37</PackageVersion>
+		<OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+		<Platforms>AnyCPU;x86</Platforms>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyOriginatorKeyFile />
+	</PropertyGroup>
+
+	<!--
   <PropertyGroup>
-	  <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-	  <OutputType>WinExe</OutputType>
-	  <RootNamespace>TownSuite.TwainScanner</RootNamespace>
-	  <TargetFrameworks>net8.0-windows</TargetFrameworks>
-	  <RuntimeIdentifiers>win;win-x86</RuntimeIdentifiers>
-	  <AssemblyName>TownSuite.TwainScanner</AssemblyName>
-	  <AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
-	  <Company>TownSuite</Company>
-	  <Product>TownSuite.TwainScanner</Product>
-	  <Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
-	  <Copyright>Copyright © SARAFF 2011</Copyright>
-	  <AssemblyVersion>1.0.37</AssemblyVersion>
-	  <FileVersion>1.0.37</FileVersion>
-	  <PackageVersion>1.0.37</PackageVersion>
-	  <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-	  <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Platforms>AnyCPU;x86</Platforms>
-	  <UseWindowsForms>true</UseWindowsForms>
-	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	
+	  <DefineConstants>INCLUDE_ORIGINAL</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
-	  <DefineConstants>INCLUDE_WIA</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>TownSuite.TwainScanner.Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent />
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="MainFrame.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="MainFrame.Designer.cs">
-      <DependentUpon>MainFrame.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Resources.fr-CA.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.fr-CA.resx</DependentUpon>
-    </Compile>
-    <Compile Update="SelectSourceForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="SelectSourceForm.Designer.cs">
-      <DependentUpon>SelectSourceForm.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Twain32.cs">
-      <SubType>Component</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="MainFrame.resx">
-      <DependentUpon>MainFrame.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Resources.fr-CA.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.fr-CA.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="SelectSourceForm.resx">
-      <DependentUpon>SelectSourceForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Twain32.resx">
-      <DependentUpon>Twain32.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\scanner.bmp" />
-  </ItemGroup>
-   <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-	<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" /> 
-  </ItemGroup> 
+  -->
+
+	<PropertyGroup>
+		<StartupObject>TownSuite.TwainScanner.Program</StartupObject>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+		<DebugType>full</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+		<DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
+		<DebugType>pdbonly</DebugType>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PostBuildEvent />
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(DefineConstants)' != 'INCLUDE_ORIGINAL'">
+		<Compile Remove="Scanner.cs" />
+		<Compile Remove="SelectSourceForm.cs" />
+		<Compile Remove="SelectSourceForm.Designer.cs" />
+		<Compile Remove="Tiff.cs" />
+		<Compile Remove="Twain32.cs" />
+		<Compile Remove="TwainCapabilities.cs" />
+		<Compile Remove="TwainDefs.cs" />
+		<Compile Remove="TwainException.cs" />
+		<Compile Remove="ScannerList.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Remove="SelectSourceForm.resx" />
+		<EmbeddedResource Remove="Twain32.resx" />
+	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System.Security" />
+		<Reference Include="System.Xaml" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="MainFrame.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="MainFrame.Designer.cs">
+			<DependentUpon>MainFrame.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<AutoGen>True</AutoGen>
+			<DesignTime>True</DesignTime>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\Resources.fr-CA.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.fr-CA.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="MainFrame.resx">
+			<DependentUpon>MainFrame.cs</DependentUpon>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			<SubType>Designer</SubType>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Resources.fr-CA.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.fr-CA.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\scanner.bmp" />
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+		<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.7.1" />
 		<PackageReference Include="NAPS2.Images.Gdi" Version="1.1.6" />
@@ -119,12 +122,8 @@
 			<IncludeAssets>all</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
+		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 	</ItemGroup>
-	
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
-
-	  <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
-	<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
-  </ItemGroup>
 </Project>

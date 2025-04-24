@@ -180,8 +180,14 @@
   <data name="ScanningError" xml:space="preserve">
     <value>Scanning Error</value>
   </data>
+  <data name="SelectImageType" xml:space="preserve">
+    <value>You must select an image format</value>
+  </data>
   <data name="SelectScanImage" xml:space="preserve">
     <value>You need to select scan Image</value>
+  </data>
+  <data name="SelectScanner" xml:space="preserve">
+    <value>You must select a scanner.</value>
   </data>
   <data name="TownSuiteScan" xml:space="preserve">
     <value>TownSuite Scan</value>

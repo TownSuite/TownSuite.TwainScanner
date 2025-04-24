@@ -24,13 +24,14 @@ namespace TownSuite.TwainScanner
             List<string> scanlist = new List<string>();
             for (int i = 0; i <= Environment.GetCommandLineArgs().Length - 1; i++)
             {
+#if INCLUDE_ORIGINAL
                 if (Environment.GetCommandLineArgs()[i] == "-scanlist")
                 {
                     ScanList = true;
                     var scnlst = new ScannerList();
                     scanlist = scnlst.ScanList();
                 }
-
+#endif
                 if (Environment.GetCommandLineArgs()[i] == "-scansettings")
                 {
                     foreach (string s in Environment.GetCommandLineArgs())

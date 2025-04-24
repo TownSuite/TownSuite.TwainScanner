@@ -1,4 +1,4 @@
-﻿using NAPS2.Images;
+﻿#if INCLUDE_ORIGINAL
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -151,3 +151,4 @@ namespace TownSuite.TwainScanner.Backends
         }
     }
 }
+#endif

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using TownSuite.TwainScanner.Backends;
+using System.Threading.Tasks;
 namespace TownSuite.TwainScanner
 {
     internal partial class MainFrame : Form
@@ -25,11 +26,6 @@ namespace TownSuite.TwainScanner
         ScannerBackends backend;
         readonly string dirText;
 
-#if INCLUDE_WIA
-        bool removeWia = false;
-#else
-        bool removeWia = true;
-#endif
 
         public MainFrame(List<String> lstScanSet, Ocr ocr, string dirText, string backend)
         {
@@ -47,35 +43,31 @@ namespace TownSuite.TwainScanner
         private void MainFrame_Load(object sender, EventArgs e)
         {
 
-            for (int i = 0; i <= lstscansettings.Count - 1; i++)
-            {
-                switch (i)
-                {
-                    case 2:
-                        UserTwainImageType = lstscansettings[i];
-                        break;
-                    case 3:
-                        UserTwainScanner = lstscansettings[i];
-                        break;
-                }
-            }
+
         }
 
-        private void MainFrame_Shown(object sender, EventArgs e)
+        private async void MainFrame_Shown(object sender, EventArgs e)
         {
             try
             {
-                if (removeWia)
+                await ChangeBackend();
+                this.backend.DeleteFiles();
+
+                for (int i = 0; i <= lstscansettings.Count - 1; i++)
                 {
-                    tabScanDrivers.TabPages.RemoveByKey("tpWIAScan");
+                    switch (i)
+                    {
+                        case 2:
+                            UserTwainImageType = lstscansettings[i];
+                            break;
+                        case 3:
+                            UserTwainScanner = lstscansettings[i];
+                            break;
+                    }
                 }
 
-                ChangeBackend();
-                this.backend.DeleteFiles();
-                // backend.ConfigureSettings();
-
-
             }
+#if INCLUDE_ORIGINAL
             catch (TwainException ex)
             {
                 if (ex.Message == "It worked!")
@@ -87,6 +79,7 @@ namespace TownSuite.TwainScanner
                 }
                 throw;
             }
+#endif
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), I18N.GetString("LoadError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -114,15 +107,35 @@ namespace TownSuite.TwainScanner
 
         #region WIA Drivers
 
-        private void btnWIAScan_Click(object sender, EventArgs e)
+        private async void btnWIAScan_Click(object sender, EventArgs e)
         {
-#if INCLUDE_WIA
             //Start Scanning using a Thread
             //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
+            try
+            {
+                btnWIAScan.Enabled = false;
+                if (sourceListBox.SelectedItem == null)
+                {
+                    MessageBox.Show(I18N.GetString("SelectScanner"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (cmbImageType.SelectedItem == null)
+                {
+                    MessageBox.Show(I18N.GetString("SelectImageType"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-            string imageFormat = GetSelectedWiaImageFormat();
-            backend.Scan(imageFormat);
-#endif
+                string imageFormat = GetSelectedWiaImageFormat();
+                await backend.Scan(imageFormat);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, I18N.GetString("ScanningError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+               btnWIAScan.Enabled = true;
+            }
 
         }
         #endregion
@@ -166,15 +179,6 @@ namespace TownSuite.TwainScanner
             this.backend.ChangeSelectedScanner(GetWiaSourceList());
         }
 
-        //private void SourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
-        //{
-
-        //    //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
-        //    if (sourceTwianListBox.SelectedIndex >= 0)
-        //    {
-        //        ChangeBackend();
-        //    }
-        //}
         private void SourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
@@ -183,7 +187,6 @@ namespace TownSuite.TwainScanner
                 this.backend.ChangeSelectedScanner(sourceTwianListBox.SelectedIndex);
             }
         }
-
 
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -202,15 +205,34 @@ namespace TownSuite.TwainScanner
             return format;
         }
 
-        private void ButtonTwainScan_Click(object sender, EventArgs e)
+        private async void ButtonTwainScan_Click(object sender, EventArgs e)
         {
             try
             {
-                backend.Scan(GetSelectedTwainImageFormat());
+                buttonTwainScan.Enabled = false;
+                if (sourceTwianListBox.SelectedItem == null)
+                {
+                    MessageBox.Show(I18N.GetString("SelectScanner"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (cmbTwainImageType.SelectedItem == null)
+                {
+                    MessageBox.Show(I18N.GetString("SelectImageType"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                await backend.Scan(GetSelectedTwainImageFormat());
+            }
+            catch (NAPS2.Scan.Exceptions.ScanDriverUnknownException)
+            {
+                // FIXME: what to do here?  the images seem to be scanning fine but the twian worker crashes when the last image was scanned
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, I18N.GetString("ScanningError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                buttonTwainScan.Enabled = true;
             }
         }
 
@@ -218,58 +240,69 @@ namespace TownSuite.TwainScanner
         {
             switch (backend)
             {
-                case "originaltwain":
+                case "twain":
                     //return new OriginalTwainBackend(dirText, ocr)
                     //{
                     //    ParentForm = this
                     //};
-                    return new Naps2Backend(dirText, ocr)
+                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Twain)
                     {
                         ParentForm = this
                     };
-#if INCLUDE_WIA
-                case "originalwia":
-                    return new OriginalWiaBackend(dirText, ocr)
-                    {
-                        ParentForm = this
-                    };
-#endif
-                case "naps2":
-                    return new Naps2Backend(dirText, ocr)
+                case "wia":
+                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Wia)
                     {
                         ParentForm = this
                     };
                 default:
-                    return new OriginalTwainBackend(dirText, ocr)
+                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Twain)
                     {
                         ParentForm = this
                     };
             }
         }
 
-        private void ChangeBackend()
+        private void ChangeStatus(string message, bool visible)
+        {
+            toolStripStatusLabel1.Text = message;
+            if (visible)
+            {
+                toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
+            }
+            else
+            {
+                toolStripProgressBar1.Style = ProgressBarStyle.Blocks;
+            }
+            toolStripProgressBar1.Visible = visible;
+            toolStripStatusLabel1.Visible = visible;
+        }
+
+        private async Task ChangeBackend()
         {
             backend?.Dispose();
+
+            ChangeStatus("Loading scanner list", true);
             switch (tabScanDrivers.SelectedTab.Name)
             {
                 case "tpTWAINScan":
-                    backend = GetBackend("originaltwain");
-                    backend.ConfigureSettings();
+                    backend = GetBackend("twain");
+                    await backend.ConfigureSettings();
                     cmbTwainImageType.SelectedItem = UserTwainImageType;
                     sourceTwianListBox.SelectedItem = UserTwainScanner;
                     break;
                 case "tpWIAScan":
-                    backend = GetBackend("originalwia");
+                    backend = GetBackend("wia");
                     //WIA Settings
-                    backend.ConfigureSettings();
+                    await backend.ConfigureSettings();
                     cmbImageType.SelectedIndex = 0;
-                    cmbColor.SelectedIndex = 0;
+                    //cmbColor.SelectedIndex = 0;
 
-                    cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;
+                    //cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;
                     cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
 
                     break;
             }
+            ChangeStatus("", false);
 
             checkBoxTwainOcr.Visible = ocr.Enabled;
             checkboxWiaOcr.Visible = ocr.Enabled;
@@ -314,9 +347,9 @@ namespace TownSuite.TwainScanner
 
         #endregion
 
-        private void tabScanDrivers_SelectedIndexChanged(object sender, EventArgs e)
+        private async void tabScanDrivers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ChangeBackend();
+            await ChangeBackend();
         }
 
     }
