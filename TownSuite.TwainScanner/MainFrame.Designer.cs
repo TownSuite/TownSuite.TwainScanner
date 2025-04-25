@@ -28,344 +28,354 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.MainMenu1 = new System.Windows.Forms.MenuStrip();
-            this.menuMainFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuAcquire = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.sourceListBox = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblResolution = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cmbImageType = new System.Windows.Forms.ComboBox();
-            this.cmbResolution = new System.Windows.Forms.ComboBox();
-            this.cmbColor = new System.Windows.Forms.ComboBox();
-            this.btnWIAScan = new System.Windows.Forms.Button();
-            this.tabScanDrivers = new System.Windows.Forms.TabControl();
-            this.tpTWAINScan = new System.Windows.Forms.TabPage();
-            this.checkBoxTwainOcr = new System.Windows.Forms.CheckBox();
-            this.buttonTwainScan = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbTwainImageType = new System.Windows.Forms.ComboBox();
-            this.sourceTwianListBox = new System.Windows.Forms.ListBox();
-            this.tpWIAScan = new System.Windows.Forms.TabPage();
-            this.checkboxWiaOcr = new System.Windows.Forms.CheckBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.MainMenu1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tabScanDrivers.SuspendLayout();
-            this.tpTWAINScan.SuspendLayout();
-            this.tpWIAScan.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.SuspendLayout();
+            MainMenu1 = new System.Windows.Forms.MenuStrip();
+            menuMainFile = new System.Windows.Forms.ToolStripMenuItem();
+            MenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            mnuAcquire = new System.Windows.Forms.ToolStripMenuItem();
+            mnuSave = new System.Windows.Forms.ToolStripMenuItem();
+            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            sourceListBox = new System.Windows.Forms.ListBox();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            label5 = new System.Windows.Forms.Label();
+            lblResolution = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            cmbImageType = new System.Windows.Forms.ComboBox();
+            cmbResolution = new System.Windows.Forms.ComboBox();
+            cmbColor = new System.Windows.Forms.ComboBox();
+            btnWIAScan = new System.Windows.Forms.Button();
+            tabScanDrivers = new System.Windows.Forms.TabControl();
+            tpTWAINScan = new System.Windows.Forms.TabPage();
+            checkBoxTwainOcr = new System.Windows.Forms.CheckBox();
+            buttonTwainScan = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            cmbTwainImageType = new System.Windows.Forms.ComboBox();
+            sourceTwianListBox = new System.Windows.Forms.ListBox();
+            tpWIAScan = new System.Windows.Forms.TabPage();
+            checkboxWiaOcr = new System.Windows.Forms.CheckBox();
+            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            MainMenu1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tabScanDrivers.SuspendLayout();
+            tpTWAINScan.SuspendLayout();
+            tpWIAScan.SuspendLayout();
+            statusStrip1.SuspendLayout();
+            SuspendLayout();
             // 
             // MainMenu1
             // 
-            this.MainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuMainFile,
-            this.mnuAcquire,
-            this.mnuSave});
-            this.MainMenu1.Location = new System.Drawing.Point(0, 0);
-            this.MainMenu1.Name = "MainMenu1";
-            this.MainMenu1.Size = new System.Drawing.Size(904, 24);
-            this.MainMenu1.TabIndex = 0;
+            MainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { menuMainFile, mnuAcquire, mnuSave });
+            MainMenu1.Location = new System.Drawing.Point(0, 0);
+            MainMenu1.Name = "MainMenu1";
+            MainMenu1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            MainMenu1.Size = new System.Drawing.Size(1055, 24);
+            MainMenu1.TabIndex = 0;
             // 
             // menuMainFile
             // 
-            this.menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem5});
-            this.menuMainFile.MergeAction = System.Windows.Forms.MergeAction.Insert;
-            this.menuMainFile.MergeIndex = 0;
-            this.menuMainFile.Name = "menuMainFile";
-            this.menuMainFile.Size = new System.Drawing.Size(37, 20);
-            this.menuMainFile.Text = "File";
+            menuMainFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { MenuItem5 });
+            menuMainFile.MergeAction = System.Windows.Forms.MergeAction.Insert;
+            menuMainFile.MergeIndex = 0;
+            menuMainFile.Name = "menuMainFile";
+            menuMainFile.Size = new System.Drawing.Size(37, 20);
+            menuMainFile.Text = "File";
             // 
             // MenuItem5
             // 
-            this.MenuItem5.MergeIndex = 0;
-            this.MenuItem5.Name = "MenuItem5";
-            this.MenuItem5.Size = new System.Drawing.Size(92, 22);
-            this.MenuItem5.Text = "Exit";
-            this.MenuItem5.Click += new System.EventHandler(this.MenuItem5_Click);
+            MenuItem5.MergeIndex = 0;
+            MenuItem5.Name = "MenuItem5";
+            MenuItem5.Size = new System.Drawing.Size(92, 22);
+            MenuItem5.Text = "Exit";
+            MenuItem5.Click += MenuItem5_Click;
             // 
             // mnuAcquire
             // 
-            this.mnuAcquire.MergeIndex = 1;
-            this.mnuAcquire.Name = "mnuAcquire";
-            this.mnuAcquire.Size = new System.Drawing.Size(60, 20);
-            this.mnuAcquire.Text = "&Acquire";
-            this.mnuAcquire.Click += new System.EventHandler(this.mnuAcquire_Click);
+            mnuAcquire.MergeIndex = 1;
+            mnuAcquire.Name = "mnuAcquire";
+            mnuAcquire.Size = new System.Drawing.Size(60, 20);
+            mnuAcquire.Text = "&Acquire";
+            mnuAcquire.Click += mnuAcquire_Click;
             // 
             // mnuSave
             // 
-            this.mnuSave.MergeIndex = 2;
-            this.mnuSave.Name = "mnuSave";
-            this.mnuSave.Size = new System.Drawing.Size(43, 20);
-            this.mnuSave.Text = "&Save";
-            this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
+            mnuSave.MergeIndex = 2;
+            mnuSave.Name = "mnuSave";
+            mnuSave.Size = new System.Drawing.Size(43, 20);
+            mnuSave.Text = "&Save";
+            mnuSave.Click += mnuSave_Click;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(186, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(710, 593);
-            this.flowLayoutPanel1.TabIndex = 0;
+            flowLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.Location = new System.Drawing.Point(217, 0);
+            flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new System.Drawing.Size(828, 684);
+            flowLayoutPanel1.TabIndex = 0;
             // 
             // sourceListBox
             // 
-            this.sourceListBox.FormattingEnabled = true;
-            this.sourceListBox.Location = new System.Drawing.Point(6, 6);
-            this.sourceListBox.Name = "sourceListBox";
-            this.sourceListBox.Size = new System.Drawing.Size(146, 160);
-            this.sourceListBox.TabIndex = 2;
-            this.sourceListBox.SelectedValueChanged += new System.EventHandler(this.SourceListBox_SelectedValueChanged);
+            sourceListBox.FormattingEnabled = true;
+            sourceListBox.ItemHeight = 15;
+            sourceListBox.Location = new System.Drawing.Point(7, 7);
+            sourceListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sourceListBox.Name = "sourceListBox";
+            sourceListBox.Size = new System.Drawing.Size(170, 184);
+            sourceListBox.TabIndex = 2;
+            sourceListBox.SelectedValueChanged += SourceListBox_SelectedValueChanged;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.lblResolution);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.cmbImageType);
-            this.groupBox1.Controls.Add(this.cmbResolution);
-            this.groupBox1.Controls.Add(this.cmbColor);
-            this.groupBox1.Location = new System.Drawing.Point(8, 170);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(146, 160);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "WIA Properties";
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(lblResolution);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(cmbImageType);
+            groupBox1.Controls.Add(cmbResolution);
+            groupBox1.Controls.Add(cmbColor);
+            groupBox1.Location = new System.Drawing.Point(9, 196);
+            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(170, 185);
+            groupBox1.TabIndex = 5;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "WIA Properties";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 104);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(31, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Color";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(7, 120);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(36, 15);
+            label5.TabIndex = 14;
+            label5.Text = "Color";
             // 
             // lblResolution
             // 
-            this.lblResolution.AutoSize = true;
-            this.lblResolution.Location = new System.Drawing.Point(6, 62);
-            this.lblResolution.Name = "lblResolution";
-            this.lblResolution.Size = new System.Drawing.Size(57, 13);
-            this.lblResolution.TabIndex = 12;
-            this.lblResolution.Text = "Resolution";
+            lblResolution.AutoSize = true;
+            lblResolution.Location = new System.Drawing.Point(7, 72);
+            lblResolution.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lblResolution.Name = "lblResolution";
+            lblResolution.Size = new System.Drawing.Size(63, 15);
+            lblResolution.TabIndex = 12;
+            lblResolution.Text = "Resolution";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 16);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Image format";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(12, 18);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(79, 15);
+            label3.TabIndex = 8;
+            label3.Text = "Image format";
             // 
             // cmbImageType
             // 
-            this.cmbImageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbImageType.FormattingEnabled = true;
-            this.cmbImageType.Items.AddRange(new object[] {
-            "TIFF",
-            "PDF",
-            "PNG",
-            "JPEG"});
-            this.cmbImageType.Location = new System.Drawing.Point(8, 34);
-            this.cmbImageType.Name = "cmbImageType";
-            this.cmbImageType.Size = new System.Drawing.Size(110, 21);
-            this.cmbImageType.TabIndex = 7;
+            cmbImageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbImageType.FormattingEnabled = true;
+            cmbImageType.Items.AddRange(new object[] { "TIFF", "PDF", "PNG", "JPEG" });
+            cmbImageType.Location = new System.Drawing.Point(9, 39);
+            cmbImageType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmbImageType.Name = "cmbImageType";
+            cmbImageType.Size = new System.Drawing.Size(128, 23);
+            cmbImageType.TabIndex = 7;
             // 
             // cmbResolution
             // 
-            this.cmbResolution.FormattingEnabled = true;
-            this.cmbResolution.Location = new System.Drawing.Point(8, 78);
-            this.cmbResolution.Name = "cmbResolution";
-            this.cmbResolution.Size = new System.Drawing.Size(110, 21);
-            this.cmbResolution.TabIndex = 2;
+            cmbResolution.FormattingEnabled = true;
+            cmbResolution.Location = new System.Drawing.Point(9, 90);
+            cmbResolution.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmbResolution.Name = "cmbResolution";
+            cmbResolution.Size = new System.Drawing.Size(128, 23);
+            cmbResolution.TabIndex = 2;
             // 
             // cmbColor
             // 
-            this.cmbColor.FormattingEnabled = true;
-            this.cmbColor.Location = new System.Drawing.Point(8, 120);
-            this.cmbColor.Name = "cmbColor";
-            this.cmbColor.Size = new System.Drawing.Size(110, 21);
-            this.cmbColor.TabIndex = 3;
+            cmbColor.FormattingEnabled = true;
+            cmbColor.Location = new System.Drawing.Point(9, 138);
+            cmbColor.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmbColor.Name = "cmbColor";
+            cmbColor.Size = new System.Drawing.Size(128, 23);
+            cmbColor.TabIndex = 3;
             // 
             // btnWIAScan
             // 
-            this.btnWIAScan.Location = new System.Drawing.Point(76, 336);
-            this.btnWIAScan.Name = "btnWIAScan";
-            this.btnWIAScan.Size = new System.Drawing.Size(75, 23);
-            this.btnWIAScan.TabIndex = 6;
-            this.btnWIAScan.Text = "WIA Scan";
-            this.btnWIAScan.UseVisualStyleBackColor = true;
-            this.btnWIAScan.Click += new System.EventHandler(this.btnWIAScan_Click);
+            btnWIAScan.Location = new System.Drawing.Point(89, 388);
+            btnWIAScan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            btnWIAScan.Name = "btnWIAScan";
+            btnWIAScan.Size = new System.Drawing.Size(88, 27);
+            btnWIAScan.TabIndex = 6;
+            btnWIAScan.Text = "WIA Scan";
+            btnWIAScan.UseVisualStyleBackColor = true;
+            btnWIAScan.Click += btnWIAScan_Click;
             // 
             // tabScanDrivers
             // 
-            this.tabScanDrivers.Controls.Add(this.tpTWAINScan);
-            this.tabScanDrivers.Controls.Add(this.tpWIAScan);
-            this.tabScanDrivers.Location = new System.Drawing.Point(6, 27);
-            this.tabScanDrivers.Name = "tabScanDrivers";
-            this.tabScanDrivers.SelectedIndex = 0;
-            this.tabScanDrivers.Size = new System.Drawing.Size(174, 447);
-            this.tabScanDrivers.TabIndex = 7;
-            this.tabScanDrivers.SelectedIndexChanged += new System.EventHandler(this.tabScanDrivers_SelectedIndexChanged);
+            tabScanDrivers.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            tabScanDrivers.Controls.Add(tpTWAINScan);
+            tabScanDrivers.Controls.Add(tpWIAScan);
+            tabScanDrivers.Location = new System.Drawing.Point(7, 31);
+            tabScanDrivers.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabScanDrivers.Name = "tabScanDrivers";
+            tabScanDrivers.SelectedIndex = 0;
+            tabScanDrivers.Size = new System.Drawing.Size(203, 657);
+            tabScanDrivers.TabIndex = 7;
+            tabScanDrivers.SelectedIndexChanged += tabScanDrivers_SelectedIndexChanged;
             // 
             // tpTWAINScan
             // 
-            this.tpTWAINScan.Controls.Add(this.checkBoxTwainOcr);
-            this.tpTWAINScan.Controls.Add(this.buttonTwainScan);
-            this.tpTWAINScan.Controls.Add(this.label1);
-            this.tpTWAINScan.Controls.Add(this.cmbTwainImageType);
-            this.tpTWAINScan.Controls.Add(this.sourceTwianListBox);
-            this.tpTWAINScan.Location = new System.Drawing.Point(4, 22);
-            this.tpTWAINScan.Name = "tpTWAINScan";
-            this.tpTWAINScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpTWAINScan.Size = new System.Drawing.Size(166, 421);
-            this.tpTWAINScan.TabIndex = 1;
-            this.tpTWAINScan.Text = "TWAIN";
-            this.tpTWAINScan.UseVisualStyleBackColor = true;
+            tpTWAINScan.Controls.Add(checkBoxTwainOcr);
+            tpTWAINScan.Controls.Add(buttonTwainScan);
+            tpTWAINScan.Controls.Add(label1);
+            tpTWAINScan.Controls.Add(cmbTwainImageType);
+            tpTWAINScan.Controls.Add(sourceTwianListBox);
+            tpTWAINScan.Location = new System.Drawing.Point(4, 24);
+            tpTWAINScan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tpTWAINScan.Name = "tpTWAINScan";
+            tpTWAINScan.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tpTWAINScan.Size = new System.Drawing.Size(195, 488);
+            tpTWAINScan.TabIndex = 1;
+            tpTWAINScan.Text = "TWAIN";
+            tpTWAINScan.UseVisualStyleBackColor = true;
             // 
             // checkBoxTwainOcr
             // 
-            this.checkBoxTwainOcr.AutoSize = true;
-            this.checkBoxTwainOcr.Location = new System.Drawing.Point(10, 229);
-            this.checkBoxTwainOcr.Name = "checkBoxTwainOcr";
-            this.checkBoxTwainOcr.Size = new System.Drawing.Size(49, 17);
-            this.checkBoxTwainOcr.TabIndex = 12;
-            this.checkBoxTwainOcr.Text = "OCR";
-            this.checkBoxTwainOcr.UseVisualStyleBackColor = true;
-            this.checkBoxTwainOcr.Visible = false;
+            checkBoxTwainOcr.AutoSize = true;
+            checkBoxTwainOcr.Location = new System.Drawing.Point(12, 264);
+            checkBoxTwainOcr.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBoxTwainOcr.Name = "checkBoxTwainOcr";
+            checkBoxTwainOcr.Size = new System.Drawing.Size(50, 19);
+            checkBoxTwainOcr.TabIndex = 12;
+            checkBoxTwainOcr.Text = "OCR";
+            checkBoxTwainOcr.UseVisualStyleBackColor = true;
+            checkBoxTwainOcr.Visible = false;
             // 
             // buttonTwainScan
             // 
-            this.buttonTwainScan.Location = new System.Drawing.Point(72, 225);
-            this.buttonTwainScan.Name = "buttonTwainScan";
-            this.buttonTwainScan.Size = new System.Drawing.Size(75, 23);
-            this.buttonTwainScan.TabIndex = 11;
-            this.buttonTwainScan.Text = "Scan";
-            this.buttonTwainScan.UseVisualStyleBackColor = true;
-            this.buttonTwainScan.Click += new System.EventHandler(this.ButtonTwainScan_Click);
+            buttonTwainScan.Location = new System.Drawing.Point(84, 260);
+            buttonTwainScan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonTwainScan.Name = "buttonTwainScan";
+            buttonTwainScan.Size = new System.Drawing.Size(88, 27);
+            buttonTwainScan.TabIndex = 11;
+            buttonTwainScan.Text = "Scan";
+            buttonTwainScan.UseVisualStyleBackColor = true;
+            buttonTwainScan.Click += ButtonTwainScan_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 180);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Image format";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(14, 208);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(79, 15);
+            label1.TabIndex = 10;
+            label1.Text = "Image format";
             // 
             // cmbTwainImageType
             // 
-            this.cmbTwainImageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTwainImageType.FormattingEnabled = true;
-            this.cmbTwainImageType.Items.AddRange(new object[] {
-            "TIFF",
-            "PDF",
-            "JPEG",
-            "PNG"});
-            this.cmbTwainImageType.Location = new System.Drawing.Point(10, 198);
-            this.cmbTwainImageType.Name = "cmbTwainImageType";
-            this.cmbTwainImageType.Size = new System.Drawing.Size(137, 21);
-            this.cmbTwainImageType.TabIndex = 9;
+            cmbTwainImageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbTwainImageType.FormattingEnabled = true;
+            cmbTwainImageType.Items.AddRange(new object[] { "TIFF", "PDF", "JPEG", "PNG" });
+            cmbTwainImageType.Location = new System.Drawing.Point(12, 228);
+            cmbTwainImageType.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmbTwainImageType.Name = "cmbTwainImageType";
+            cmbTwainImageType.Size = new System.Drawing.Size(159, 23);
+            cmbTwainImageType.TabIndex = 9;
             // 
             // sourceTwianListBox
             // 
-            this.sourceTwianListBox.FormattingEnabled = true;
-            this.sourceTwianListBox.Location = new System.Drawing.Point(6, 8);
-            this.sourceTwianListBox.Name = "sourceTwianListBox";
-            this.sourceTwianListBox.Size = new System.Drawing.Size(146, 160);
-            this.sourceTwianListBox.TabIndex = 3;
-            this.sourceTwianListBox.SelectedValueChanged += new System.EventHandler(this.SourceTwianListBox_SelectedValueChanged);
+            sourceTwianListBox.FormattingEnabled = true;
+            sourceTwianListBox.ItemHeight = 15;
+            sourceTwianListBox.Location = new System.Drawing.Point(7, 9);
+            sourceTwianListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            sourceTwianListBox.Name = "sourceTwianListBox";
+            sourceTwianListBox.Size = new System.Drawing.Size(170, 184);
+            sourceTwianListBox.TabIndex = 3;
+            sourceTwianListBox.SelectedValueChanged += SourceTwianListBox_SelectedValueChanged;
             // 
             // tpWIAScan
             // 
-            this.tpWIAScan.Controls.Add(this.checkboxWiaOcr);
-            this.tpWIAScan.Controls.Add(this.sourceListBox);
-            this.tpWIAScan.Controls.Add(this.btnWIAScan);
-            this.tpWIAScan.Controls.Add(this.groupBox1);
-            this.tpWIAScan.Location = new System.Drawing.Point(4, 22);
-            this.tpWIAScan.Name = "tpWIAScan";
-            this.tpWIAScan.Padding = new System.Windows.Forms.Padding(3);
-            this.tpWIAScan.Size = new System.Drawing.Size(166, 421);
-            this.tpWIAScan.TabIndex = 0;
-            this.tpWIAScan.Text = "WIA";
-            this.tpWIAScan.UseVisualStyleBackColor = true;
+            tpWIAScan.Controls.Add(checkboxWiaOcr);
+            tpWIAScan.Controls.Add(sourceListBox);
+            tpWIAScan.Controls.Add(btnWIAScan);
+            tpWIAScan.Controls.Add(groupBox1);
+            tpWIAScan.Location = new System.Drawing.Point(4, 24);
+            tpWIAScan.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tpWIAScan.Name = "tpWIAScan";
+            tpWIAScan.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tpWIAScan.Size = new System.Drawing.Size(195, 629);
+            tpWIAScan.TabIndex = 0;
+            tpWIAScan.Text = "WIA";
+            tpWIAScan.UseVisualStyleBackColor = true;
             // 
             // checkboxWiaOcr
             // 
-            this.checkboxWiaOcr.AutoSize = true;
-            this.checkboxWiaOcr.Location = new System.Drawing.Point(16, 340);
-            this.checkboxWiaOcr.Name = "checkboxWiaOcr";
-            this.checkboxWiaOcr.Size = new System.Drawing.Size(49, 17);
-            this.checkboxWiaOcr.TabIndex = 7;
-            this.checkboxWiaOcr.Text = "OCR";
-            this.checkboxWiaOcr.UseVisualStyleBackColor = true;
-            this.checkboxWiaOcr.Visible = false;
+            checkboxWiaOcr.AutoSize = true;
+            checkboxWiaOcr.Location = new System.Drawing.Point(19, 392);
+            checkboxWiaOcr.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkboxWiaOcr.Name = "checkboxWiaOcr";
+            checkboxWiaOcr.Size = new System.Drawing.Size(50, 19);
+            checkboxWiaOcr.TabIndex = 7;
+            checkboxWiaOcr.Text = "OCR";
+            checkboxWiaOcr.UseVisualStyleBackColor = true;
+            checkboxWiaOcr.Visible = false;
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1,
-            this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 596);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(904, 22);
-            this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "statusStrip1";
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripProgressBar1, toolStripStatusLabel1 });
+            statusStrip1.Location = new System.Drawing.Point(0, 691);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            statusStrip1.Size = new System.Drawing.Size(1055, 22);
+            statusStrip1.TabIndex = 8;
+            statusStrip1.Text = "statusStrip1";
             // 
             // toolStripProgressBar1
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            this.toolStripProgressBar1.Visible = false;
+            toolStripProgressBar1.Name = "toolStripProgressBar1";
+            toolStripProgressBar1.Size = new System.Drawing.Size(117, 18);
+            toolStripProgressBar1.Visible = false;
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(93, 17);
-            this.toolStripStatusLabel1.Text = "processing ocr...";
-            this.toolStripStatusLabel1.Visible = false;
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new System.Drawing.Size(93, 17);
+            toolStripStatusLabel1.Text = "processing ocr...";
+            toolStripStatusLabel1.Visible = false;
             // 
             // MainFrame
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(904, 618);
-            this.Controls.Add(this.MainMenu1);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.tabScanDrivers);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.MainMenuStrip = this.MainMenu1;
-            this.Name = "MainFrame";
-            this.Text = "Scan Document";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
-            this.Load += new System.EventHandler(this.MainFrame_Load);
-            this.Shown += new System.EventHandler(this.MainFrame_Shown);
-            this.MainMenu1.ResumeLayout(false);
-            this.MainMenu1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tabScanDrivers.ResumeLayout(false);
-            this.tpTWAINScan.ResumeLayout(false);
-            this.tpTWAINScan.PerformLayout();
-            this.tpWIAScan.ResumeLayout(false);
-            this.tpWIAScan.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1055, 713);
+            Controls.Add(MainMenu1);
+            Controls.Add(statusStrip1);
+            Controls.Add(tabScanDrivers);
+            Controls.Add(flowLayoutPanel1);
+            MainMenuStrip = MainMenu1;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "MainFrame";
+            Text = "Scan Document";
+            FormClosing += MainFrame_FormClosing;
+            Load += MainFrame_Load;
+            Shown += MainFrame_Shown;
+            MainMenu1.ResumeLayout(false);
+            MainMenu1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tabScanDrivers.ResumeLayout(false);
+            tpTWAINScan.ResumeLayout(false);
+            tpTWAINScan.PerformLayout();
+            tpWIAScan.ResumeLayout(false);
+            tpWIAScan.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
