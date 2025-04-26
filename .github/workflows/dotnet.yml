@@ -21,7 +21,7 @@ jobs:
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: win-x86
+        name: win
         path: |
-          TownSuite.TwainScanner/bin/x86/Release
+          TownSuite.TwainScanner/bin/AnyCPU/Release
         retention-days: 1

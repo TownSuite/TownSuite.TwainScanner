@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+		<Platform Condition=" '$(Platform)' == '' "></Platform>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
 		<TargetFrameworks>net8.0-windows</TargetFrameworks>
-		<RuntimeIdentifiers>win;win-x86</RuntimeIdentifiers>
+		<RuntimeIdentifiers>win</RuntimeIdentifiers>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
 		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
 		<Company>TownSuite</Company>
@@ -16,7 +16,8 @@
 		<PackageVersion>1.0.37</PackageVersion>
 		<OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		<Platforms>AnyCPU;x86</Platforms>
+		<GeneratePackageOnBuild>string</GeneratePackageOnBuild>
+		<Platforms>AnyCPU</Platforms>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 	</PropertyGroup>
@@ -33,10 +34,10 @@
 	<PropertyGroup>
 		<StartupObject>TownSuite.TwainScanner.Program</StartupObject>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug'">
 		<DebugType>full</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release'">
 		<DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
 		<DebugType>pdbonly</DebugType>
 	</PropertyGroup>
