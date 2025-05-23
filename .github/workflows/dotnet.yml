@@ -15,6 +15,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Install .NET Workloads
+      run: |
+        dotnet workload install microsoft-net-sdk-windowsdesktop
     - name: Build
       run: dotnet build TownSuite.TwainScanner.sln -c Release
     - name: publish
