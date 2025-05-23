@@ -53,13 +53,19 @@ namespace TownSuite.TwainScanner.Backends
                 sourceListBox.DataSource = null;
                 sourceListBox.DataSource = existingDevices;
                 sourceListBox.DisplayMember = "Name";
-                sourceListBox.SelectedIndex = 0;
+                if (existingDevices.Count > 0)
+                {
+                    sourceListBox.SelectedIndex = 0;
+                }
             }
             else
             {
                 sourceListBox.DataSource = devices;
                 sourceListBox.DisplayMember = "Name";
-                sourceListBox.SelectedIndex = 0;
+                if (devices.Count>0)
+                {
+                    sourceListBox.SelectedIndex = 0;
+                }
             }
         }
 
