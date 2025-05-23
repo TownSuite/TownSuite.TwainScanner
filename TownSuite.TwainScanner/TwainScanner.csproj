@@ -61,14 +61,6 @@
 		<EmbeddedResource Remove="Twain32.resx" />
 	</ItemGroup>
 	<ItemGroup>
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="PresentationCore" />
-		<Reference Include="PresentationFramework" />
-		<Reference Include="System.Security" />
-		<Reference Include="System.Xaml" />
-		<Reference Include="WindowsBase" />
-	</ItemGroup>
-	<ItemGroup>
 		<Compile Update="MainFrame.cs">
 			<SubType>Form</SubType>
 		</Compile>
