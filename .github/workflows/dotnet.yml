@@ -20,7 +20,7 @@ jobs:
     - name: Build
       run: dotnet build TownSuite.TwainScanner.sln -c Release
     - name: publish
-      run: dotnet publish TownSuite.TwainScanner.sln -c Release -r win-x64 --self-contained true -f net8.0-windows  	
+      run: dotnet publish TownSuite.TwainScanner.sln -c Release -r "win-x64" --self-contained true -f net8.0-windows  	
     - name: custom nuget package
       run: |
         cd nugetspec
