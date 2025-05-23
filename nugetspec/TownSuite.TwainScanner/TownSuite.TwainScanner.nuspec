@@ -5,18 +5,7 @@
     <version>1.0.37</version>
     <authors>TownSuite.TwainScanner</authors>
     <description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</description>
-    <copyright>Copyright © SARAFF 2011</copyright>
-    <dependencies>
-      <group targetFramework=".NETFramework4.8">
-        <dependency id="Wia.Interop.Townsuite.x86" version="1.0.1" exclude="Build,Analyzers" /> 
-        <dependency id="iTextSharp.LGPLv2.Core" version="3.7.1" exclude="Build,Analyzers" />
-      </group>
-       <group targetFramework="net8.0-windows">
-        <dependency id="System.Drawing.Common" version="8.0.10" exclude="Build,Analyzers" /> 
-        <dependency id="iTextSharp.LGPLv2.Core" version="3.7.1" exclude="Build,Analyzers" />
-        <dependency id="System.Windows.Extensions" version="8.0.0" exclude="Build,Analyzers" />
-      </group>
-    </dependencies>
+    <copyright>TownSuite 2025, Copyright © SARAFF 2011</copyright>
 
     <contentFiles>
         <files include="**" buildAction="Content" copyToOutput="true" flatten="false" />

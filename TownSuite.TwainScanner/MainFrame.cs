@@ -1,30 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Windows.Forms;
-using System.Linq;
-using System.Collections;
-
-using System.Threading;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using TownSuite.TwainScanner.Backends;
 using System.Threading.Tasks;
+using NAPS2.Scan;
+using System.Linq;
 namespace TownSuite.TwainScanner
 {
     internal partial class MainFrame : Form
     {
         private List<String> lstscansettings;
-        private string UserTwainImageType;
-        private string UserTwainScanner;
+        private string UserImageType;
+        private string UserScanner;
         readonly Ocr ocr;
-        ScannerBackends backend;
+        ScannerBackends[] backends;
         readonly string dirText;
+
 
 
         public MainFrame(List<String> lstScanSet, Ocr ocr, string dirText, string backend)
@@ -34,86 +25,62 @@ namespace TownSuite.TwainScanner
             this.dirText = dirText;
 
             InitializeComponent();
-
-            // this.backend = GetBackend(backend);
-            //this.backend.DeleteFiles();
-
-        }
-
-        private void MainFrame_Load(object sender, EventArgs e)
-        {
-
-
         }
 
         private async void MainFrame_Shown(object sender, EventArgs e)
         {
             try
             {
-                await ChangeBackend();
-                this.backend.DeleteFiles();
+                await LoadBackends();
+                this.backends[0].DeleteFiles();
+                cmbColor.DataSource = Colors.GetColors();
+                cmbColor.DisplayMember = "Name";
+                cmbColor.ValueMember = "Color";
+                cmbColor.SelectedIndex = 2;
+
+                cmbResolution.DataSource = DPIs.GetDPI();
+                cmbResolution.DisplayMember = "Name";
+                cmbResolution.ValueMember = "DPI";
+                cmbResolution.SelectedIndex = 3;
+
+                cmbImageType.DataSource = ImageFormats.GetImageFormats();
+                cmbImageType.DisplayMember = "Description";
+                cmbImageType.ValueMember = "Name";
+                cmbImageType.SelectedIndex = 3;
+
 
                 for (int i = 0; i <= lstscansettings.Count - 1; i++)
                 {
                     switch (i)
                     {
                         case 2:
-                            UserTwainImageType = lstscansettings[i];
+                            UserImageType = lstscansettings[i];
                             break;
                         case 3:
-                            UserTwainScanner = lstscansettings[i];
+                            UserScanner = lstscansettings[i];
                             break;
                     }
                 }
 
             }
-#if INCLUDE_ORIGINAL
-            catch (TwainException ex)
-            {
-                if (ex.Message == "It worked!")
-                {
-                    Console.WriteLine("Failed to find a scanner");
-                    Console.Out.Flush();
-                    this.Close();
-                    return;
-                }
-                throw;
-            }
-#endif
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), I18N.GetString("LoadError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            //Set Default Twain Scanner Settings
-            cmbTwainImageType.SelectedItem = UserTwainImageType;
-            sourceTwianListBox.SelectedItem = UserTwainScanner;
-            //cmbTwainImageType.SelectedIndex = 0;
-
-            checkBoxTwainOcr.Visible = ocr.Enabled;
-            checkboxWiaOcr.Visible = ocr.Enabled;
+            checkboxOcr.Visible = ocr.Enabled;
         }
-
-        #region Delete Temporary Files
-
-
-
-        #endregion
 
         private void MenuItem5_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        #region WIA Drivers
-
-        private async void btnWIAScan_Click(object sender, EventArgs e)
+        private async void btnScan_ClickAsync(object sender, EventArgs e)
         {
-            //Start Scanning using a Thread
-            //Task.Factory.StartNew(StartScanning).ContinueWith(result => TriggerScan());
             try
             {
-                btnWIAScan.Enabled = false;
+                btnScan.Enabled = false;
                 if (sourceListBox.SelectedItem == null)
                 {
                     MessageBox.Show(I18N.GetString("SelectScanner"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -125,8 +92,13 @@ namespace TownSuite.TwainScanner
                     return;
                 }
 
-                string imageFormat = GetSelectedWiaImageFormat();
+                string imageFormat = GetSelectedImageFormat();
+                var backend = GetSelectedBackend();
                 await backend.Scan(imageFormat);
+            }
+            catch (NAPS2.Scan.Exceptions.ScanDriverUnknownException)
+            {
+                // FIXME: what to do here?  the images seem to be scanning fine but the twian worker crashes when the last image was scanned
             }
             catch (Exception ex)
             {
@@ -134,18 +106,16 @@ namespace TownSuite.TwainScanner
             }
             finally
             {
-               btnWIAScan.Enabled = true;
+                btnScan.Enabled = true;
             }
-
         }
-        #endregion
-
 
         private void mnuAcquire_Click(object sender, EventArgs e)
         {
             try
             {
-                string imageFormat = GetSelectedTwainImageFormat().ToLower().Trim();
+                var backend = GetSelectedBackend();
+                string imageFormat = GetSelectedImageFormat().ToLower().Trim();
                 backend.Scan(imageFormat);
             }
             catch (Exception ex)
@@ -160,6 +130,7 @@ namespace TownSuite.TwainScanner
         {
             try
             {
+                var backend = GetSelectedBackend();
                 backend.Save();
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -176,67 +147,26 @@ namespace TownSuite.TwainScanner
         private void SourceListBox_SelectedValueChanged(object sender, EventArgs e)
         {
             // wia
-            this.backend.ChangeSelectedScanner(GetWiaSourceList());
-        }
-
-        private void SourceTwianListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            //this._twain.SetDefaultSource(sourceTwianListBox.SelectedIndex);
-            if (sourceTwianListBox.SelectedIndex >= 0)
-            {
-                this.backend.ChangeSelectedScanner(sourceTwianListBox.SelectedIndex);
-            }
+            var backend = GetSelectedBackend();
+            backend.ChangeSelectedScanner(GetSourceList());
+            var device = sourceListBox.SelectedItem as ScanDevice;
         }
 
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
         {
-            backend?.Dispose();
+            foreach (var scanner in backends)
+            {
+                scanner.Dispose();
+            }
         }
 
-        private string GetSelectedTwainImageFormat()
+        private string GetSelectedImageFormat()
         {
-            string format = cmbTwainImageType.SelectedItem.ToString().ToLower();
+            string format = (cmbImageType.SelectedItem as ImageFormats).Name;
             return format;
         }
 
-        private string GetSelectedWiaImageFormat()
-        {
-            string format = cmbImageType.SelectedItem.ToString();
-            return format;
-        }
-
-        private async void ButtonTwainScan_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                buttonTwainScan.Enabled = false;
-                if (sourceTwianListBox.SelectedItem == null)
-                {
-                    MessageBox.Show(I18N.GetString("SelectScanner"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (cmbTwainImageType.SelectedItem == null)
-                {
-                    MessageBox.Show(I18N.GetString("SelectImageType"), I18N.GetString("ScanDocument"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                await backend.Scan(GetSelectedTwainImageFormat());
-            }
-            catch (NAPS2.Scan.Exceptions.ScanDriverUnknownException)
-            {
-                // FIXME: what to do here?  the images seem to be scanning fine but the twian worker crashes when the last image was scanned
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, I18N.GetString("ScanningError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                buttonTwainScan.Enabled = true;
-            }
-        }
-
-        private ScannerBackends GetBackend(string backend)
+        private ScannerBackends CreateBackend(string backend)
         {
             switch (backend)
             {
@@ -262,6 +192,16 @@ namespace TownSuite.TwainScanner
             }
         }
 
+        private ScannerBackends GetSelectedBackend()
+        {
+            var device = sourceListBox?.SelectedItem as ScanDevice;
+            if (device == null) return null;
+
+            var backend = backends.FirstOrDefault(b => string.Equals(b.GetBackendType(), device.Driver.ToString(), StringComparison.OrdinalIgnoreCase));
+
+            return backend;
+        }
+
         private void ChangeStatus(string message, bool visible)
         {
             toolStripStatusLabel1.Text = message;
@@ -277,35 +217,24 @@ namespace TownSuite.TwainScanner
             toolStripStatusLabel1.Visible = visible;
         }
 
-        private async Task ChangeBackend()
+        private async Task LoadBackends()
         {
-            backend?.Dispose();
-
             ChangeStatus("Loading scanner list", true);
-            switch (tabScanDrivers.SelectedTab.Name)
-            {
-                case "tpTWAINScan":
-                    backend = GetBackend("twain");
-                    await backend.ConfigureSettings();
-                    cmbTwainImageType.SelectedItem = UserTwainImageType;
-                    sourceTwianListBox.SelectedItem = UserTwainScanner;
-                    break;
-                case "tpWIAScan":
-                    backend = GetBackend("wia");
-                    //WIA Settings
-                    await backend.ConfigureSettings();
-                    cmbImageType.SelectedIndex = 0;
-                    //cmbColor.SelectedIndex = 0;
 
-                    //cmbColor.DropDownStyle = ComboBoxStyle.DropDownList;
-                    cmbResolution.DropDownStyle = ComboBoxStyle.DropDownList;
+            var twainBackend = CreateBackend("twain");
+            var wiaBackend = CreateBackend("wia");
 
-                    break;
-            }
+            backends = new[] { twainBackend, wiaBackend };
+
+            await twainBackend.ConfigureSettings();
+            await wiaBackend.ConfigureSettings();
+
+            cmbImageType.SelectedItem = UserImageType;
+            sourceListBox.SelectedItem = UserScanner;
+
             ChangeStatus("", false);
 
-            checkBoxTwainOcr.Visible = ocr.Enabled;
-            checkboxWiaOcr.Visible = ocr.Enabled;
+            checkboxOcr.Visible = ocr.Enabled;
         }
 
         #region "helper methods to help refactor the source code"
@@ -319,17 +248,17 @@ namespace TownSuite.TwainScanner
             return toolStripStatusLabel1;
         }
 
-        public ListBox GetWiaSourceList()
+        public ListBox GetSourceList()
         {
             return sourceListBox;
         }
 
-        public ComboBox GetWiaResolution()
+        public ComboBox GetResolution()
         {
             return cmbResolution;
         }
 
-        public ComboBox GetWiaColor()
+        public ComboBox GetColor()
         {
             return cmbColor;
         }
@@ -339,18 +268,75 @@ namespace TownSuite.TwainScanner
             return flowLayoutPanel1;
         }
 
-        public ListBox GetTwainSourceList()
-        {
-            return sourceTwianListBox;
-        }
-
-
         #endregion
 
-        private async void tabScanDrivers_SelectedIndexChanged(object sender, EventArgs e)
+    }
+
+    internal class DPIs
+    {
+        public int DPI { get; set; }
+        public string Name { get; set; }
+        public DPIs(int dpi, string name)
         {
-            await ChangeBackend();
+            DPI = dpi;
+            Name = name;
         }
 
+        public static List<DPIs> GetDPI()
+        {
+            return new List<DPIs>
+            {
+                new DPIs(100, "100 DPI"),
+                new DPIs(150, "150 DPI"),
+                new DPIs(200, "200 DPI"),
+                new DPIs(300, "300 DPI"),
+                new DPIs(600, "600 DPI"),
+                new DPIs(900, "900 DPI"),
+                new DPIs(1200, "1200 DPI"),
+            };
+        }
+    }
+
+    internal class Colors
+    {
+        public int Color { get; set; }
+        public string Name { get; set; }
+        public Colors(int color, string name)
+        {
+            Color = color;
+            Name = name;
+        }
+
+        public static List<Colors> GetColors()
+        {
+            return new List<Colors>
+            {
+                new Colors(0, "Black and White"),
+                new Colors(1, "Gray Scale"),
+                new Colors(2, "Color")
+            };
+        }
+    }
+
+    internal class ImageFormats
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public ImageFormats(string name, string description)
+        {
+            Name = name;
+            Description = description;
+        }
+
+        public static List<ImageFormats> GetImageFormats()
+        {
+            return new List<ImageFormats>
+            {
+                new ImageFormats("TIFF", "TIFF"),
+                new ImageFormats("PDF", "PDF"),
+                new ImageFormats("PNG", "PNG"),
+                new ImageFormats("JPEG", "JPEG")
+            };
+        }
     }
 }

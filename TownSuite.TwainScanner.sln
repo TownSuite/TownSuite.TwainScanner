@@ -7,14 +7,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwainScanner", "TownSuite.T
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Debug|x86.ActiveCfg = Debug|x86
-		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Debug|x86.Build.0 = Debug|x86
-		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Release|x86.ActiveCfg = Release|x86
-		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Release|x86.Build.0 = Release|x86
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658F9851-4D1C-4D57-904E-F9D7DA7F24FC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
