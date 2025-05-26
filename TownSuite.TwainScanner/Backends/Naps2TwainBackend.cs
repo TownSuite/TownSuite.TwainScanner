@@ -1,5 +1,4 @@
-﻿#if NET8_0_OR_GREATER
-using NAPS2.Images;
+﻿using NAPS2.Images;
 using NAPS2.Images.Gdi;
 using NAPS2.Pdf;
 using NAPS2.Scan;
@@ -30,7 +29,6 @@ namespace TownSuite.TwainScanner.Backends
         public override async Task ConfigureSettings()
         {
             await base.ConfigureSettings();
-            // Initialize NAPS2 scanning context and other settings here
 
             scanningContext = new ScanningContext(new GdiImageContext());
             if (driver == Driver.Twain)
@@ -42,35 +40,39 @@ namespace TownSuite.TwainScanner.Backends
 
             var scanOptions = new ScanOptions()
             {
-                PaperSource = PaperSource.Auto,
-                PageSize = PageSize.Letter,
-                Dpi = 300,
-                UseNativeUI = true,
                 Driver = driver
             };
             var devices = (await controller.GetDeviceList(scanOptions));
 
-            ListBox sourceListBox;
-            if (driver == Driver.Twain)
+            ListBox sourceListBox = ParentForm.GetSourceList();
+
+            if (sourceListBox.DataSource != null && sourceListBox.DataSource is List<ScanDevice>)
             {
-                sourceListBox = ParentForm.GetTwainSourceList();
+                var existingDevices = (sourceListBox.DataSource as List<ScanDevice>);
+                existingDevices.AddRange(devices);
+                sourceListBox.DataSource = null;
+                sourceListBox.DataSource = existingDevices;
+                sourceListBox.DisplayMember = "Name";
+                if (existingDevices.Count > 0)
+                {
+                    sourceListBox.SelectedIndex = 0;
+                }
             }
             else
             {
-                sourceListBox = ParentForm.GetWiaSourceList();
+                sourceListBox.DataSource = devices;
+                sourceListBox.DisplayMember = "Name";
+                if (devices.Count>0)
+                {
+                    sourceListBox.SelectedIndex = 0;
+                }
             }
-
-            sourceListBox.DataSource = devices;
-            sourceListBox.DisplayMember = "Name";
-            sourceListBox.SelectedIndex = 0;
         }
 
-        int picnumber = 0;
         public override async Task Scan(string imageFormat)
         {
             var toolStrip = ParentForm.GetProgressBar();
             var statusLabel = ParentForm.GetStatusLabel();
-
             toolStrip.Style = ProgressBarStyle.Marquee;
             toolStrip.Visible = true;
             statusLabel.Text = "Scanning...";
@@ -78,20 +80,25 @@ namespace TownSuite.TwainScanner.Backends
 
             try
             {
-
                 await base.Scan(imageFormat);
 
-                ListBox sourceListBox;
-                if (driver == Driver.Twain)
-                {
-                    sourceListBox = ParentForm.GetTwainSourceList();
-                }
-                else
-                {
-                    sourceListBox = ParentForm.GetWiaSourceList();
-                }
+                var sourceListBox = ParentForm.GetSourceList();
+                var dpiCombox = ParentForm.GetResolution();
+                var colorCombo = ParentForm.GetColor();
+                var resolution = (dpiCombox.SelectedItem as DPIs).DPI;
+
                 var device = sourceListBox.SelectedItem as ScanDevice;
-                var options = new ScanOptions { Device = device };
+                var options = new ScanOptions()
+                {
+                    // TODO: PaperSource and PageSize should be set based on user input
+                    PaperSource = PaperSource.Auto,
+                    PageSize = PageSize.Letter,
+                    Dpi = resolution,
+                    // UseNativeUI = true,
+                    Driver = driver,
+                    Device = device,
+                    BitDepth = BitDepth.Color
+                };
 
                 await foreach (var image in controller.Scan(options))
                 {
@@ -101,42 +108,43 @@ namespace TownSuite.TwainScanner.Backends
                     string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + picnumber.ToString() + Guid.NewGuid().ToString() + imageExtension);
                     newpic.Tag = origPath;
 
-                    using Bitmap img = image.RenderToBitmap();
-
-                    switch (imageFormat)
+                    using (Bitmap img = image.RenderToBitmap())
                     {
-                        case "tiff":
-                            img.Save(origPath, ImageFormat.Tiff);
-                            break;
-                        case "png":
-                            img.Save(origPath, ImageFormat.Png);
-                            break;
-                        case "pdf":
-                        case "jpeg":
-                        default:
-                            // pdf is just an import of a file.  Use jpg.
-                            img.Save(origPath, ImageFormat.Jpeg);
-                            break;
+                        switch (imageFormat)
+                        {
+                            case "tiff":
+                                img.Save(origPath, ImageFormat.Tiff);
+                                break;
+                            case "png":
+                                img.Save(origPath, ImageFormat.Png);
+                                break;
+                            case "pdf":
+                            case "jpeg":
+                            default:
+                                // pdf is just an import of a file.  Use jpg.
+                                img.Save(origPath, ImageFormat.Jpeg);
+                                break;
+                        }
+
+                        resizedImg = new Bitmap(img, new Size(180, 180));
+
+
+                        newpic.Image = resizedImg;
+                        newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
+                        newpic.Refresh();
+                        newpic.DoubleClick += Newpic_DoubleClick;
+                        newpic.MouseEnter += Newpic_MouseEnter;
+                        newpic.MouseLeave += Newpic_MouseLeave;
+                        var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
+                        newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
+                        flowLayoutPanel1.Controls.Add(newpic);
+                        // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
+
+                        RunOcr(newpic, origPath, OcrEnabled());
+
+                        Console.WriteLine("Scanned a page!");
+                        picnumber += 1;
                     }
-
-                    resizedImg = new Bitmap(img, new Size(180, 180));
-
-
-                    newpic.Image = resizedImg;
-                    newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
-                    newpic.Refresh();
-                    newpic.DoubleClick += Newpic_DoubleClick;
-                    newpic.MouseEnter += Newpic_MouseEnter;
-                    newpic.MouseLeave += Newpic_MouseLeave;
-                    var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
-                    newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                    flowLayoutPanel1.Controls.Add(newpic);
-                    // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
-
-                    RunOcr(newpic, origPath, OcrEnabled());
-
-                    Console.WriteLine("Scanned a page!");
-                    picnumber += 1;
                 }
             }
             finally
@@ -151,6 +159,11 @@ namespace TownSuite.TwainScanner.Backends
             base.Save();
         }
 
+        public override string GetBackendType()
+        {
+            return driver.ToString();
+        }
+
         public override void Dispose()
         {
             base.Dispose();
@@ -158,5 +171,3 @@ namespace TownSuite.TwainScanner.Backends
         }
     }
 }
-
-#endif

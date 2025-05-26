@@ -1,24 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+		<Platform Condition=" '$(Platform)' == '' "></Platform>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
-		<TargetFrameworks>net8.0-windows</TargetFrameworks>
-		<RuntimeIdentifiers>win;win-x86</RuntimeIdentifiers>
+		<TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
 		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
 		<Company>TownSuite</Company>
 		<Product>TownSuite.TwainScanner</Product>
 		<Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
 		<Copyright>Copyright © SARAFF 2011</Copyright>
-		<AssemblyVersion>1.0.37</AssemblyVersion>
-		<FileVersion>1.0.37</FileVersion>
-		<PackageVersion>1.0.37</PackageVersion>
+		<AssemblyVersion>1.0.38</AssemblyVersion>
+		<FileVersion>1.0.38</FileVersion>
+		<PackageVersion>1.0.38</PackageVersion>
 		<OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		<Platforms>AnyCPU;x86</Platforms>
+		<GeneratePackageOnBuild>string</GeneratePackageOnBuild>
+		<Platforms>AnyCPU</Platforms>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<LangVersion>9.0</LangVersion>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 	<PropertyGroup>
 		<AssemblyOriginatorKeyFile />
@@ -33,10 +36,10 @@
 	<PropertyGroup>
 		<StartupObject>TownSuite.TwainScanner.Program</StartupObject>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug'">
 		<DebugType>full</DebugType>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release'">
 		<DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
 		<DebugType>pdbonly</DebugType>
 	</PropertyGroup>
@@ -58,14 +61,6 @@
 	<ItemGroup>
 		<EmbeddedResource Remove="SelectSourceForm.resx" />
 		<EmbeddedResource Remove="Twain32.resx" />
-	</ItemGroup>
-	<ItemGroup>
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="PresentationCore" />
-		<Reference Include="PresentationFramework" />
-		<Reference Include="System.Security" />
-		<Reference Include="System.Xaml" />
-		<Reference Include="WindowsBase" />
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="MainFrame.cs">
@@ -111,7 +106,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\scanner.bmp" />
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' AND '$(DefineConstants)' == 'INCLUDE_ORIGINAL' ">
 		<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
@@ -121,9 +116,11 @@
 		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.1.6">
 			<IncludeAssets>all</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />	
+		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />	
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
 		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
 		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 	</ItemGroup>
 </Project>

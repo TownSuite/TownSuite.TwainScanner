@@ -15,13 +15,22 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
     - name: Build
       run: dotnet build TownSuite.TwainScanner.sln -c Release
-
+    - name: publish
+      run: dotnet publish TownSuite.TwainScanner.sln -c Release -r "win-x64" --self-contained true -f net8.0-windows  	
+    - name: custom nuget package
+      run: |
+        cd nugetspec
+        .\create_nuget.ps1
+        
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: win-x86
+        name: win
         path: |
-          TownSuite.TwainScanner/bin/x86/Release
+          TownSuite.TwainScanner/bin/AnyCPU/Release
+          nugetspec/NugetBuild
         retention-days: 1

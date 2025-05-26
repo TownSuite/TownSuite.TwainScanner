@@ -15,7 +15,7 @@ delete_files "NugetBuild"
 mkdir -force TownSuite.TwainScanner\content\TownSuite.TwainScanner
 mkdir -force NugetBuild
 
-Copy-Item -force "..\TownSuite.TwainScanner\bin\x86\Release\net48\TownSuite.TwainScanner.exe" TownSuite.TwainScanner\content\TownSuite.TwainScanner\TownSuite.TwainScanner.exe
+Copy-Item -Recurse -Force "..\TownSuite.TwainScanner\bin\AnyCPU\Release\net48\*" TownSuite.TwainScanner\content\TownSuite.TwainScanner\
 
 nuget pack TownSuite.TwainScanner\TownSuite.TwainScanner.nuspec -OutputDirectory .\NugetBuild
 

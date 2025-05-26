@@ -21,7 +21,9 @@ namespace TownSuite.TwainScanner.Backends
         protected readonly string DirText;
         protected string FileExtention;
         protected string imageExtension;
+        protected int picnumber = 0;
         readonly Ocr ocr;
+
         public MainFrame ParentForm
         {
             get; set;
@@ -56,7 +58,7 @@ namespace TownSuite.TwainScanner.Backends
         public virtual Task Scan(string imageFormat)
         {
             this.imageFormat = imageFormat.ToLower().Trim();
-            switch (imageFormat)
+            switch (this.imageFormat)
             {
                 case "tiff":
                     FileExtention = ".tif";
@@ -453,13 +455,22 @@ namespace TownSuite.TwainScanner.Backends
             var pb = sender as PictureBox;
             if (System.IO.File.Exists(pb.Tag?.ToString() ?? ""))
             {
-                System.Diagnostics.Process.Start(pb.Tag.ToString());
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = pb.Tag.ToString(),
+                    UseShellExecute = true // Required for .NET 8.0 to open files with the default application
+                });
             }
+        }
+
+        public virtual string GetBackendType()
+        {
+            return string.Empty;
         }
 
         public virtual void Dispose()
         {
-            
+
         }
     }
 }
