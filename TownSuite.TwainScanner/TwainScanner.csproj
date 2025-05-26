@@ -3,7 +3,7 @@
 		<Platform Condition=" '$(Platform)' == '' "></Platform>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
-		<TargetFrameworks>net8.0-windows</TargetFrameworks>
+		<TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
 		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
@@ -20,6 +20,7 @@
 		<Platforms>AnyCPU</Platforms>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<LangVersion>9.0</LangVersion>
 	</PropertyGroup>
 	<PropertyGroup>
 		<AssemblyOriginatorKeyFile />
@@ -104,7 +105,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\scanner.bmp" />
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' AND '$(DefineConstants)' == 'INCLUDE_ORIGINAL' ">
 		<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
@@ -114,9 +115,11 @@
 		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.1.6">
 			<IncludeAssets>all</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />	
+		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />	
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
 		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
 		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
 	</ItemGroup>
 </Project>

@@ -100,7 +100,6 @@ namespace TownSuite.TwainScanner.Backends
                     BitDepth = BitDepth.Color
                 };
 
-
                 await foreach (var image in controller.Scan(options))
                 {
                     picnumber += 1;
@@ -109,42 +108,43 @@ namespace TownSuite.TwainScanner.Backends
                     string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + picnumber.ToString() + Guid.NewGuid().ToString() + imageExtension);
                     newpic.Tag = origPath;
 
-                    using Bitmap img = image.RenderToBitmap();
-
-                    switch (imageFormat)
+                    using (Bitmap img = image.RenderToBitmap())
                     {
-                        case "tiff":
-                            img.Save(origPath, ImageFormat.Tiff);
-                            break;
-                        case "png":
-                            img.Save(origPath, ImageFormat.Png);
-                            break;
-                        case "pdf":
-                        case "jpeg":
-                        default:
-                            // pdf is just an import of a file.  Use jpg.
-                            img.Save(origPath, ImageFormat.Jpeg);
-                            break;
+                        switch (imageFormat)
+                        {
+                            case "tiff":
+                                img.Save(origPath, ImageFormat.Tiff);
+                                break;
+                            case "png":
+                                img.Save(origPath, ImageFormat.Png);
+                                break;
+                            case "pdf":
+                            case "jpeg":
+                            default:
+                                // pdf is just an import of a file.  Use jpg.
+                                img.Save(origPath, ImageFormat.Jpeg);
+                                break;
+                        }
+
+                        resizedImg = new Bitmap(img, new Size(180, 180));
+
+
+                        newpic.Image = resizedImg;
+                        newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
+                        newpic.Refresh();
+                        newpic.DoubleClick += Newpic_DoubleClick;
+                        newpic.MouseEnter += Newpic_MouseEnter;
+                        newpic.MouseLeave += Newpic_MouseLeave;
+                        var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
+                        newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
+                        flowLayoutPanel1.Controls.Add(newpic);
+                        // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
+
+                        RunOcr(newpic, origPath, OcrEnabled());
+
+                        Console.WriteLine("Scanned a page!");
+                        picnumber += 1;
                     }
-
-                    resizedImg = new Bitmap(img, new Size(180, 180));
-
-
-                    newpic.Image = resizedImg;
-                    newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
-                    newpic.Refresh();
-                    newpic.DoubleClick += Newpic_DoubleClick;
-                    newpic.MouseEnter += Newpic_MouseEnter;
-                    newpic.MouseLeave += Newpic_MouseLeave;
-                    var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
-                    newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                    flowLayoutPanel1.Controls.Add(newpic);
-                    // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
-
-                    RunOcr(newpic, origPath, OcrEnabled());
-
-                    Console.WriteLine("Scanned a page!");
-                    picnumber += 1;
                 }
             }
             finally
