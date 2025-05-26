@@ -4,7 +4,7 @@
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
 		<TargetFrameworks>net8.0-windows</TargetFrameworks>
-		<RuntimeIdentifiers>win</RuntimeIdentifiers>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
 		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
 		<Company>TownSuite</Company>
