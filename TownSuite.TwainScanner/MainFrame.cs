@@ -18,7 +18,7 @@ namespace TownSuite.TwainScanner
 
 
 
-        public MainFrame(List<String> lstScanSet, Ocr ocr, string dirText, string backend)
+        public MainFrame(List<String> lstScanSet, Ocr ocr, string dirText)
         {
             lstscansettings = lstScanSet;
             this.ocr = ocr;
@@ -31,8 +31,6 @@ namespace TownSuite.TwainScanner
         {
             try
             {
-                await LoadBackends();
-                this.backends[0].DeleteFiles();
                 cmbColor.DataSource = Colors.GetColors();
                 cmbColor.DisplayMember = "Name";
                 cmbColor.ValueMember = "Color";
@@ -61,6 +59,10 @@ namespace TownSuite.TwainScanner
                             break;
                     }
                 }
+                await LoadBackends();
+                this.backends[0].DeleteFiles();
+
+
 
             }
             catch (Exception ex)
@@ -168,28 +170,12 @@ namespace TownSuite.TwainScanner
 
         private ScannerBackends CreateBackend(string backend)
         {
-            switch (backend)
+           
+            return new Naps2Backend(dirText, ocr, NewScannerList.GetDriver(backend))
             {
-                case "twain":
-                    //return new OriginalTwainBackend(dirText, ocr)
-                    //{
-                    //    ParentForm = this
-                    //};
-                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Twain)
-                    {
-                        ParentForm = this
-                    };
-                case "wia":
-                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Wia)
-                    {
-                        ParentForm = this
-                    };
-                default:
-                    return new Naps2Backend(dirText, ocr, NAPS2.Scan.Driver.Twain)
-                    {
-                        ParentForm = this
-                    };
-            }
+                ParentForm = this
+            };
+
         }
 
         private ScannerBackends GetSelectedBackend()
@@ -230,7 +216,23 @@ namespace TownSuite.TwainScanner
             await wiaBackend.ConfigureSettings();
 
             cmbImageType.SelectedItem = UserImageType;
-            sourceListBox.SelectedItem = UserScanner;
+            foreach (ImageFormats imgformat in cmbImageType.Items)
+            {
+                if (string.Equals(imgformat.Name?.Trim(), UserImageType?.Trim(),StringComparison.OrdinalIgnoreCase))
+                {
+                    cmbImageType.SelectedItem = imgformat;
+                    break;
+                }
+            }
+
+            foreach (ScanDevice source in sourceListBox.Items)
+            {
+                if (source.Name?.Trim() == UserScanner?.Trim())
+                {
+                    sourceListBox.SelectedItem = source;
+                    break;
+                }
+            }
 
             ChangeStatus("", false);
 
