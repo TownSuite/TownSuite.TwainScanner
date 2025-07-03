@@ -21,31 +21,21 @@ namespace TownSuite.TwainScanner.Backends
         ScanningContext scanningContext;
         ScanController controller;
         Driver driver;
+        NewScannerList newScannerList ;
         public Naps2Backend(string dirText, Ocr ocr, Driver driver) : base(dirText, ocr)
         {
             this.driver = driver;
+            this.newScannerList = new NewScannerList(driver);
+            scanningContext = newScannerList.GetScanContext();
+            controller = newScannerList.GetScanController(scanningContext);
         }
 
         public override async Task ConfigureSettings()
         {
             await base.ConfigureSettings();
 
-            scanningContext = new ScanningContext(new GdiImageContext());
-            if (driver == Driver.Twain)
-            {
-                scanningContext.SetUpWin32Worker();
-            }
-
-            controller = new ScanController(scanningContext);
-
-            var scanOptions = new ScanOptions()
-            {
-                Driver = driver
-            };
-            var devices = (await controller.GetDeviceList(scanOptions));
-
-            ListBox sourceListBox = ParentForm.GetSourceList();
-
+            var devices = await new NewScannerList(driver).GetList(scanningContext);
+            var sourceListBox = ParentForm.GetSourceList();
             if (sourceListBox.DataSource != null && sourceListBox.DataSource is List<ScanDevice>)
             {
                 var existingDevices = (sourceListBox.DataSource as List<ScanDevice>);
@@ -62,13 +52,14 @@ namespace TownSuite.TwainScanner.Backends
             {
                 sourceListBox.DataSource = devices;
                 sourceListBox.DisplayMember = "Name";
-                if (devices.Count>0)
+                if (devices.Count > 0)
                 {
                     sourceListBox.SelectedIndex = 0;
                 }
             }
         }
 
+     
         public override async Task Scan(string imageFormat)
         {
             var toolStrip = ParentForm.GetProgressBar();
