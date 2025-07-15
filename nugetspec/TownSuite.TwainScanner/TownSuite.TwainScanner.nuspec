@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TownSuite.TwainScanner</id>
-    <version>1.0.38</version>
+    <version>1.0.40</version>
     <authors>TownSuite.TwainScanner</authors>
     <description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</description>
     <copyright>TownSuite 2025, Copyright © SARAFF 2011</copyright>
