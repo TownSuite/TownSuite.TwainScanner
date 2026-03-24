@@ -57,7 +57,7 @@ jobs:
       #- name: Autobuild
       #  uses: github/codeql-action/autobuild@v3
       - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v1.1
+        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 #v3.0.0
       - name: Restore dependencies
         run: dotnet restore TownSuite.TwainScanner.sln
       - name: Build
