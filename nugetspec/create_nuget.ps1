@@ -17,5 +17,5 @@ mkdir -force NugetBuild
 
 Copy-Item -Recurse -Force "..\TownSuite.TwainScanner\bin\AnyCPU\Release\net48\*" TownSuite.TwainScanner\content\TownSuite.TwainScanner\
 
-nuget pack TownSuite.TwainScanner\TownSuite.TwainScanner.nuspec -OutputDirectory .\NugetBuild
+nuget pack TownSuite.TwainScanner\TownSuite.TwainScanner.nuspec -OutputDirectory ..\build
 
