@@ -11,8 +11,8 @@
 		<Product>TownSuite.TwainScanner</Product>
 		<Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
 		<Copyright>Copyright © SARAFF 2011 / TownSuite Municipal Software Inc. © 2026</Copyright>
-		<AssemblyVersion>26.0.0</AssemblyVersion>
-		<FileVersion>26.0.0</FileVersion>
+		<AssemblyVersion>26.1.0</AssemblyVersion>
+		<FileVersion>26.1.0</FileVersion>
 		<PackageVersion>26.0.0</PackageVersion>
 		<OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
