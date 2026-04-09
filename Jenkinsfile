@@ -58,11 +58,9 @@ pipeline {
                 }
                 stage('Build Zip') {
                     steps {
-                        dir('nugetspec') {
-                            pwsh '''
-                            .\\build_zip.ps1
-                            '''
-                        }
+                        pwsh '''
+                        .\\build_zip.ps1
+                        '''
                     }
                 }
                 stage('Code Sign Detached') {
