@@ -44,7 +44,6 @@ pipeline {
                         echo 'Code Signing happening here....'
                         script {
                             townsuite.codesign "${env.WORKSPACE}", "*TownSuite*.dll;*TownSuite*.exe", false
-                            townsuite.codesign "${env.WORKSPACE}\\build", "*.zip", true
                         }
                     }
                 }
@@ -54,6 +53,26 @@ pipeline {
                             pwsh '''
                             .\\create_nuget.ps1
                             '''
+                        }
+                    }
+                }
+                stage('Build Zip') {
+                    steps {
+                        dir('nugetspec') {
+                            pwsh '''
+                            .\\build_zip.ps1
+                            '''
+                        }
+                    }
+                }
+                stage('Code Sign Detached') {
+                    when {
+                        expression { return env.BRANCH_NAME.startsWith('PR-') == false }
+                    }
+                    steps {
+                        echo 'Code Signing happening here....'
+                        script {
+                            townsuite.codesign "${env.WORKSPACE}\\build", "*.zip", true
                         }
                     }
                 }

@@ -23,7 +23,9 @@ jobs:
     - name: Build
       run: dotnet build TownSuite.TwainScanner.sln -c Release
     - name: publish
-      run: .\build.ps1 	
+      run: |
+        .\build.ps1
+        .\build_zip.ps1 	
     - name: custom nuget package
       run: |
         cd nugetspec
