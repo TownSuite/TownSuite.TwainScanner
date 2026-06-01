@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Drawing;
 using System.IO;
 using System;
 using System.Linq;
@@ -9,6 +7,12 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using Avalonia.Threading;
 using System.Threading.Tasks;
+using ISImage = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Tiff;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 
 namespace TownSuite.TwainScanner.Backends
 {
@@ -25,7 +29,7 @@ namespace TownSuite.TwainScanner.Backends
 
         public ScannerBackends(string dirText, Ocr ocr)
         {
-            this.DirText = dirText;
+            DirText = dirText;
             this.ocr = ocr;
         }
 
@@ -44,19 +48,19 @@ namespace TownSuite.TwainScanner.Backends
             switch (this.imageFormat)
             {
                 case "tiff":
-                    FileExtention = ".tif";
+                    FileExtention  = ".tif";
                     imageExtension = ".tif";
                     break;
                 case "png":
-                    FileExtention = ".png";
+                    FileExtention  = ".png";
                     imageExtension = ".png";
                     break;
                 case "pdf":
-                    FileExtention = ".pdf";
+                    FileExtention  = ".pdf";
                     imageExtension = ".jpeg";
                     break;
                 case "jpeg":
-                    FileExtention = ".jpeg";
+                    FileExtention  = ".jpeg";
                     imageExtension = ".jpeg";
                     break;
             }
@@ -83,82 +87,102 @@ namespace TownSuite.TwainScanner.Backends
         protected string PadNumbers(string input)
         {
             string smallName = Path.GetFileNameWithoutExtension(input);
-            return Regex.Replace(smallName, "[0-9]+", match => match.Value.PadLeft(10, '0'));
+            return Regex.Replace(smallName, "[0-9]+", m => m.Value.PadLeft(10, '0'));
         }
 
         private void Save_TIFF()
         {
-            string[] sa = Directory.GetFiles(DirText, "tmpscan*.tif");
-            sa = new List<string>(sa).OrderBy(p => PadNumbers(p)).ToArray();
+            var files = Directory.GetFiles(DirText, "tmpscan*.tif")
+                                 .OrderBy(PadNumbers)
+                                 .ToList();
 
-            ImageCodecInfo info = ImageCodecInfo.GetImageEncoders().FirstOrDefault(p => p.MimeType == "image/tiff");
-            var enc = Encoder.SaveFlag;
-            var ep = new EncoderParameters(1);
-            ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.MultiFrame));
+            if (files.Count == 0) return;
 
-            Bitmap pages = null;
-            int frame = 0;
+            string outPath = Path.Combine(DirText, "tmpScan.tif");
 
-            foreach (string s in sa)
+            using var first = ISImage.Load(files[0]);
+            var encoder = new TiffEncoder { CompressionLevel = SixLabors.ImageSharp.Compression.Zlib.DeflateCompressionLevel.DefaultCompression };
+
+            if (files.Count == 1)
             {
-                if (frame == 0)
-                {
-                    pages = (Bitmap)System.Drawing.Image.FromFile(s);
-                    pages.Save(Path.Combine(DirText, "tmpScan.tif"), info, ep);
-                }
-                else
-                {
-                    ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.FrameDimensionPage));
-                    using (Bitmap bm = (Bitmap)System.Drawing.Image.FromFile(s))
-                        pages.SaveAdd(bm, ep);
-                }
-                if (frame == sa.Length - 1)
-                {
-                    ep.Param[0] = new EncoderParameter(enc, Convert.ToInt64(EncoderValue.Flush));
-                    pages.SaveAdd(ep);
-                }
-                frame++;
+                first.SaveAsTiff(outPath, encoder);
+                return;
             }
+
+            // Multi-frame: embed all pages as TIFF frames
+            for (int i = 1; i < files.Count; i++)
+            {
+                using var next = ISImage.Load(files[i]);
+                first.Frames.AddFrame(next.Frames.RootFrame);
+            }
+            first.SaveAsTiff(outPath, encoder);
         }
 
         private void SavePNG()
         {
-            string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.png");
-            System.Drawing.Image[] images = new System.Drawing.Image[inputFiles.Length];
-            int height = 0, width = 0;
+            var files = Directory.GetFiles(DirText, "tmpscan*.png")
+                                 .OrderBy(PadNumbers)
+                                 .ToList();
+            if (files.Count == 0) return;
 
+            var images = files.Select(ISImage.Load).ToList();
             try
             {
-                for (int i = 0; i < inputFiles.Length; i++)
-                {
-                    images[i] = System.Drawing.Image.FromFile(inputFiles[i]);
-                    height = Math.Max(height, images[i].Height);
-                    width += images[i].Width;
-                }
+                int totalWidth = images.Sum(img => img.Width);
+                int maxHeight  = images.Max(img => img.Height);
 
-                var image = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-                using (var g = Graphics.FromImage(image))
+                using var canvas = new Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(totalWidth, maxHeight);
+                canvas.Mutate(ctx =>
                 {
-                    g.Clear(System.Drawing.Color.Transparent);
-                    width = 0;
-                    for (int i = 0; i < images.Length; i++)
+                    int x = 0;
+                    foreach (var img in images)
                     {
-                        double scale = (double)height / images[i].Height;
-                        int scaledWidth = (int)(images[i].Width * scale);
-                        g.DrawImage(images[i],
-                            new System.Drawing.Rectangle(width, 0, scaledWidth, height),
-                            new System.Drawing.Rectangle(0, 0, images[i].Width, images[i].Height),
-                            GraphicsUnit.Pixel);
-                        width += scaledWidth;
-                        images[i].Dispose();
+                        double scale = (double)maxHeight / img.Height;
+                        int scaledW = (int)(img.Width * scale);
+                        using var resized = img.Clone(c => c.Resize(scaledW, maxHeight));
+                        ctx.DrawImage(resized, new Point(x, 0), 1f);
+                        x += scaledW;
                     }
-                }
-                image.Save(Path.Combine(DirText, "tmpScan.png"));
+                });
+                canvas.SaveAsPng(Path.Combine(DirText, "tmpScan.png"));
             }
             finally
             {
-                for (int i = 0; i < inputFiles.Length; i++)
-                    images[i]?.Dispose();
+                foreach (var img in images) img.Dispose();
+            }
+        }
+
+        private void SaveJPEG()
+        {
+            var files = Directory.GetFiles(DirText, "tmpscan*.jpeg")
+                                 .OrderBy(PadNumbers)
+                                 .ToList();
+            if (files.Count == 0) return;
+
+            var images = files.Select(ISImage.Load).ToList();
+            try
+            {
+                int totalWidth = images.Sum(img => img.Width);
+                int maxHeight  = images.Max(img => img.Height);
+
+                using var canvas = new Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(totalWidth, maxHeight);
+                canvas.Mutate(ctx =>
+                {
+                    int x = 0;
+                    foreach (var img in images)
+                    {
+                        double scale = (double)maxHeight / img.Height;
+                        int scaledW = (int)(img.Width * scale);
+                        using var resized = img.Clone(c => c.Resize(scaledW, maxHeight));
+                        ctx.DrawImage(resized, new Point(x, 0), 1f);
+                        x += scaledW;
+                    }
+                });
+                canvas.SaveAsJpeg(Path.Combine(DirText, "tmpScan.jpeg"), new JpegEncoder { Quality = 90 });
+            }
+            finally
+            {
+                foreach (var img in images) img.Dispose();
             }
         }
 
@@ -174,121 +198,80 @@ namespace TownSuite.TwainScanner.Backends
                 new { Size = new iTextSharp.text.Rectangle( 8f    * 28.35f, 30f    * 28.35f), Width =  8f,    Height = 30f    },
             };
 
-            string[] sa = Directory.GetFiles(DirText, "tmpscan*.jpeg");
-            sa = new List<string>(sa).OrderBy(p => PadNumbers(p)).ToArray();
+            var files = Directory.GetFiles(DirText, "tmpscan*.jpeg")
+                                 .OrderBy(PadNumbers)
+                                 .ToList();
+            if (files.Count == 0) return;
+
             string outputPdfPath = Path.Combine(DirText, "tmpscan.pdf");
 
-            using var fs = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
-            using var doc = new Document(iTextSharp.text.PageSize.A4);
+            using var fs     = new FileStream(outputPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            using var doc    = new Document(iTextSharp.text.PageSize.A4);
             using var writer = PdfWriter.GetInstance(doc, fs);
             doc.Open();
 
-            foreach (string imagePath in sa)
+            foreach (string imagePath in files)
             {
                 byte[] imageBytes = File.ReadAllBytes(imagePath);
-                using var ms = new MemoryStream(imageBytes);
-                using var sysImage = System.Drawing.Image.FromStream(ms);
 
-                float dpiX = sysImage.HorizontalResolution;
-                float dpiY = sysImage.VerticalResolution;
-                float widthInches = sysImage.Width / dpiX;
-                float heightInches = sysImage.Height / dpiY;
-                float imageWidthCm = widthInches * 2.54f;
-                float imageHeightCm = heightInches * 2.54f;
-
-                bool isLandscape = imageWidthCm > imageHeightCm;
-                float actualWidth  = isLandscape ? imageHeightCm : imageWidthCm;
-                float actualHeight = isLandscape ? imageWidthCm  : imageHeightCm;
-
-                float bestDiff = float.MaxValue;
-                var bestPaper = predefinedSizes[0];
-                foreach (var paper in predefinedSizes)
+                // Read DPI via ImageSharp (cross-platform)
+                float dpiX, dpiY;
+                using (var img = ISImage.Load(imagePath))
                 {
-                    float pw = paper.Width, ph = paper.Height;
-                    if (isLandscape && pw < ph) { float t = pw; pw = ph; ph = t; }
-                    float diff = Math.Abs(actualWidth - pw) + Math.Abs(actualHeight - ph);
-                    if (diff < bestDiff) { bestDiff = diff; bestPaper = paper; }
+                    var meta = img.Metadata;
+                    dpiX = (float)(meta.HorizontalResolution > 0 ? meta.HorizontalResolution : 96);
+                    dpiY = (float)(meta.VerticalResolution   > 0 ? meta.VerticalResolution   : 96);
+                    float widthInches  = img.Width  / dpiX;
+                    float heightInches = img.Height / dpiY;
+                    float imageWidthCm  = widthInches  * 2.54f;
+                    float imageHeightCm = heightInches * 2.54f;
+
+                    bool isLandscape = imageWidthCm > imageHeightCm;
+                    float actualWidth  = isLandscape ? imageHeightCm : imageWidthCm;
+                    float actualHeight = isLandscape ? imageWidthCm  : imageHeightCm;
+
+                    float bestDiff = float.MaxValue;
+                    var   bestPaper = predefinedSizes[0];
+                    foreach (var paper in predefinedSizes)
+                    {
+                        float pw = paper.Width, ph = paper.Height;
+                        if (isLandscape && pw < ph) { float t = pw; pw = ph; ph = t; }
+                        float diff = Math.Abs(actualWidth - pw) + Math.Abs(actualHeight - ph);
+                        if (diff < bestDiff) { bestDiff = diff; bestPaper = paper; }
+                    }
+
+                    doc.SetPageSize(bestPaper.Size);
+                    doc.NewPage();
+
+                    iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imageBytes);
+                    pdfImage.ScaleToFit(bestPaper.Size.Width, bestPaper.Size.Height);
+                    pdfImage.SetAbsolutePosition(0, 0);
+                    doc.Add(pdfImage);
                 }
-
-                doc.SetPageSize(bestPaper.Size);
-                doc.NewPage();
-
-                iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(imageBytes);
-                pdfImage.ScaleToFit(bestPaper.Size.Width, bestPaper.Size.Height);
-                pdfImage.SetAbsolutePosition(0, 0);
-                doc.Add(pdfImage);
             }
 
             doc.Close();
         }
 
-        private void SaveJPEG()
-        {
-            string[] inputFiles = Directory.GetFiles(DirText, "tmpscan*.jpeg");
-            System.Drawing.Image[] images = new System.Drawing.Image[inputFiles.Length];
-            int height = 0, width = 0;
-
-            try
-            {
-                for (int i = 0; i < inputFiles.Length; i++)
-                {
-                    images[i] = System.Drawing.Image.FromFile(inputFiles[i]);
-                    height = Math.Max(height, images[i].Height);
-                    width += images[i].Width;
-                }
-
-                var image = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-                using (var g = Graphics.FromImage(image))
-                {
-                    g.Clear(System.Drawing.Color.Transparent);
-                    width = 0;
-                    for (int i = 0; i < images.Length; i++)
-                    {
-                        double scale = (double)height / images[i].Height;
-                        int scaledWidth = (int)(images[i].Width * scale);
-                        g.DrawImage(images[i],
-                            new System.Drawing.Rectangle(width, 0, scaledWidth, height),
-                            new System.Drawing.Rectangle(0, 0, images[i].Width, images[i].Height),
-                            GraphicsUnit.Pixel);
-                        width += scaledWidth;
-                        images[i].Dispose();
-                    }
-                }
-                image.Save(Path.Combine(DirText, "tmpScan.jpeg"));
-            }
-            finally
-            {
-                for (int i = 0; i < inputFiles.Length; i++)
-                    images[i]?.Dispose();
-            }
-        }
-
         public void DeleteFiles()
         {
-            if (string.Equals(DirText, Path.Combine(Environment.GetEnvironmentVariable("TMP") ?? "", "TownSuite", "TwainScanner"),
+            if (string.Equals(DirText,
+                Path.Combine(Environment.GetEnvironmentVariable("TMP") ?? "", "TownSuite", "TwainScanner"),
                 StringComparison.InvariantCultureIgnoreCase))
             {
-                LoopFiles("*.bmp");
-                LoopFiles("*.jpeg");
-                LoopFiles("*.tif");
-                LoopFiles("*.png");
-                LoopFiles("*.pdf");
-                LoopFiles("*.txt");
+                LoopFiles("*.bmp"); LoopFiles("*.jpeg"); LoopFiles("*.tif");
+                LoopFiles("*.png"); LoopFiles("*.pdf");  LoopFiles("*.txt");
             }
             else
             {
-                LoopFiles("tmpscan*.bmp");
-                LoopFiles("tmpscan*.jpeg");
-                LoopFiles("tmpscan*.tif");
-                LoopFiles("tmpscan*.png");
-                LoopFiles("tmpscan*.pdf");
-                LoopFiles("tmpscan*.txt");
+                LoopFiles("tmpscan*.bmp");  LoopFiles("tmpscan*.jpeg"); LoopFiles("tmpscan*.tif");
+                LoopFiles("tmpscan*.png");  LoopFiles("tmpscan*.pdf");  LoopFiles("tmpscan*.txt");
             }
         }
 
-        private void LoopFiles(string fileext)
+        private void LoopFiles(string pattern)
         {
-            foreach (string s in Directory.GetFiles(DirText, fileext))
+            foreach (string s in Directory.GetFiles(DirText, pattern))
                 File.Delete(s);
         }
 

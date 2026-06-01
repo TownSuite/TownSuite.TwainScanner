@@ -1,15 +1,14 @@
 using Avalonia.Media.Imaging;
 using NAPS2.Images;
-using NAPS2.Images.Gdi;
+using NAPS2.Images.Transforms;
 using NAPS2.Scan;
 using System;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace TownSuite.TwainScanner.Backends
 {
-    class Naps2Backend : ScannerBackends
+    internal class Naps2Backend : ScannerBackends
     {
         private ScanningContext scanningContext;
         private ScanController controller;
@@ -27,7 +26,6 @@ namespace TownSuite.TwainScanner.Backends
         public override async Task ConfigureSettings()
         {
             await base.ConfigureSettings();
-
             var devices = await new NewScannerList(driver).GetList(scanningContext);
             ParentView.SetDeviceList(devices, append: true);
         }
@@ -43,46 +41,49 @@ namespace TownSuite.TwainScanner.Backends
                 var resolution = ParentView.GetResolutionDpi();
                 var device = ParentView.GetSelectedDevice();
 
-                var options = new ScanOptions()
+                var options = new ScanOptions
                 {
-                    PaperSource = NAPS2.Scan.PaperSource.Auto,
-                    PageSize = PageSize.Letter,
-                    Dpi = resolution,
-                    Driver = driver,
-                    Device = device,
-                    BitDepth = BitDepth.Color
+                    PaperSource = PaperSource.Auto,
+                    PageSize    = PageSize.Letter,
+                    Dpi         = resolution,
+                    Driver      = driver,
+                    Device      = device,
+                    BitDepth    = BitDepth.Color
                 };
 
-                await foreach (var image in controller.Scan(options))
+                await foreach (var scanned in controller.Scan(options))
                 {
-                    picnumber += 1;
+                    picnumber++;
                     string origPath = Path.Combine(DirText,
-                        "tmpScan" + picnumber + "_" + picnumber + Guid.NewGuid().ToString() + imageExtension);
+                        $"tmpScan{picnumber}_{picnumber}{Guid.NewGuid()}{imageExtension}");
 
-                    using (var img = image.RenderToBitmap())
+                    using var memImage = scanningContext.ImageContext.Render(scanned);
+
+                    // Save full-resolution file
+                    var fmt = imageExtension switch
                     {
-                        switch (imageFormat)
-                        {
-                            case "tiff": img.Save(origPath, ImageFormat.Tiff); break;
-                            case "png":  img.Save(origPath, ImageFormat.Png);  break;
-                            default:     img.Save(origPath, ImageFormat.Jpeg); break;
-                        }
+                        ".tif"  => ImageFileFormat.Tiff,
+                        ".png"  => ImageFileFormat.Png,
+                        _       => ImageFileFormat.Jpeg
+                    };
+                    memImage.Save(origPath, fmt, new ImageSaveOptions());
 
-                        Bitmap avaloniaThumbnail;
-                        using (var thumb = new System.Drawing.Bitmap(img, new System.Drawing.Size(180, 180)))
-                        using (var ms = new MemoryStream())
-                        {
-                            thumb.Save(ms, ImageFormat.Png);
-                            ms.Position = 0;
-                            avaloniaThumbnail = new Bitmap(ms);
-                        }
-
-                        ParentView.AddThumbnail(origPath, avaloniaThumbnail);
-                        RunOcr(origPath, ParentView.IsOcrChecked);
-
-                        Console.WriteLine("Scanned a page!");
-                        picnumber += 1;
+                    // Build 180-pixel thumbnail for display
+                    Bitmap avaloniaThumbnail;
+                    using (var ms = new MemoryStream())
+                    {
+                        using var thumb = scanningContext.ImageContext.PerformTransform(
+                            memImage.Clone(), new ThumbnailTransform(180));
+                        thumb.Save(ms, ImageFileFormat.Png, new ImageSaveOptions());
+                        ms.Position = 0;
+                        avaloniaThumbnail = new Bitmap(ms);
                     }
+
+                    ParentView.AddThumbnail(origPath, avaloniaThumbnail);
+                    RunOcr(origPath, ParentView.IsOcrChecked);
+
+                    Console.WriteLine("Scanned a page!");
+                    picnumber++;
                 }
             }
             finally

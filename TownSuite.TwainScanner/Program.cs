@@ -33,10 +33,9 @@ namespace TownSuite.TwainScanner
                     if (cmdArgs[i] == "-scanlist")
                     {
                         scanList = true;
-                        var drivers = new Driver[] { Driver.Wia, Driver.Twain };
                         Task.Run(async () =>
                         {
-                            foreach (var driver in drivers)
+                            foreach (var driver in NewScannerList.PlatformDrivers())
                             {
                                 var scnlst = new NewScannerList(driver);
                                 using var context = scnlst.GetScanContext();

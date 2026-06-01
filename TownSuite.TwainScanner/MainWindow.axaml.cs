@@ -164,12 +164,12 @@ namespace TownSuite.TwainScanner
         {
             SetScanningStatus(true, "Loading scanner list");
 
-            var twainBackend = new Naps2Backend(_dirText, _ocr, NewScannerList.GetDriver("twain")) { ParentView = this };
-            var wiaBackend = new Naps2Backend(_dirText, _ocr, NewScannerList.GetDriver("wia")) { ParentView = this };
-            _backends = new ScannerBackends[] { twainBackend, wiaBackend };
+            _backends = Array.ConvertAll(
+                NewScannerList.PlatformDrivers(),
+                d => (ScannerBackends)new Naps2Backend(_dirText, _ocr, d) { ParentView = this });
 
-            await twainBackend.ConfigureSettings();
-            await wiaBackend.ConfigureSettings();
+            foreach (var b in _backends)
+                await b.ConfigureSettings();
 
             foreach (ScanImageFormats fmt in cmbImageType.Items)
             {

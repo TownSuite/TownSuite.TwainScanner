@@ -107,19 +107,26 @@
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
 	</ItemGroup>
 
-	<!-- Scanning & image packages -->
+	<!-- Scanning & image packages (all platforms) -->
 	<ItemGroup>
 		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.7.1" />
-		<PackageReference Include="NAPS2.Images.Gdi" Version="1.1.6" />
-		<PackageReference Include="NAPS2.Sdk" Version="1.1.6" />
-		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.1.6">
-			<IncludeAssets>all</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="NAPS2.Sdk" Version="1.2.1" />
+		<PackageReference Include="NAPS2.Images.ImageSharp" Version="1.2.1" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<!-- Required for auto-generated Resources.Designer.cs (scanner icon); never called on non-Windows -->
 		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' AND '$(DefineConstants)' == 'INCLUDE_ORIGINAL' ">
-		<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
+	<!-- Windows-only scanning packages -->
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<PackageReference Include="NAPS2.Images.Gdi" Version="1.2.1" />
+		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.2.1">
+			<IncludeAssets>all</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<!-- Linux: SANE native binaries -->
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+		<PackageReference Include="NAPS2.Sane.Binaries" Version="1.1.0" />
 	</ItemGroup>
 </Project>

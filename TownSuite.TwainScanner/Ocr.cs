@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Concurrent;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace TownSuite.TwainScanner
 {
@@ -30,7 +31,6 @@ namespace TownSuite.TwainScanner
         {
             QueueThread(async () =>
             {
-                string text = string.Empty;
                 try
                 {
                     onOcrStarting?.Invoke();
@@ -40,28 +40,12 @@ namespace TownSuite.TwainScanner
                     client.DefaultRequestHeaders.Add("User-Agent",
                         "TownSuiteScanner/1.0 Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
 
-                    byte[] byteImage;
-                    using (var bmp = (Bitmap)Bitmap.FromFile(filepath))
-                    {
-                        if (bmp.Width > 2550 && bmp.Height > 3300)
-                        {
-                            using var resized = new Bitmap(bmp, new System.Drawing.Size(2550, 3300));
-                            byteImage = ImageToByte(resized);
-                        }
-                        else if (!string.Equals(Path.GetExtension(filepath), ".jpg", StringComparison.OrdinalIgnoreCase))
-                        {
-                            byteImage = ImageToByte(bmp);
-                        }
-                        else
-                        {
-                            byteImage = File.ReadAllBytes(filepath);
-                        }
-                    }
+                    byte[] byteImage = PrepareImageBytes(filepath);
 
                     using var content = new ByteArrayContent(byteImage);
                     var response = await client.PostAsync(_apiUrl, content);
                     response.EnsureSuccessStatusCode();
-                    text = await response.Content.ReadAsStringAsync();
+                    string text = await response.Content.ReadAsStringAsync();
 
                     File.WriteAllText($"{filepath}.txt", text);
                     onOcrComplete?.Invoke(filepath, text);
@@ -73,11 +57,32 @@ namespace TownSuite.TwainScanner
             });
         }
 
-        public static byte[] ImageToByte(Image img)
+        private static byte[] PrepareImageBytes(string filepath)
         {
-            using var stream = new MemoryStream();
-            img.Save(stream, ImageFormat.Jpeg);
-            return stream.ToArray();
+            using var img = Image.Load(filepath);
+
+            // Downscale large images (> letter-size at 300 DPI) before sending to OCR
+            bool needsResize = img.Width > 2550 || img.Height > 3300;
+            if (needsResize)
+            {
+                using var resized = img.Clone(ctx => ctx.Resize(
+                    Math.Min(img.Width,  2550),
+                    Math.Min(img.Height, 3300)));
+                return EncodeJpeg(resized);
+            }
+
+            string ext = Path.GetExtension(filepath).ToLowerInvariant();
+            if (ext == ".jpg" || ext == ".jpeg")
+                return File.ReadAllBytes(filepath);
+
+            return EncodeJpeg(img);
+        }
+
+        private static byte[] EncodeJpeg(Image img)
+        {
+            using var ms = new MemoryStream();
+            img.SaveAsJpeg(ms, new JpegEncoder { Quality = 90 });
+            return ms.ToArray();
         }
 
         private readonly ConcurrentQueue<Action> _queue = new ConcurrentQueue<Action>();
@@ -86,7 +91,6 @@ namespace TownSuite.TwainScanner
         private void QueueThread(Action work)
         {
             _queue.Enqueue(work);
-
             if (!_threadStarted)
             {
                 _threadStarted = true;
@@ -104,11 +108,7 @@ namespace TownSuite.TwainScanner
                 {
                     Thread.Sleep(500);
                     idleMs += 500;
-                    if (idleMs >= 2000)
-                    {
-                        _threadStarted = false;
-                        return;
-                    }
+                    if (idleMs >= 2000) { _threadStarted = false; return; }
                 }
 
                 while (_queue.TryDequeue(out var work))

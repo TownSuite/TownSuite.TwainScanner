@@ -1,104 +1,86 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using NTwain.Data;
-using NTwain;
-using TownSuite.TwainScanner.Backends;
+using NAPS2.Images.ImageSharp;
 using NAPS2.Scan;
-using NAPS2.Images.Gdi;
 
 namespace TownSuite.TwainScanner
 {
     internal class NewScannerList
     {
         public Driver driver;
+
         public NewScannerList(Driver driver)
         {
             this.driver = driver;
-        
         }
 
         public NewScannerList(string driver) : this(GetDriver(driver)) { }
-      
-        public static NAPS2.Scan.Driver GetDriver(string backend)
+
+        public static Driver GetDriver(string backend)
         {
-            switch (backend)
+            return backend switch
             {
-                case "twain":
-                    //return new OriginalTwainBackend(dirText, ocr)
-                    //{
-                    //    ParentForm = this
-                    //};
-
-                    return NAPS2.Scan.Driver.Twain;
-
-                case "wia":
-                    return NAPS2.Scan.Driver.Wia;
-
-                default:
-                    return NAPS2.Scan.Driver.Twain;
-
-            }
+                "twain" => Driver.Twain,
+                "wia"   => Driver.Wia,
+                "sane"  => Driver.Sane,
+                "apple" => Driver.Apple,
+                "escl"  => Driver.Escl,
+                _       => DefaultDriver()
+            };
         }
-        //private Twain32 _twain;
+
+        public static Driver DefaultDriver()
+        {
+            if (OperatingSystem.IsWindows()) return Driver.Twain;
+            if (OperatingSystem.IsMacOS())   return Driver.Apple;
+            return Driver.Sane;
+        }
+
+        /// <summary>Returns the drivers appropriate for the current platform.</summary>
+        public static Driver[] PlatformDrivers()
+        {
+            if (OperatingSystem.IsWindows()) return new[] { Driver.Twain, Driver.Wia, Driver.Escl };
+            if (OperatingSystem.IsMacOS())   return new[] { Driver.Apple, Driver.Escl };
+            return new[] { Driver.Sane, Driver.Escl };
+        }
+
         public async Task<IEnumerable<string>> ScanList(ScanningContext scanningContext)
         {
-            List<string> lstscan = new List<string>();
             try
             {
-               var list = await GetList(scanningContext);
-                return list.Select(s=>s.Name);
+                var list = await GetList(scanningContext);
+                return list.Select(s => s.Name);
             }
-            catch (TwainException ex)
+            catch (Exception ex) when (ex.GetType().Name == "TwainException")
             {
                 if (ex.Message == "It worked!")
-                {
                     Console.Error.WriteLine("Failed to find a scanner");
-                    Console.Out.Flush();
-                    Console.Error.Flush();
-                }
-                return lstscan;
+                return Array.Empty<string>();
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(string.Format("{0}\n\n{1}", ex.Message, ex.StackTrace), "TownSuite Scanner Load Error");
-
-                return lstscan;
+                Console.Error.WriteLine($"{ex.Message}\n\n{ex.StackTrace}");
+                return Array.Empty<string>();
             }
-
         }
+
         public async Task<List<ScanDevice>> GetList(ScanningContext scanningContext)
         {
-   
             var controller = GetScanController(scanningContext);
-
-            var scanOptions = new ScanOptions()
-            {
-                Driver = driver
-            };
-            var devices = (await controller.GetDeviceList(scanOptions));
-
-            return devices;
+            var scanOptions = new ScanOptions { Driver = driver };
+            return await controller.GetDeviceList(scanOptions);
         }
 
         public ScanController GetScanController(ScanningContext scanningContext)
         {
-            if (driver == Driver.Twain)
-            {
+            if (OperatingSystem.IsWindows() && driver == Driver.Twain)
                 scanningContext.SetUpWin32Worker();
-            }
-
             return new ScanController(scanningContext);
-
         }
 
-      
-        public  ScanningContext GetScanContext()
-        {
-            return new ScanningContext(new GdiImageContext());
-        }
+        public ScanningContext GetScanContext() =>
+            new ScanningContext(new ImageSharpImageContext());
     }
-
 }
