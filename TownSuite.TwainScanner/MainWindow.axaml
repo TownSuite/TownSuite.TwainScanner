@@ -1,0 +1,89 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TownSuite.TwainScanner.MainWindow"
+        x:CompileBindings="False"
+        Title="Scan Document"
+        Width="1055" Height="713">
+  <DockPanel>
+
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="File">
+        <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
+      </MenuItem>
+      <MenuItem Header="_Acquire" Click="MenuItem_Acquire_Click"/>
+      <MenuItem Header="_Save" Click="MenuItem_Save_Click"/>
+    </Menu>
+
+    <Border DockPanel.Dock="Bottom" Height="24"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}">
+      <StackPanel Orientation="Horizontal" Spacing="4" Margin="4,0">
+        <ProgressBar x:Name="progressBar" Width="120" Height="14"
+                     IsIndeterminate="True" IsVisible="False" VerticalAlignment="Center"/>
+        <TextBlock x:Name="statusLabel" IsVisible="False" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Border>
+
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="200"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- Left sidebar -->
+      <Grid Grid.Column="0" Margin="6" RowDefinitions="Auto,Auto,*,Auto">
+
+        <TextBlock Grid.Row="0" Text="Scanners" Margin="0,0,0,2"/>
+
+        <ListBox Grid.Row="1" x:Name="sourceListBox" Height="190" Margin="0,0,0,8"
+                 SelectionChanged="SourceListBox_SelectionChanged">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Name}"/>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <GroupBox Grid.Row="2" Header="Properties">
+          <StackPanel Spacing="4" Margin="2">
+            <TextBlock Text="Image format"/>
+            <ComboBox x:Name="cmbImageType" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Description}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="Resolution"/>
+            <ComboBox x:Name="cmbResolution" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="Color"/>
+            <ComboBox x:Name="cmbColor" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,8,0,0" Spacing="8">
+          <CheckBox x:Name="checkboxOcr" Content="OCR" IsVisible="False"/>
+          <Button x:Name="btnScan" Content="Scan" Click="BtnScan_Click"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- Thumbnail area -->
+      <ScrollViewer Grid.Column="1">
+        <WrapPanel x:Name="thumbnailPanel" Margin="4"/>
+      </ScrollViewer>
+    </Grid>
+
+  </DockPanel>
+</Window>

@@ -1,27 +1,21 @@
-﻿using NAPS2.Images;
+using Avalonia.Media.Imaging;
+using NAPS2.Images;
 using NAPS2.Images.Gdi;
-using NAPS2.Pdf;
 using NAPS2.Scan;
 using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
-using System.Drawing;
-using System.Linq;
-using System.Security.RightsManagement;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
-
+using System.Threading.Tasks;
 
 namespace TownSuite.TwainScanner.Backends
 {
     class Naps2Backend : ScannerBackends
     {
-        ScanningContext scanningContext;
-        ScanController controller;
-        Driver driver;
-        NewScannerList newScannerList ;
+        private ScanningContext scanningContext;
+        private ScanController controller;
+        private readonly Driver driver;
+        private readonly NewScannerList newScannerList;
+
         public Naps2Backend(string dirText, Ocr ocr, Driver driver) : base(dirText, ocr)
         {
             this.driver = driver;
@@ -35,57 +29,25 @@ namespace TownSuite.TwainScanner.Backends
             await base.ConfigureSettings();
 
             var devices = await new NewScannerList(driver).GetList(scanningContext);
-            var sourceListBox = ParentForm.GetSourceList();
-            if (sourceListBox.DataSource != null && sourceListBox.DataSource is List<ScanDevice>)
-            {
-                var existingDevices = (sourceListBox.DataSource as List<ScanDevice>);
-                existingDevices.AddRange(devices);
-                sourceListBox.DataSource = null;
-                sourceListBox.DataSource = existingDevices;
-                sourceListBox.DisplayMember = "Name";
-                if (existingDevices.Count > 0)
-                {
-                    sourceListBox.SelectedIndex = 0;
-                }
-            }
-            else
-            {
-                sourceListBox.DataSource = devices;
-                sourceListBox.DisplayMember = "Name";
-                if (devices.Count > 0)
-                {
-                    sourceListBox.SelectedIndex = 0;
-                }
-            }
+            ParentView.SetDeviceList(devices, append: true);
         }
 
-     
         public override async Task Scan(string imageFormat)
         {
-            var toolStrip = ParentForm.GetProgressBar();
-            var statusLabel = ParentForm.GetStatusLabel();
-            toolStrip.Style = ProgressBarStyle.Marquee;
-            toolStrip.Visible = true;
-            statusLabel.Text = "Scanning...";
-            statusLabel.Visible = true;
+            ParentView.SetScanningStatus(true, "Scanning...");
 
             try
             {
                 await base.Scan(imageFormat);
 
-                var sourceListBox = ParentForm.GetSourceList();
-                var dpiCombox = ParentForm.GetResolution();
-                var colorCombo = ParentForm.GetColor();
-                var resolution = (dpiCombox.SelectedItem as DPIs).DPI;
+                var resolution = ParentView.GetResolutionDpi();
+                var device = ParentView.GetSelectedDevice();
 
-                var device = sourceListBox.SelectedItem as ScanDevice;
                 var options = new ScanOptions()
                 {
-                    // TODO: PaperSource and PageSize should be set based on user input
-                    PaperSource = PaperSource.Auto,
+                    PaperSource = NAPS2.Scan.PaperSource.Auto,
                     PageSize = PageSize.Letter,
                     Dpi = resolution,
-                    // UseNativeUI = true,
                     Driver = driver,
                     Device = device,
                     BitDepth = BitDepth.Color
@@ -94,44 +56,29 @@ namespace TownSuite.TwainScanner.Backends
                 await foreach (var image in controller.Scan(options))
                 {
                     picnumber += 1;
-                    var newpic = new PictureBox();
-                    System.Drawing.Image resizedImg;
-                    string origPath = Path.Combine(DirText, "tmpScan" + picnumber.ToString() + "_" + picnumber.ToString() + Guid.NewGuid().ToString() + imageExtension);
-                    newpic.Tag = origPath;
+                    string origPath = Path.Combine(DirText,
+                        "tmpScan" + picnumber + "_" + picnumber + Guid.NewGuid().ToString() + imageExtension);
 
-                    using (Bitmap img = image.RenderToBitmap())
+                    using (var img = image.RenderToBitmap())
                     {
                         switch (imageFormat)
                         {
-                            case "tiff":
-                                img.Save(origPath, ImageFormat.Tiff);
-                                break;
-                            case "png":
-                                img.Save(origPath, ImageFormat.Png);
-                                break;
-                            case "pdf":
-                            case "jpeg":
-                            default:
-                                // pdf is just an import of a file.  Use jpg.
-                                img.Save(origPath, ImageFormat.Jpeg);
-                                break;
+                            case "tiff": img.Save(origPath, ImageFormat.Tiff); break;
+                            case "png":  img.Save(origPath, ImageFormat.Png);  break;
+                            default:     img.Save(origPath, ImageFormat.Jpeg); break;
                         }
 
-                        resizedImg = new Bitmap(img, new Size(180, 180));
+                        Bitmap avaloniaThumbnail;
+                        using (var thumb = new System.Drawing.Bitmap(img, new System.Drawing.Size(180, 180)))
+                        using (var ms = new MemoryStream())
+                        {
+                            thumb.Save(ms, ImageFormat.Png);
+                            ms.Position = 0;
+                            avaloniaThumbnail = new Bitmap(ms);
+                        }
 
-
-                        newpic.Image = resizedImg;
-                        newpic.Size = new Size(newpic.Image.Width, newpic.Image.Height);
-                        newpic.Refresh();
-                        newpic.DoubleClick += Newpic_DoubleClick;
-                        newpic.MouseEnter += Newpic_MouseEnter;
-                        newpic.MouseLeave += Newpic_MouseLeave;
-                        var flowLayoutPanel1 = ParentForm.GetFlowLayoutPanel();
-                        newpic.Text = "ScanPass" + picnumber.ToString() + "_Pic" + picnumber.ToString();
-                        flowLayoutPanel1.Controls.Add(newpic);
-                        // newpic.doTmpSave(DirText + "\\tmpScan" + picnumber.ToString() + "_" + i.ToString() + ".bmp");
-
-                        RunOcr(newpic, origPath, OcrEnabled());
+                        ParentView.AddThumbnail(origPath, avaloniaThumbnail);
+                        RunOcr(origPath, ParentView.IsOcrChecked);
 
                         Console.WriteLine("Scanned a page!");
                         picnumber += 1;
@@ -140,25 +87,18 @@ namespace TownSuite.TwainScanner.Backends
             }
             finally
             {
-                toolStrip.Style = ProgressBarStyle.Blocks;
-                toolStrip.Visible = false;
-                statusLabel.Visible = false;
+                ParentView.SetScanningStatus(false);
             }
         }
-        public override void Save()
-        {
-            base.Save();
-        }
 
-        public override string GetBackendType()
-        {
-            return driver.ToString();
-        }
+        public override void Save() => base.Save();
+
+        public override string GetBackendType() => driver.ToString();
 
         public override void Dispose()
         {
             base.Dispose();
-            this.scanningContext?.Dispose();
+            scanningContext?.Dispose();
         }
     }
 }
