@@ -36,10 +36,12 @@
         <TextBlock Grid.Row="0" Text="Scanners" Margin="0,0,0,2"/>
 
         <ListBox Grid.Row="1" x:Name="sourceListBox" Height="190" Margin="0,0,0,8"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  SelectionChanged="SourceListBox_SelectionChanged">
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding Name}"/>
+              <TextBlock Text="{Binding Name}" TextWrapping="NoWrap"
+                         ToolTip.Tip="{Binding Name}"/>
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
