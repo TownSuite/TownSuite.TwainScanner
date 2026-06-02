@@ -34,16 +34,15 @@ namespace TownSuite.TwainScanner
         public static Driver DefaultDriver()
         {
             if (OperatingSystem.IsWindows()) return Driver.Twain;
-            if (OperatingSystem.IsMacOS())   return Driver.Apple;
-            return Driver.Sane;
+            return Driver.Escl; // macOS and Linux: use eSCL (AirScan); no platform-specific TFM needed
         }
 
         /// <summary>Returns the drivers appropriate for the current platform.</summary>
         public static Driver[] PlatformDrivers()
         {
-            if (OperatingSystem.IsWindows()) return new[] { Driver.Twain, Driver.Wia, Driver.Escl };
-            if (OperatingSystem.IsMacOS())   return new[] { Driver.Apple, Driver.Escl };
-            return new[] { Driver.Sane, Driver.Escl };
+            if (OperatingSystem.IsWindows()) return new[] { Driver.Escl, Driver.Twain, Driver.Wia  };
+            if (OperatingSystem.IsMacOS())   return new[] { Driver.Escl };       // AirScan; no -macos TFM needed
+            return new[] {  Driver.Escl, Driver.Sane};                            // Linux: SANE + AirScan
         }
 
         public async Task<IEnumerable<string>> ScanList(ScanningContext scanningContext)
