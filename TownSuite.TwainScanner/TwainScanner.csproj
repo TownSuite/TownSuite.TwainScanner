@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
+		<OutputType>exe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
 		<TargetFramework>net10.0</TargetFramework>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
@@ -30,25 +30,8 @@
 		<DocumentationFile>bin\$(Configuration)\TownSuite.TwainScanner.XML</DocumentationFile>
 		<DebugType>pdbonly</DebugType>
 	</PropertyGroup>
-
-	<!-- Exclude legacy TWAIN/WIA files when not in INCLUDE_ORIGINAL mode -->
-	<ItemGroup Condition="'$(DefineConstants)' != 'INCLUDE_ORIGINAL'">
-		<Compile Remove="Scanner.cs" />
-		<Compile Remove="SelectSourceForm.cs" />
-		<Compile Remove="SelectSourceForm.Designer.cs" />
-		<Compile Remove="Tiff.cs" />
-		<Compile Remove="Twain32.cs" />
-		<Compile Remove="TwainCapabilities.cs" />
-		<Compile Remove="TwainDefs.cs" />
-		<Compile Remove="TwainException.cs" />
-		<Compile Remove="ScannerList.cs" />
-	</ItemGroup>
-
+	
 	<!-- Old WinForms MainFrame replaced by Avalonia MainWindow -->
-	<ItemGroup>
-		<Compile Remove="MainFrame.cs" />
-		<Compile Remove="MainFrame.Designer.cs" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Remove="SelectSourceForm.resx" />
