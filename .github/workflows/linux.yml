@@ -23,8 +23,8 @@ jobs:
     - name: publish
       run: |
         mkdir -p build
-        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-x64" --self-contained true -f net10.0 -o "$CURRENTPATH\build\TownSuite.TwainScanner_linux_x64"
-        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-arm64" --self-contained true -f net10.0 -o "$CURRENTPATH\build\TownSuite.TwainScanner_linux_arm64"	
+        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-x64" --self-contained true -f net10.0 -o "build/TownSuite.TwainScanner_linux_x64"
+        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-arm64" --self-contained true -f net10.0 -o "build/TownSuite.TwainScanner_linux_arm64"	
         
     - name: Archive artifacts
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0

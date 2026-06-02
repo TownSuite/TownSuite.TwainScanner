@@ -23,7 +23,7 @@ jobs:
     - name: publish
       run: |
         mkdir -p build
-        dotnet publish TownSuite.TwainScanner.sln -c Release -r "osx-arm64" --self-contained true -f net10.0 -o "$CURRENTPATH\build\TownSuite.TwainScanner_osx_arm64"	
+        dotnet publish TownSuite.TwainScanner.sln -c Release -r "osx-arm64" --self-contained true -f net10.0 -o "build/TownSuite.TwainScanner_osx_arm64"	
         
     - name: Archive artifacts
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
