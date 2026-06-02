@@ -32,7 +32,7 @@ namespace TownSuite.TwainScanner.Backends
 
         public override async Task Scan(string imageFormat)
         {
-            ParentView.SetScanningStatus(true, "Scanning...");
+            ParentView.SetScanningStatus(true, I18N.GetString("Scanning"));
 
             try
             {

@@ -39,6 +39,12 @@
 		<EmbeddedResource Remove="MainFrame.resx" />
 	</ItemGroup>
 
+	<!-- Properties/Resources.Designer.cs uses System.Drawing.Bitmap (scanner icon) which is Windows-only -->
+	<ItemGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+		<Compile Remove="Properties\Resources.Designer.cs" />
+		<EmbeddedResource Remove="Properties\Resources.resx" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<Compile Update="Properties\Resources.Designer.cs">
 			<AutoGen>True</AutoGen>
@@ -96,8 +102,6 @@
 		<PackageReference Include="NAPS2.Sdk" Version="1.2.1" />
 		<PackageReference Include="NAPS2.Images.ImageSharp" Version="1.2.1" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<!-- Required for auto-generated Resources.Designer.cs (scanner icon); never called on non-Windows -->
-		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />
 	</ItemGroup>
 
 	<!-- Windows-only scanning packages -->

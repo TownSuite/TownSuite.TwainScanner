@@ -50,7 +50,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
           </Grid.ColumnDefinitions>
-          <TextBlock Text="Scanners" FontWeight="SemiBold" VerticalAlignment="Center"/>
+          <TextBlock x:Name="scannersLabel" Text="Scanners" FontWeight="SemiBold" VerticalAlignment="Center"/>
           <TextBlock x:Name="scannerCountLabel" Grid.Column="1"
                      Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                      FontSize="11" VerticalAlignment="Center"/>
@@ -79,9 +79,9 @@
         </Panel>
 
         <!-- Scan settings -->
-        <GroupBox Grid.Row="2" Header="Properties" Margin="0,0,0,8">
+        <GroupBox x:Name="propertiesGroup" Grid.Row="2" Header="Properties" Margin="0,0,0,8">
           <StackPanel Spacing="4" Margin="2">
-            <TextBlock Text="Image format"/>
+            <TextBlock x:Name="imgFormatLabel" Text="Image format"/>
             <ComboBox x:Name="cmbImageType" HorizontalAlignment="Stretch">
               <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -89,7 +89,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <TextBlock Text="Resolution"/>
+            <TextBlock x:Name="resolutionLabel" Text="Resolution"/>
             <ComboBox x:Name="cmbResolution" HorizontalAlignment="Stretch">
               <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -97,7 +97,7 @@
                 </DataTemplate>
               </ComboBox.ItemTemplate>
             </ComboBox>
-            <TextBlock Text="Color"/>
+            <TextBlock x:Name="colorLabel" Text="Color"/>
             <ComboBox x:Name="cmbColor" HorizontalAlignment="Stretch">
               <ComboBox.ItemTemplate>
                 <DataTemplate>

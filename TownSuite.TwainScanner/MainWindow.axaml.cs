@@ -41,6 +41,10 @@ namespace TownSuite.TwainScanner
         protected override async void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
+
+            // Apply localised text to AXAML elements that hold static strings
+            ApplyLocalisedText();
+
             try
             {
                 cmbColor.ItemsSource    = ScanColors.GetColors();
@@ -72,6 +76,33 @@ namespace TownSuite.TwainScanner
             checkboxOcr.IsVisible = _ocr.Enabled;
             UpdatePageCount();
         }
+
+        private void ApplyLocalisedText()
+        {
+            // Labels and static text that live in AXAML as named elements
+            this.FindControl<TextBlock>("scannersLabel")!.Text     = I18N.GetString("ScannersLabel");
+            noScannersOverlay.Child                                 = MakeOverlayText(I18N.GetString("NoScannersFound"));
+            emptyThumbnailOverlay.Child                             = MakeOverlayText(I18N.GetString("ScanPrompt"));
+            btnScan.Content                                         = I18N.GetString("ScanButton");
+
+            // GroupBox Header is an object — set it as a string
+            this.FindControl<GroupBox>("propertiesGroup")!.Header   = I18N.GetString("PropertiesLabel");
+            this.FindControl<TextBlock>("imgFormatLabel")!.Text      = I18N.GetString("ImageFormatLabel");
+            this.FindControl<TextBlock>("resolutionLabel")!.Text     = I18N.GetString("ResolutionLabel");
+            this.FindControl<TextBlock>("colorLabel")!.Text          = I18N.GetString("ColorLabel");
+        }
+
+        private static TextBlock MakeOverlayText(string text) => new TextBlock
+        {
+            Text                = text,
+            TextAlignment       = Avalonia.Media.TextAlignment.Center,
+            TextWrapping        = Avalonia.Media.TextWrapping.Wrap,
+            VerticalAlignment   = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Foreground          = new SolidColorBrush(Color.FromRgb(130, 130, 130)),
+            FontSize            = 13,
+            Margin              = new Avalonia.Thickness(12)
+        };
 
         // ── Keyboard shortcuts ────────────────────────────────────────────────
 
@@ -182,7 +213,7 @@ namespace TownSuite.TwainScanner
 
         private async Task LoadBackends()
         {
-            SetScanningStatus(true, "Loading scanner list…");
+            SetScanningStatus(true, I18N.GetString("LoadingScannerList"));
 
             _backends = Array.ConvertAll(
                 NewScannerList.PlatformDrivers(),
@@ -218,10 +249,13 @@ namespace TownSuite.TwainScanner
         private void UpdatePageCount()
         {
             int n = _pages.Count;
-            pageCountLabel.Text        = n == 1 ? "1 page scanned" : $"{n} pages scanned";
-            Title                      = n == 0 ? "Scan Document"
-                                                : $"Scan Document — {n} page{(n == 1 ? "" : "s")}";
-            mnuSave.IsEnabled          = n > 0;
+            pageCountLabel.Text = n == 1
+                ? I18N.GetString("PageScannedSingular")
+                : I18N.GetString("PagesScannedPlural", n);
+            Title = n == 0 ? I18N.GetString("ScanDocument")
+                  : n == 1 ? I18N.GetString("WindowTitlePageSingular")
+                  :          I18N.GetString("WindowTitlePagesPlural", n);
+            mnuSave.IsEnabled             = n > 0;
             emptyThumbnailOverlay.IsVisible = n == 0;
         }
 
@@ -233,7 +267,7 @@ namespace TownSuite.TwainScanner
 
             // Renumber the remaining pages
             for (int i = 0; i < _pages.Count; i++)
-                _pages[i].PageLabel.Text = $"Page {i + 1}";
+                _pages[i].PageLabel.Text = I18N.GetString("PageLabel", i + 1);
 
             UpdatePageCount();
         }
@@ -243,6 +277,7 @@ namespace TownSuite.TwainScanner
         public void AddThumbnail(string filePath, Bitmap thumbnail)
         {
             int pageNumber = _pages.Count + 1;
+
 
             var image = new Image
             {
@@ -271,7 +306,7 @@ namespace TownSuite.TwainScanner
             // Page label below image
             var pageLabel = new TextBlock
             {
-                Text                = $"Page {pageNumber}",
+                Text                = I18N.GetString("PageLabel", pageNumber),
                 TextAlignment       = Avalonia.Media.TextAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Margin              = new Avalonia.Thickness(4, 3, 4, 4),
@@ -294,6 +329,7 @@ namespace TownSuite.TwainScanner
             };
 
             ToolTip.SetTip(card, filePath);
+            ToolTip.SetTip(deleteBtn, I18N.GetString("DeletePage"));
 
             // Hover highlight
             image.PointerEntered += (_, _) => card.BorderBrush = Brushes.SteelBlue;
@@ -385,7 +421,7 @@ namespace TownSuite.TwainScanner
 
             // Update scanner count badge and empty-state overlay
             int total = combined.Count;
-            scannerCountLabel.Text    = total > 0 ? $"({total} found)" : "";
+            scannerCountLabel.Text    = total > 0 ? I18N.GetString("ScannersFound", total) : "";
             noScannersOverlay.IsVisible = total == 0;
         }
 
