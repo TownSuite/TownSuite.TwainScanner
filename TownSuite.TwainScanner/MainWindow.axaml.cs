@@ -126,17 +126,17 @@ namespace TownSuite.TwainScanner
 
         private void MenuItem_Exit_Click(object? sender, RoutedEventArgs e) => Close();
 
-        private void MenuItem_Acquire_Click(object? sender, RoutedEventArgs e)
+        private async void MenuItem_Acquire_Click(object? sender, RoutedEventArgs e)
         {
             try
             {
                 var backend = GetSelectedBackend();
                 if (backend == null) return;
-                _ = backend.Scan(GetSelectedImageFormat());
+                await backend.Scan(GetSelectedImageFormat());
             }
             catch (Exception ex)
             {
-                _ = ShowErrorAsync(ex.Message, I18N.GetString("ScanningError"));
+                await ShowErrorAsync(ex.Message, I18N.GetString("ScanningError"));
             }
         }
 
