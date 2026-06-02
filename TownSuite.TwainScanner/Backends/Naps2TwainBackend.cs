@@ -83,7 +83,6 @@ namespace TownSuite.TwainScanner.Backends
                     RunOcr(origPath, ParentView.IsOcrChecked);
 
                     Console.WriteLine("Scanned a page!");
-                    picnumber++;
                 }
             }
             finally
