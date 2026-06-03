@@ -1,115 +1,97 @@
-﻿using System;
-using System.CodeDom.Compiler;
+using Avalonia;
+using NAPS2.Scan;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NAPS2.Scan;
-using TownSuite.TwainScanner.Backends;
 
 namespace TownSuite.TwainScanner
 {
     static class Program
     {
+        internal static List<string> Settings { get; private set; } = new List<string>();
+        internal static Ocr OcrInstance { get; private set; }
+        internal static string DirText { get; private set; }
+
         [STAThread]
-        static async Task Main()
+        static int Main(string[] args)
         {
-            var settings = new List<String>();
-            bool ScanList = false;
+            bool scanList = false;
             bool enableOcr = false;
             string ocrApiUrl = "";
             string ocrBearerToken = "";
             string workingDir = Environment.GetEnvironmentVariable("TMP");
-            string backend = "originaltwain";
+            List<string> settings = new List<string>();
 
             try
             {
+                var cmdArgs = Environment.GetCommandLineArgs();
+                List<string> scanListOutput = new List<string>();
 
-
-                List<string> scanlist = new List<string>();
-                for (int i = 0; i <= Environment.GetCommandLineArgs().Length - 1; i++)
+                for (int i = 0; i < cmdArgs.Length; i++)
                 {
-#if INCLUDE_ORIGINAL
-                if (Environment.GetCommandLineArgs()[i] == "-scanlist")
-                {
-                    ScanList = true;
-                    var scnlst = new ScannerList();
-                    scanlist = scnlst.ScanList();
-                }
-#else
-                    if (Environment.GetCommandLineArgs()[i] == "-scanlist")
+                    if (cmdArgs[i] == "-scanlist")
                     {
-                        var drivers = new Driver[] { Driver.Wia, Driver.Twain };
-                        ScanList = true;
-                        foreach (Driver driver in drivers)
+                        scanList = true;
+                        Task.Run(async () =>
                         {
-                            var scnlst = new NewScannerList(driver);
-                            using var context = scnlst.GetScanContext();
-                            scanlist.AddRange(await scnlst.ScanList(context));
-                        }
+                            foreach (var driver in NewScannerList.PlatformDrivers())
+                            {
+                                var scnlst = new NewScannerList(driver);
+                                using var context = scnlst.GetScanContext();
+                                var names = await scnlst.ScanList(context);
+                                scanListOutput.AddRange(names);
+                            }
+                        }).GetAwaiter().GetResult();
                     }
 
-#endif
-                    if (Environment.GetCommandLineArgs()[i] == "-scansettings")
+                    if (cmdArgs[i] == "-scansettings")
                     {
-                        foreach (string s in Environment.GetCommandLineArgs())
-                        {
+                        foreach (string s in cmdArgs)
                             settings.Add(s);
-                        }
                     }
 
-                    if (Environment.GetCommandLineArgs()[i] == "-enableocr")
+                    if (cmdArgs[i] == "-enableocr")
                     {
                         Console.WriteLine("Enabling OCR");
                         enableOcr = true;
                     }
-                    if (Environment.GetCommandLineArgs()[i] == "-ocrapiurl")
-                    {
-                        ocrApiUrl = Environment.GetCommandLineArgs()[i + 1];
-                    }
-                    if (Environment.GetCommandLineArgs()[i] == "-ocrbearertoken")
-                    {
-                        ocrBearerToken = Environment.GetCommandLineArgs()[i + 1];
-                    }
-                    if (Environment.GetCommandLineArgs()[i] == "-tempdir")
-                    {
-                        workingDir = Environment.GetCommandLineArgs()[i + 1];
-                    }
-                    if (Environment.GetCommandLineArgs()[i] == "-backend")
-                    {
-                        backend = Environment.GetCommandLineArgs()[i + 1];
-                    }
-
+                    if (cmdArgs[i] == "-ocrapiurl" && i + 1 < cmdArgs.Length)
+                        ocrApiUrl = cmdArgs[i + 1];
+                    if (cmdArgs[i] == "-ocrbearertoken" && i + 1 < cmdArgs.Length)
+                        ocrBearerToken = cmdArgs[i + 1];
+                    if (cmdArgs[i] == "-tempdir" && i + 1 < cmdArgs.Length)
+                        workingDir = cmdArgs[i + 1];
                 }
 
-                string dirText = Path.Combine(workingDir, "TownSuiteScanner");
+                string dirText = Path.Combine(workingDir ?? Path.GetTempPath(), "TownSuiteScanner");
 
-                if (ScanList == false)
+                if (scanList)
                 {
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new MainFrame(settings, new Ocr(enableOcr, ocrApiUrl, ocrBearerToken),
-                        dirText));
-                }
-                else
-                {
-                    foreach (string i in scanlist)
-                    {
-                        Console.WriteLine(i);
-                    }
+                    foreach (string name in scanListOutput)
+                        Console.WriteLine(name);
                     Console.WriteLine("ScanListEnd");
                     Console.Out.Flush();
-
+                    return 0;
                 }
 
-            }
-            catch(Exception e) { 
+                Settings = settings;
+                OcrInstance = new Ocr(enableOcr, ocrApiUrl, ocrBearerToken);
+                DirText = dirText;
 
+                return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception e)
+            {
                 Console.Error.WriteLine($"Here is the error {e}");
                 Console.Error.Flush();
-
+                return 1;
             }
         }
+
+        static AppBuilder BuildAvaloniaApp()
+            => AppBuilder.Configure<App>()
+                .UsePlatformDetect()
+                .LogToTrace();
     }
 }

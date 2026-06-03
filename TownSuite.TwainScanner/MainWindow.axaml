@@ -1,0 +1,145 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="TownSuite.TwainScanner.MainWindow"
+        x:CompileBindings="False"
+        Title="Scan Document"
+        Width="1055" Height="713"
+        KeyDown="Window_KeyDown">
+  <DockPanel>
+
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="File">
+        <MenuItem Header="Exit" Click="MenuItem_Exit_Click"/>
+      </MenuItem>
+      <MenuItem Header="_Acquire" Click="MenuItem_Acquire_Click"/>
+      <MenuItem x:Name="mnuSave" Header="_Save" Click="MenuItem_Save_Click" IsEnabled="False"/>
+    </Menu>
+
+    <!-- Status bar -->
+    <Border DockPanel.Dock="Bottom" Height="26"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}">
+      <Grid Margin="6,0">
+        <StackPanel Orientation="Horizontal" Spacing="6"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
+          <ProgressBar x:Name="progressBar" Width="120" Height="14"
+                       IsIndeterminate="True" IsVisible="False" VerticalAlignment="Center"/>
+          <TextBlock x:Name="statusLabel" IsVisible="False" VerticalAlignment="Center"/>
+        </StackPanel>
+        <TextBlock x:Name="pageCountLabel" Text="0 pages scanned"
+                   HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                   FontSize="12"/>
+      </Grid>
+    </Border>
+
+    <!-- Main content -->
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="220" MinWidth="160" MaxWidth="400"/>
+        <ColumnDefinition Width="4"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- Left sidebar -->
+      <Grid Grid.Column="0" Margin="6,4,2,6" RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- Scanner header: label + count badge -->
+        <Grid Grid.Row="0" Margin="0,0,0,4">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock x:Name="scannersLabel" Text="Scanners" FontWeight="SemiBold" VerticalAlignment="Center"/>
+          <TextBlock x:Name="scannerCountLabel" Grid.Column="1"
+                     Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                     FontSize="11" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Scanner list + empty-state overlay -->
+        <Panel Grid.Row="1" Margin="0,0,0,8">
+          <ListBox x:Name="sourceListBox"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                   SelectionChanged="SourceListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Name}" TextWrapping="NoWrap"
+                           ToolTip.Tip="{Binding Name}"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <Border x:Name="noScannersOverlay" IsVisible="False" IsHitTestVisible="False"
+                  Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+            <TextBlock Text="No scanners found.&#10;Check connections&#10;and try restarting."
+                       TextAlignment="Center" TextWrapping="Wrap"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                       FontSize="12" Margin="8"/>
+          </Border>
+        </Panel>
+
+        <!-- Scan settings -->
+        <GroupBox x:Name="propertiesGroup" Grid.Row="2" Header="Properties" Margin="0,0,0,8">
+          <StackPanel Spacing="4" Margin="2">
+            <TextBlock x:Name="imgFormatLabel" Text="Image format"/>
+            <ComboBox x:Name="cmbImageType" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Description}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock x:Name="resolutionLabel" Text="Resolution"/>
+            <ComboBox x:Name="cmbResolution" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock x:Name="colorLabel" Text="Color"/>
+            <ComboBox x:Name="cmbColor" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+          </StackPanel>
+        </GroupBox>
+
+        <!-- OCR + Scan button (full-width, accent) -->
+        <StackPanel Grid.Row="3" Spacing="6">
+          <CheckBox x:Name="checkboxOcr" Content="OCR" IsVisible="False"/>
+          <Button x:Name="btnScan" Content="Scan  (F5)"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Classes="accent"
+                  Click="BtnScan_Click"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- Drag handle to resize the sidebar -->
+      <GridSplitter Grid.Column="1"
+                    ResizeDirection="Columns"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"/>
+
+      <!-- Thumbnail area + empty-state overlay -->
+      <Grid Grid.Column="2">
+        <ScrollViewer>
+          <WrapPanel x:Name="thumbnailPanel" Margin="6"/>
+        </ScrollViewer>
+        <Border x:Name="emptyThumbnailOverlay" IsHitTestVisible="False">
+          <TextBlock Text="Scanned pages will appear here.&#10;Select a scanner and press Scan."
+                     TextAlignment="Center" TextWrapping="Wrap"
+                     VerticalAlignment="Center" HorizontalAlignment="Center"
+                     Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                     FontSize="14" Margin="20"/>
+        </Border>
+      </Grid>
+
+    </Grid>
+  </DockPanel>
+</Window>

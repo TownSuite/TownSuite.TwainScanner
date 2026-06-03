@@ -192,4 +192,61 @@
   <data name="TownSuiteScan" xml:space="preserve">
     <value>TownSuite Scan</value>
   </data>
+  <data name="OcrProcessing" xml:space="preserve">
+    <value>Processing OCR…</value>
+  </data>
+  <data name="LoadingScannerList" xml:space="preserve">
+    <value>Loading scanner list…</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Scanning…</value>
+  </data>
+  <data name="PageLabel" xml:space="preserve">
+    <value>Page {0}</value>
+  </data>
+  <data name="PageScannedSingular" xml:space="preserve">
+    <value>1 page scanned</value>
+  </data>
+  <data name="PagesScannedPlural" xml:space="preserve">
+    <value>{0} pages scanned</value>
+  </data>
+  <data name="WindowTitlePageSingular" xml:space="preserve">
+    <value>Scan Document — 1 page</value>
+  </data>
+  <data name="WindowTitlePagesPlural" xml:space="preserve">
+    <value>Scan Document — {0} pages</value>
+  </data>
+  <data name="NoScannersFound" xml:space="preserve">
+    <value>No scanners found.
+Check connections
+and try restarting.</value>
+  </data>
+  <data name="ScanPrompt" xml:space="preserve">
+    <value>Scanned pages will appear here.
+Select a scanner and press Scan.</value>
+  </data>
+  <data name="ScannersLabel" xml:space="preserve">
+    <value>Scanners</value>
+  </data>
+  <data name="PropertiesLabel" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="ImageFormatLabel" xml:space="preserve">
+    <value>Image format</value>
+  </data>
+  <data name="ResolutionLabel" xml:space="preserve">
+    <value>Resolution</value>
+  </data>
+  <data name="ColorLabel" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="ScanButton" xml:space="preserve">
+    <value>Scan  (F5)</value>
+  </data>
+  <data name="ScannersFound" xml:space="preserve">
+    <value>({0} found)</value>
+  </data>
+  <data name="DeletePage" xml:space="preserve">
+    <value>Delete this page</value>
+  </data>
 </root>

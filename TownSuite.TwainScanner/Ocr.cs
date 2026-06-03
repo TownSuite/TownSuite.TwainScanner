@@ -1,24 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace TownSuite.TwainScanner
 {
     internal class Ocr
     {
         public bool Enabled { get; set; }
-        string _apiUrl;
-        string _bearerToken;
+        private readonly string _apiUrl;
+        private readonly string _bearerToken;
 
         public Ocr(bool enabled, string apiUrl, string bearerToken)
         {
@@ -27,144 +23,99 @@ namespace TownSuite.TwainScanner
             _bearerToken = bearerToken;
         }
 
-        public void GetText(string filepath,
-            PictureBox newpic,
-            ToolStripProgressBar toolStrip,
-            ToolStripStatusLabel statusLabel)
+        public void GetText(
+            string filepath,
+            Action onOcrStarting,
+            Action<string, string> onOcrComplete,
+            Action<string, Exception> onOcrError)
         {
             QueueThread(async () =>
             {
-                string text = string.Empty;
                 try
                 {
-                    newpic.Invoke((MethodInvoker)delegate
-                    {
-                        // Running on the UI thread
-                        toolStrip.Style = ProgressBarStyle.Marquee;
-                        toolStrip.Visible = true;
-                        statusLabel.Text = I18N.GetString("OcrProcessing");
-                        statusLabel.Visible = true;
-                    });
+                    onOcrStarting?.Invoke();
 
-                    var client = new WebClient();
-                    client.Headers.Add("Authorization", $"Bearer {_bearerToken}");
-                    client.Headers.Add("User-Agent", "TownSuiteScanner/1.0 Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/113.0");
+                    using var client = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_bearerToken}");
+                    client.DefaultRequestHeaders.Add("User-Agent",
+                        "TownSuiteScanner/1.0 Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
 
-#if DEBUG
-                    if (ServicePointManager.ServerCertificateValidationCallback == null)
-                    {
-                        ServicePointManager.ServerCertificateValidationCallback += (o, c, ch, er) => true;
-                    }
-#endif
+                    byte[] byteImage = PrepareImageBytes(filepath);
 
-                    byte[] byteImage;
-                    using (var bmp = Bitmap.FromFile(filepath))
-                    {
-                        // sheet of paper hack 2550 pixels wide (300 pixels/inch * 8.5 inches) and. 3300 pixels tall (300 pixels/inch * 11 inches)
-                        if (bmp.Width > 2550 && bmp.Height > 3300)
-                        {
-                            using (var resizedImg = new Bitmap(bmp, new Size(2550, 3300)))
-                            {
-                                byteImage = ImageToByte(resizedImg);
-                            }
-                        }
-                        else if (!string.Equals(System.IO.Path.GetExtension(filepath), ".jpg", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            byteImage = ImageToByte(bmp);
-                        }
-                        else
-                        {
-                            byteImage = System.IO.File.ReadAllBytes(filepath);
-                        }
-                    }
-;
-                    var output = await client.UploadDataTaskAsync(_apiUrl, byteImage);
+                    using var content = new ByteArrayContent(byteImage);
+                    var response = await client.PostAsync(_apiUrl, content);
+                    response.EnsureSuccessStatusCode();
+                    string text = await response.Content.ReadAsStringAsync();
 
-                    text = System.Text.Encoding.UTF8.GetString(output);
-
+                    File.WriteAllText($"{filepath}.txt", text);
+                    onOcrComplete?.Invoke(filepath, text);
                 }
                 catch (Exception ex)
                 {
-                    newpic.Invoke((MethodInvoker)delegate
-                    {
-                        MessageBox.Show(ex.Message, I18N.GetString("OcrError"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    });
-                }
-                finally
-                {
-                    newpic.Invoke((MethodInvoker)delegate
-                    {
-                        // Running on the UI thread
-                        var tt = new ToolTip();
-                        tt.SetToolTip(newpic, text);
-                        System.IO.File.WriteAllText($"{filepath}.txt", text);
-                        newpic.BackColor = Color.Gray;
-                        toolStrip.Style = ProgressBarStyle.Blocks;
-                        toolStrip.Visible = false;
-                        statusLabel.Visible = false;
-                    });
+                    onOcrError?.Invoke(filepath, ex);
                 }
             });
-
         }
 
-        public static byte[] ImageToByte(Image img)
+        private static byte[] PrepareImageBytes(string filepath)
         {
-            using (var stream = new MemoryStream())
+            using var img = Image.Load(filepath);
+
+            // Downscale large images (> letter-size at 300 DPI) before sending to OCR
+            bool needsResize = img.Width > 2550 || img.Height > 3300;
+            if (needsResize)
             {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                return stream.ToArray();
+                using var resized = img.Clone(ctx => ctx.Resize(
+                    Math.Min(img.Width,  2550),
+                    Math.Min(img.Height, 3300)));
+                return EncodeJpeg(resized);
             }
+
+            string ext = Path.GetExtension(filepath).ToLowerInvariant();
+            if (ext == ".jpg" || ext == ".jpeg")
+                return File.ReadAllBytes(filepath);
+
+            return EncodeJpeg(img);
         }
 
-        private ConcurrentQueue<Action> _theQueueAction = new ConcurrentQueue<Action>();
-        private bool threadStarted = false;
-        // Use with caution.  When using this you must handle any thrown exceptions.   Any unhandled exceptions will generally crash the running application.
+        private static byte[] EncodeJpeg(Image img)
+        {
+            using var ms = new MemoryStream();
+            img.SaveAsJpeg(ms, new JpegEncoder { Quality = 90 });
+            return ms.ToArray();
+        }
+
+        private readonly ConcurrentQueue<Action> _queue = new ConcurrentQueue<Action>();
+        private bool _threadStarted = false;
+
         private void QueueThread(Action work)
         {
-            _theQueueAction.Enqueue(work);
-
-            if (threadStarted == false)
+            _queue.Enqueue(work);
+            if (!_threadStarted)
             {
-                threadStarted = true;
-                var t = new Thread(DoThreadness);
+                _threadStarted = true;
+                var t = new Thread(DrainQueue);
                 t.Start();
             }
         }
 
-        private void DoThreadness()
+        private void DrainQueue()
         {
             while (true)
             {
-                const int halfSecond = 500;
-                const int twoSecond = 2000;
-                var totalTimeEmpty = 0;
-                while (_theQueueAction.IsEmpty)
+                int idleMs = 0;
+                while (_queue.IsEmpty)
                 {
-                    var timeAsleep = halfSecond;
-                    Thread.Sleep(timeAsleep);
-                    totalTimeEmpty += timeAsleep;
-
-                    if (totalTimeEmpty >= twoSecond)
-                    {
-                        threadStarted = false;
-
-                        return;
-                    }
+                    Thread.Sleep(500);
+                    idleMs += 500;
+                    if (idleMs >= 2000) { _threadStarted = false; return; }
                 }
 
-                while (_theQueueAction.TryDequeue(out Action work))
+                while (_queue.TryDequeue(out var work))
                 {
-                    try
-                    {
-                        work();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine(ex);
-                    }
+                    try { work(); }
+                    catch (Exception ex) { Console.Error.WriteLine(ex); }
                 }
-
             }
         }
     }

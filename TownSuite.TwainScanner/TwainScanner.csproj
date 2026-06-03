@@ -1,30 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<Platform Condition=" '$(Platform)' == '' "></Platform>
-		<OutputType>WinExe</OutputType>
+		<OutputType>exe</OutputType>
 		<RootNamespace>TownSuite.TwainScanner</RootNamespace>
-		<TargetFrameworks>net48;net8.0-windows</TargetFrameworks>
-		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+		<TargetFramework>net10.0</TargetFramework>
 		<AssemblyName>TownSuite.TwainScanner</AssemblyName>
 		<AssemblyTitle>TownSuite.TwainScanner</AssemblyTitle>
 		<Company>TownSuite</Company>
 		<Product>TownSuite.TwainScanner</Product>
 		<Description>Allows you to control work of flatbed scanner, web and digital camera and any other TWAIN device from .NET environment. You can use this library in your programs written in any programming languages compatible with .NET technology.</Description>
 		<Copyright>Copyright © SARAFF 2011 / TownSuite Municipal Software Inc. © 2026</Copyright>
-		<AssemblyVersion>26.1.0</AssemblyVersion>
-		<FileVersion>26.1.0</FileVersion>
+		<AssemblyVersion>26.2.0</AssemblyVersion>
+		<FileVersion>26.2.0</FileVersion>
 		<PackageVersion>26.0.0</PackageVersion>
 		<OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-		<GeneratePackageOnBuild>string</GeneratePackageOnBuild>
 		<Platforms>AnyCPU</Platforms>
-		<UseWindowsForms>true</UseWindowsForms>
-		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-		<LangVersion>9.0</LangVersion>
-		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-	</PropertyGroup>
-	<PropertyGroup>
-		<AssemblyOriginatorKeyFile />
+		<StartupObject>TownSuite.TwainScanner.Program</StartupObject>
 	</PropertyGroup>
 
 	<!--
@@ -33,42 +23,29 @@
   </PropertyGroup>
   -->
 
-	<PropertyGroup>
-		<StartupObject>TownSuite.TwainScanner.Program</StartupObject>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug'">
 		<DebugType>full</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release'">
-		<DocumentationFile>bin\$(Configuration)\Saraff.Twain.XML</DocumentationFile>
+		<DocumentationFile>bin\$(Configuration)\TownSuite.TwainScanner.XML</DocumentationFile>
 		<DebugType>pdbonly</DebugType>
 	</PropertyGroup>
-	<PropertyGroup>
-		<PostBuildEvent />
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	</PropertyGroup>
-	<ItemGroup Condition="'$(DefineConstants)' != 'INCLUDE_ORIGINAL'">
-		<Compile Remove="Scanner.cs" />
-		<Compile Remove="SelectSourceForm.cs" />
-		<Compile Remove="SelectSourceForm.Designer.cs" />
-		<Compile Remove="Tiff.cs" />
-		<Compile Remove="Twain32.cs" />
-		<Compile Remove="TwainCapabilities.cs" />
-		<Compile Remove="TwainDefs.cs" />
-		<Compile Remove="TwainException.cs" />
-		<Compile Remove="ScannerList.cs" />
-	</ItemGroup>
+	
+	<!-- Old WinForms MainFrame replaced by Avalonia MainWindow -->
+
 	<ItemGroup>
 		<EmbeddedResource Remove="SelectSourceForm.resx" />
 		<EmbeddedResource Remove="Twain32.resx" />
+		<EmbeddedResource Remove="MainFrame.resx" />
 	</ItemGroup>
+
+	<!-- Properties/Resources.Designer.cs uses System.Drawing.Bitmap (scanner icon) which is Windows-only -->
+	<ItemGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+		<Compile Remove="Properties\Resources.Designer.cs" />
+		<EmbeddedResource Remove="Properties\Resources.resx" />
+	</ItemGroup>
+
 	<ItemGroup>
-		<Compile Update="MainFrame.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Update="MainFrame.Designer.cs">
-			<DependentUpon>MainFrame.cs</DependentUpon>
-		</Compile>
 		<Compile Update="Properties\Resources.Designer.cs">
 			<AutoGen>True</AutoGen>
 			<DesignTime>True</DesignTime>
@@ -85,10 +62,9 @@
 			<DependentUpon>Resources.fr-CA.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
+
 	<ItemGroup>
-		<EmbeddedResource Update="MainFrame.resx">
-			<DependentUpon>MainFrame.cs</DependentUpon>
-		</EmbeddedResource>
+		<EmbeddedResource Include="Resources\scanner.bmp" />
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -103,24 +79,41 @@
 			<LastGenOutput>Resources.fr-CA.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 	</ItemGroup>
+
 	<ItemGroup>
-		<EmbeddedResource Include="Resources\scanner.bmp" />
+		<AvaloniaXaml Update="App.axaml">
+			<Generator>MSBuild:Compile</Generator>
+		</AvaloniaXaml>
+		<AvaloniaXaml Update="MainWindow.axaml">
+			<Generator>MSBuild:Compile</Generator>
+		</AvaloniaXaml>
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' AND '$(DefineConstants)' == 'INCLUDE_ORIGINAL' ">
-		<PackageReference Include="Wia.Interop.Townsuite.x86" Version="1.0.1" />
+
+	<!-- Avalonia UI -->
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="12.0.4" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
 	</ItemGroup>
+
+	<!-- Scanning & image packages (all platforms) -->
 	<ItemGroup>
 		<PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.7.1" />
-		<PackageReference Include="NAPS2.Images.Gdi" Version="1.1.6" />
-		<PackageReference Include="NAPS2.Sdk" Version="1.1.6" />
-		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.1.6">
+		<PackageReference Include="NAPS2.Sdk" Version="1.2.1" />
+		<PackageReference Include="NAPS2.Images.ImageSharp" Version="1.2.1" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+	</ItemGroup>
+
+	<!-- Windows-only scanning packages -->
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<PackageReference Include="NAPS2.Images.Gdi" Version="1.2.1" />
+		<PackageReference Include="NAPS2.Sdk.Worker.Win32" Version="1.2.1">
 			<IncludeAssets>all</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />	
-		<PackageReference Include="System.Drawing.Common" Version="8.0.10" />	
 	</ItemGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' != 'net48' ">
-		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-		<PackageReference Include="System.Windows.Extensions" Version="8.0.0" />
+
+	<!-- Linux: SANE native binaries -->
+	<ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+		<PackageReference Include="NAPS2.Sane.Binaries" Version="1.1.0" />
 	</ItemGroup>
 </Project>

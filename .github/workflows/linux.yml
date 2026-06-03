@@ -1,0 +1,35 @@
+name: linux build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7  # v5.2.0
+      with:
+        dotnet-version: 10.0.x
+    - name: Build
+      run: dotnet build TownSuite.TwainScanner.sln -c Release
+    - name: publish
+      run: |
+        mkdir -p build
+        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-x64" --self-contained true -f net10.0 -o "build/TownSuite.TwainScanner_linux_x64"
+        dotnet publish TownSuite.TwainScanner.sln -c Release -r "linux-arm64" --self-contained true -f net10.0 -o "build/TownSuite.TwainScanner_linux_arm64"	
+        
+    - name: Archive artifacts
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+      with:
+        name: linux
+        path: |
+          build/
+        retention-days: 1
