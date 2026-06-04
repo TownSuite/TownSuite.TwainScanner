@@ -1,4 +1,6 @@
-
+#!/usr/bin/pwsh
+$ErrorActionPreference = "Stop"
+$CURRENTPATH = $pwd.Path
 
 # See https://github.com/baseclass/Contrib.Nuget, nuget by default does not let output content 
 
