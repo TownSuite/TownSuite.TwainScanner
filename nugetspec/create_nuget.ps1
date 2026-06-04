@@ -12,12 +12,12 @@ function delete_files([string]$path) {
 	}
 }
 
-delete_files "TownSuite.TwainScanner\content"
+delete_files "TownSuite.TwainScanner/content"
 delete_files "NugetBuild"
-mkdir -p TownSuite.TwainScanner\content\TownSuite.TwainScanner
+mkdir -p TownSuite.TwainScanner/content/TownSuite.TwainScanner
 mkdir -p NugetBuild
 
-Copy-Item -Recurse -Force "..\build\TownSuite.TwainScanner\*" TownSuite.TwainScanner\content\TownSuite.TwainScanner\
+Copy-Item -Recurse -Force "../build/TownSuite.TwainScanner/*" TownSuite.TwainScanner/content/TownSuite.TwainScanner/
 
-nuget pack TownSuite.TwainScanner\TownSuite.TwainScanner.nuspec -OutputDirectory ..\build
+nuget pack TownSuite.TwainScanner/TownSuite.TwainScanner.nuspec -OutputDirectory ../build
 
