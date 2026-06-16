@@ -14,12 +14,12 @@ pipeline {
             agent { label 'starting-agent' }
             steps {
                 script {
-                    townsuite_automation2.start_windows()
+                    townsuite_automation2.start_linux()
                 }
             }
         }    
         stage('Pipeline') {
-            agent { label townsuite_automation2.get_windows_label() }
+            agent { label townsuite_automation2.get_linux_label() }
             stages {
                 stage('Environment Setup') {
                     steps {
@@ -31,8 +31,9 @@ pipeline {
                 }
                 stage('Build') {
                     steps {
-                        pwsh '''
-                        .\\build.ps1
+                        sh '''
+                        chmod +x build.ps1
+                        ./build.ps1
                         '''
                     }
                 }
@@ -50,16 +51,18 @@ pipeline {
                 stage('Nuget Package') {
                     steps {
                         dir('nugetspec') {
-                            pwsh '''
-                            .\\create_nuget.ps1
+                            sh '''
+                            chmod +x create_nuget.ps1
+                            ./create_nuget.ps1
                             '''
                         }
                     }
                 }
                 stage('Build Zip') {
                     steps {
-                        pwsh '''
-                        .\\build_zip.ps1
+                        sh '''
+                        chmod +x build_zip.ps1
+                        ./build_zip.ps1
                         '''
                     }
                 }
@@ -70,7 +73,7 @@ pipeline {
                     steps {
                         echo 'Code Signing happening here....'
                         script {
-                            townsuite.codesign "${env.WORKSPACE}\\build", "*.zip", true
+                            townsuite.codesign "${env.WORKSPACE}/build", "*.zip", true
                         }
                     }
                 }
