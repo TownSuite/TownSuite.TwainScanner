@@ -25,15 +25,21 @@ if (-not $dotnet) {
 	exit 1
 }
 
-$nuspecPath = Join-Path $CURRENTPATH "TownSuite.TwainScanner/TownSuite.TwainScanner.nuspec"
-if (-not (Test-Path $nuspecPath)) {
-	Write-Error "Nuspec not found: $nuspecPath"
+$projectPath = Join-Path $CURRENTPATH "TownSuite.TwainScanner/TownSuite.TwainScanner.csproj"
+if (-not (Test-Path $projectPath)) {
+	Write-Error "Project not found: $projectPath"
 	exit 1
 }
 
-Write-Host "Packing using dotnet with nuspec: $nuspecPath" -ForegroundColor Green
+# dotnet pack is project-based: it cannot pack a bare nuspec, so we drive it
+# through the stub csproj that references the nuspec. Output path must be
+# absolute because dotnet pack resolves relative paths against the project dir.
+$outDir = Join-Path $CURRENTPATH "../build"
+New-Item -Path $outDir -ItemType Directory -Force | Out-Null
+$outDir = (Resolve-Path $outDir).Path
 
-# Use MSBuild/NuGet pack via dotnet. Many CI setups accept passing the NuspecFile property.
-& $dotnet pack -p:NuspecFile="$nuspecPath" -p:PackageOutputPath="../build" --no-build
+Write-Host "Packing using dotnet with project: $projectPath" -ForegroundColor Green
+
+& $dotnet pack "$projectPath" -c Release -p:PackageOutputPath="$outDir"
 if ($LASTEXITCODE -ne 0) { Write-Error "dotnet pack failed"; exit $LASTEXITCODE }
 
